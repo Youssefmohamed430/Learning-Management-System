@@ -1,18 +1,6 @@
-<?php
-  // require_once '../Models/User.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\User.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\AdminController.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\DBController.php';
-
-  $admin = new AdminController;
-
-  $Admins = $admin->GetAll("Admin");
-  $Students = $admin->GetAll("Student");
-  $Members = $admin->GetAll("Faculty");
-?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -31,14 +19,14 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.png" />
-  </head>
-  <body>
+</head>
+    <body>
     <div class="container-scroller">
-      <!-- partial:../../partials/_navbar.html -->
-      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <!-- partial:../../partials/_navbar.html -->
+        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-          <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../assets/images/logo.svg" alt="logo" /></a>
-          <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../assets/images/logo-mini.svg" alt="logo" /></a>
+            <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../assets/images/logo.svg" alt="logo" /></a>
+            <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../assets/images/logo-mini.svg" alt="logo" /></a>
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-stretch">
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -66,6 +54,8 @@
                 </div>
               </a>
               <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+                <a class="dropdown-item" href="#">
+                  <i class="mdi mdi-cached me-2 text-success"></i> Activity Log </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">
                   <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
@@ -208,164 +198,43 @@
           </ul>
         </nav>
         <!-- partial -->
-          <!-- Admin Table-->
         <div class="main-panel">
           <div class="content-wrapper">
-            <div class="row">
-              <div class="col-lg-12 grid-margin stretch-card">
+          <div class="row">
+              <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Admins</h4>
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <!-- <th>Profile</th> -->
-                          <th>Id</th>
-                          <th>Name</th>
-                          <th>User Name</th>
-                          <th>Email</th>
-                          <th>Edit</th>
-                          <th>Delete</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php 
-                        foreach($Admins as $admin)
-                        {
-                          ?>
-                            <tr>
-                              <td><?php echo $admin["Id"]?></td>
-                              <td><?php echo $admin["Name"]?></td>
-                              <td><?php echo $admin["UserName"]?></td>
-                              <td><?php echo $admin["Email"]?></td>
-                              <td>
-                                <button type="button" class="btn btn-gradient-primary btn-fw">
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                              </td>
-                              <td><button type="button" class="btn btn-gradient-primary btn-fw">
-                                <i class="fa fa-trash-o"></i>
-                              </button></td>
-                          <?php
-                          }
-                          ?>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <h4 class="card-title">Add New Admin</h4>
+                    <form class="forms-sample" method = "Post">
+                    <div class="form-group">
+                        <label for="exampleInputConfirmPassword1">Name</label>
+                        <input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Name">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1">Username</label>
+                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                      </div>
+                      <div class="form-check form-check-flat form-check-primary">
+                        <label class="form-check-label">
+                          <input type="checkbox" class="form-check-input"> Remember me </label>
+                      </div>
+                      <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                      <button class="btn btn-light">Cancel</button>
+                    </form>
                   </div>
                 </div>
               </div>
-          </div>
-          <a href="/Learning-Management-System/Views/pages/samples/AddAdmin.php" class="btn btn-gradient-primary btn-fw">
-              Add Admin
-          </a>
-        <!-- Members -->
-        <div class="row mt-4">
-          <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">Faculty Members</h4>
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <!-- <th>Profile</th> -->
-                          <th>Id</th>
-                          <th>Name</th>
-                          <th>User Name</th>
-                          <th>Email</th>
-                          <th>Edit</th>
-                          <th>Delete</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php 
-                        foreach($Members as $Member)
-                        {
-                          ?>
-                            <tr>
-                              <td><?php echo $Member["Id"]?></td>
-                              <td><?php echo $Member["Name"]?></td>
-                              <td><?php echo $Member["UserName"]?></td>
-                              <td><?php echo $Member["Email"]?></td>
-                              <td>
-                                <button type="button" class="btn btn-gradient-primary btn-fw">
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                              </td>
-                              <td><button type="button" class="btn btn-gradient-primary btn-fw">
-                                <i class="fa fa-trash-o"></i>
-                              </button></td>
-                          <?php
-                          }
-                          ?>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <div class="mt-2">
-              <a href="/Learning-Management-System/Views/pages/samples/AddFacultyMember.php" class="btn btn-gradient-primary btn-sm-custom">
-                  Add Member
-              </a>
-          </div>
-          <!-- Students -->
-          <div class="row mt-4">
-          <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">Students</h4>
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <!-- <th>Profile</th> -->
-                          <th>Id</th>
-                          <th>Name</th>
-                          <th>User Name</th>
-                          <th>Email</th>
-                          <th>Edit</th>
-                          <th>Delete</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php 
-                        foreach($Students as $Student)
-                        {
-                          ?>
-                            <tr>
-                              <td><?php echo $Student["Id"]?></td>
-                              <td><?php echo $Student["Name"]?></td>
-                              <td><?php echo $Student["UserName"]?></td>
-                              <td><?php echo $Student["Email"]?></td>
-                              <td>
-                                <button type="button" class="btn btn-gradient-primary btn-fw">
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                              </td>
-                              <td><button type="button" class="btn btn-gradient-primary btn-fw">
-                                <i class="fa fa-trash-o"></i>
-                              </button></td>
-                          <?php
-                          }
-                          ?>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <div class="mt-2">
-              <a href="/Learning-Management-System/Views/pages/samples/AddStudent.php" class="btn btn-gradient-primary btn-sm-custom">
-                  Add Student
-              </a>
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
-          <br>
           <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
