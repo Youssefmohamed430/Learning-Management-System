@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2025 at 02:57 PM
+-- Generation Time: Apr 23, 2025 at 04:08 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,17 +30,17 @@ SET time_zone = "+00:00";
 CREATE TABLE `course` (
   `CrsId` int(11) NOT NULL,
   `CrsName` varchar(50) NOT NULL,
-  `FacultyId` int(11) NOT NULL
+  `FacultyId` int(11) NOT NULL,
+  `Description` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `course`
 --
 
-INSERT INTO `course` (`CrsId`, `CrsName`, `FacultyId`) VALUES
-(1, 'Database', 4),
-(2, 'Computer Science', 4),
-(3, 'Signals', 4);
+INSERT INTO `course` (`CrsId`, `CrsName`, `FacultyId`, `Description`) VALUES
+(4, 'Database', 4, 'Database'),
+(5, 'Computer Science', 4, 'ComputerScience');
 
 -- --------------------------------------------------------
 
@@ -59,8 +59,8 @@ CREATE TABLE `courseregisteration` (
 --
 
 INSERT INTO `courseregisteration` (`CrsId`, `StuId`, `Grade`) VALUES
-(1, 3, NULL),
-(2, 2, NULL);
+(4, 3, NULL),
+(5, 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -203,7 +203,7 @@ CREATE TABLE `schedule` (
 --
 
 INSERT INTO `schedule` (`SchId`, `EventType`, `Date`, `CrsId`, `FactulyId`) VALUES
-(1, 'Exam', '2025-04-23', 2, 4);
+(2, 'Exam', '2025-04-23', 5, 4);
 
 -- --------------------------------------------------------
 
@@ -380,7 +380,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `course`
 --
 ALTER TABLE `course`
-  MODIFY `CrsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `CrsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `coursevideos`
@@ -440,7 +440,7 @@ ALTER TABLE `questions`
 -- AUTO_INCREMENT for table `schedule`
 --
 ALTER TABLE `schedule`
-  MODIFY `SchId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `SchId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `student`
