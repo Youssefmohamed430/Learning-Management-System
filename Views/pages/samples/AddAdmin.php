@@ -10,18 +10,18 @@
   {
       if(!empty($_POST["Name"]) && !empty($_POST["Username"]) && !empty($_POST["Email"]) && !empty($_POST["Password"]))
       {
-          $Admin->Name = $_POST["Name"];
-          $Admin->UserName = $_POST["Username"];
-          $Admin->Email = $_POST["Email"];
-          $Admin->Password = $_POST["Password"];
-          $Admin->RoleName = "Admin";
+          $Admin->setName($_POST["Name"]);
+          $Admin->setUsername($_POST["Username"]);
+          $Admin->setEmail($_POST["Email"]);
+          $Admin->setPassword($_POST["Password"]);
+          $Admin->setRoleName("Admin");
           if($AdminController->AddAdmin($Admin) != "")
           {
               $errmsg = $AdminController->AddAdmin($Admin);
           }
           else
           {
-              header("locatin : AdminDashBoard");
+            header("Location: AdminDashBoard");
           }
       }
       else
@@ -248,19 +248,19 @@
                     ?>
                     <div class="form-group">
                         <label for="exampleInputConfirmPassword1">Name</label>
-                        <input type="text" class="form-control" id="InputName" placeholder="Name">
+                        <input type="text" class="form-control" id="InputName" placeholder="Name" name = "Name">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputUsername1">Username</label>
-                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username">
+                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username" name="Username">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="Email">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="Password">
                       </div>
                       <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                       <button class="btn btn-light">Cancel</button>
