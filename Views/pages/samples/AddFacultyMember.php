@@ -1,3 +1,38 @@
+
+<?php
+  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\AdminController.php';
+  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\User.php';
+  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\FacultyMember.php';
+
+  $AdminController = new AdminController;
+  $Member = new FacultyMember;
+  $errmsg = "";
+
+  if(isset($_POST["Name"]) && isset($_POST["Username"]) && isset($_POST["Email"]) && isset($_POST["Password"]) && isset($_POST["SSN"]))
+  {
+      if(!empty($_POST["Name"]) && !empty($_POST["Username"]) && !empty($_POST["Email"]) && !empty($_POST["Password"]) && !empty($_POST["SSN"]))
+      {
+          $Member->setName($_POST["Name"]);
+          $Member->setUsername($_POST["Username"]);
+          $Member->setEmail($_POST["Email"]);
+          $Member->setPassword($_POST["Password"]);
+          $Member->setRoleName("Faculty");
+          $Member->setSsNo($_POST["SSN"]);
+          if($AdminController->AddFacultyMember($Member) != "")
+          {
+              $errmsg = $AdminController->AddFacultyMember($Member);
+          }
+          else
+          {
+            header("Location: AdminDashBoard.php");
+          }
+      }
+      else
+      {
+          $errmsg = "Please fill all fields";
+      }
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -204,27 +239,35 @@
               <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Add New Admin</h4>
+                    <h4 class="card-title">Add New Faculty Member</h4>
                     <form class="forms-sample" method = "Post">
+                    <?php 
+                      if($errmsg!="")
+                      {
+                          ?>
+                              <div class="alert alert-danger" role="alert"><?php echo $errmsg ?></div>
+                          <?php
+                      }
+                    ?>
                     <div class="form-group">
                         <label for="exampleInputConfirmPassword1">Name</label>
-                        <input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Name">
+                        <input type="text" class="form-control" id="InputName" placeholder="Name" name = "Name">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputUsername1">Username</label>
-                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username">
+                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username" name="Username">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1">SSN</label>
+                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="SSN" name="SSN">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="Email">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                      </div>
-                      <div class="form-check form-check-flat form-check-primary">
-                        <label class="form-check-label">
-                          <input type="checkbox" class="form-check-input"> Remember me </label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="Password">
                       </div>
                       <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                       <button class="btn btn-light">Cancel</button>

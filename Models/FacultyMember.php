@@ -1,5 +1,6 @@
 <?php
-    class FacultyMember {
+    class FacultyMember extends User
+    {
         private $UserId;
         private $SsNo;
     

@@ -1,5 +1,6 @@
 <?php
-    class Student {
+    class Student extends User
+    {
         private $UserId;
         private $Age;
     

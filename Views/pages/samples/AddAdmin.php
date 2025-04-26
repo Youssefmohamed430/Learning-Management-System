@@ -21,7 +21,7 @@
           }
           else
           {
-            header("Location: AdminDashBoard");
+            header("Location: AdminDashBoard.php");
           }
       }
       else

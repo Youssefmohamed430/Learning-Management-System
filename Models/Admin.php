@@ -1,5 +1,6 @@
 <?php
-    class Admin {
+    class Admin extends User 
+    {
         private $UserId;
     
         public function getUserId() { return $this->UserId; }

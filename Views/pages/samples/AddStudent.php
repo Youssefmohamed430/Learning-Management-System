@@ -1,6 +1,42 @@
+
+<?php
+  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\AdminController.php';
+  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\User.php';
+  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\FacultyMember.php';
+  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\Student.php';
+
+  $AdminController = new AdminController;
+  $student = new Student;
+  $errmsg = "";
+
+  if(isset($_POST["Name"]) && isset($_POST["Username"]) && isset($_POST["Email"]) && isset($_POST["Password"]) && isset($_POST["age"]))
+  {
+      if(!empty($_POST["Name"]) && !empty($_POST["Username"]) && !empty($_POST["Email"]) && !empty($_POST["Password"]) && !empty($_POST["age"]))
+      {
+          $student->setName($_POST["Name"]);
+          $student->setUsername($_POST["Username"]);
+          $student->setEmail($_POST["Email"]);
+          $student->setPassword($_POST["Password"]);
+          $student->setRoleName("Student");
+          $student->setAge($_POST["age"]);
+          if($AdminController->AddStudent($student) != "")
+          {
+              $errmsg = $AdminController->AddStudent($student);
+          }
+          else
+          {
+            header("Location: AdminDashBoard.php");
+          }
+      }
+      else
+      {
+          $errmsg = "Please fill all fields";
+      }
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,14 +55,14 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.png" />
-  </head>
-  <body>
+</head>
+    <body>
     <div class="container-scroller">
-      <!-- partial:../../partials/_navbar.html -->
-      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <!-- partial:../../partials/_navbar.html -->
+        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-          <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../assets/images/logo.svg" alt="logo" /></a>
-          <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../assets/images/logo-mini.svg" alt="logo" /></a>
+            <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../assets/images/logo.svg" alt="logo" /></a>
+            <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../assets/images/logo-mini.svg" alt="logo" /></a>
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-stretch">
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -204,27 +240,35 @@
               <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Add New Admin</h4>
+                    <h4 class="card-title">Add New Student</h4>
                     <form class="forms-sample" method = "Post">
+                    <?php 
+                      if($errmsg!="")
+                      {
+                          ?>
+                              <div class="alert alert-danger" role="alert"><?php echo $errmsg ?></div>
+                          <?php
+                      }
+                    ?>
                     <div class="form-group">
                         <label for="exampleInputConfirmPassword1">Name</label>
-                        <input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Name">
+                        <input type="text" class="form-control" id="InputName" placeholder="Name" name = "Name">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputUsername1">Username</label>
-                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username">
+                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username" name="Username">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1">age</label>
+                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="age" name="age">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="Email">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                      </div>
-                      <div class="form-check form-check-flat form-check-primary">
-                        <label class="form-check-label">
-                          <input type="checkbox" class="form-check-input"> Remember me </label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="Password">
                       </div>
                       <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                       <button class="btn btn-light">Cancel</button>
