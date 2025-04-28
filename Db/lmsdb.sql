@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2025 at 04:08 PM
+-- Generation Time: Apr 28, 2025 at 06:07 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `course` (
   `CrsId` int(11) NOT NULL,
   `CrsName` varchar(50) NOT NULL,
-  `FacultyId` int(11) NOT NULL,
+  `FacultyId` int(11) DEFAULT NULL,
   `Description` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -39,8 +39,8 @@ CREATE TABLE `course` (
 --
 
 INSERT INTO `course` (`CrsId`, `CrsName`, `FacultyId`, `Description`) VALUES
-(4, 'Database', 4, 'Database'),
-(5, 'Computer Science', 4, 'ComputerScience');
+(4, 'Database', 12, 'Database'),
+(5, 'Computer Science', 13, 'ComputerScience');
 
 -- --------------------------------------------------------
 
@@ -59,8 +59,7 @@ CREATE TABLE `courseregisteration` (
 --
 
 INSERT INTO `courseregisteration` (`CrsId`, `StuId`, `Grade`) VALUES
-(4, 3, NULL),
-(5, 2, NULL);
+(4, 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -131,7 +130,9 @@ CREATE TABLE `facultymember` (
 --
 
 INSERT INTO `facultymember` (`UserId`, `SsNo`) VALUES
-(4, '30507394723545');
+(12, '3040278937925'),
+(13, '3030987750254'),
+(27, '3020810948304345');
 
 -- --------------------------------------------------------
 
@@ -198,13 +199,6 @@ CREATE TABLE `schedule` (
   `FactulyId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `schedule`
---
-
-INSERT INTO `schedule` (`SchId`, `EventType`, `Date`, `CrsId`, `FactulyId`) VALUES
-(2, 'Exam', '2025-04-23', 5, 4);
-
 -- --------------------------------------------------------
 
 --
@@ -221,8 +215,9 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`UserId`, `Age`) VALUES
-(2, 18),
-(3, 19);
+(3, 19),
+(20, 18),
+(28, 21);
 
 -- --------------------------------------------------------
 
@@ -259,9 +254,14 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`Id`, `Name`, `UserName`, `Password`, `Email`, `RoleName`) VALUES
 (1, 'adminone', 'admin1', 'Admin123', 'admin1@gmail.com', 'Admin'),
-(2, 'studentone', 'student1', 'Student123', 'student1@gmail.com', 'Student'),
 (3, 'studenttwo', 'student2', 'Student234', 'student2@gmail.com', 'Student'),
-(4, 'memberone', 'member1', 'member123', 'member1@gmail.com', 'Faculty');
+(6, 'admintwo', 'admin2', 'Admin234', 'admintwo@gmail.com', 'Admin'),
+(12, 'membertwo', 'member2', 'Member234', 'member2@gmail.com', 'Faculty'),
+(13, 'memberthree', 'member3', 'Member345', 'memberthree@gmail.com', 'Faculty'),
+(20, 'Student3', 'student3', 'Student345', 'Student3@gmaill.com', 'Student'),
+(26, 'adminthree', 'admin3', 'Admin345', 'adminthree@gmail.com', 'Admin'),
+(27, 'memberone', 'member1', 'Member123', 'member1@gmail.com', 'Faculty'),
+(28, 'Student1', 'student1', 'Student123', 'Student1@gmail.com', 'Student');
 
 --
 -- Indexes for dumped tables
@@ -410,7 +410,7 @@ ALTER TABLE `exam`
 -- AUTO_INCREMENT for table `facultymember`
 --
 ALTER TABLE `facultymember`
-  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `notifications`
@@ -446,13 +446,13 @@ ALTER TABLE `schedule`
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Constraints for dumped tables
@@ -462,7 +462,7 @@ ALTER TABLE `users`
 -- Constraints for table `course`
 --
 ALTER TABLE `course`
-  ADD CONSTRAINT `course_ibfk_1` FOREIGN KEY (`FacultyId`) REFERENCES `facultymember` (`UserId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `course_ibfk_1` FOREIGN KEY (`FacultyId`) REFERENCES `facultymember` (`UserId`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `courseregisteration`

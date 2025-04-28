@@ -5,6 +5,18 @@
   require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\DBController.php';
 
   $admin = new AdminController;
+  $errmsg = "";
+  if(isset($_POST["userid"]))
+  {
+      if(!empty($_POST["userid"]))
+      {
+          $errmsg = $admin->DeleteUser($_POST["userid"]);
+      }
+      else
+      {
+        $errmsg = "Delete failed";
+      }
+  }
 
   $Admins = $admin->GetAll("Admin");
   $Students = $admin->GetAll("Student");
@@ -243,9 +255,14 @@
                                   <i class="fa fa-edit"></i>
                                 </button>
                               </td>
-                              <td><button type="button" class="btn btn-gradient-primary btn-fw">
-                                <i class="fa fa-trash-o"></i>
-                              </button></td>
+                              <td>
+                                <form action="" method="post">
+                                  <input type="hidden" name="userid" value="<?php echo $admin["Id"]?>"/>
+                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
+                                    <i class="fa fa-trash-o"></i>
+                                  </button>
+                                </form>
+                              </td>
                           <?php
                           }
                           ?>
@@ -293,9 +310,14 @@
                                   <i class="fa fa-edit"></i>
                                 </button>
                               </td>
-                              <td><button type="button" class="btn btn-gradient-primary btn-fw">
-                                <i class="fa fa-trash-o"></i>
-                              </button></td>
+                              <td>
+                                <form action="" method="post">
+                                  <input type="hidden" name="userid" value="<?php echo $Member["Id"]?>"/>
+                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
+                                    <i class="fa fa-trash-o"></i>
+                                  </button>
+                                </form>
+                            </td>
                           <?php
                           }
                           ?>
@@ -344,10 +366,14 @@
                                 <button type="button" class="btn btn-gradient-primary btn-fw">
                                   <i class="fa fa-edit"></i>
                                 </button>
+                                <td>
+                                <form action="" method="post">
+                                  <input type="hidden" name="userid" value="<?php echo $Student["Id"]?>"/>
+                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
+                                    <i class="fa fa-trash-o"></i>
+                                  </button>
+                                </form>
                               </td>
-                              <td><button type="button" class="btn btn-gradient-primary btn-fw">
-                                <i class="fa fa-trash-o"></i>
-                              </button></td>
                           <?php
                           }
                           ?>

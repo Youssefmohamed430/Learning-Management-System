@@ -34,7 +34,7 @@
 
         public function IsEmailValid($Email) { return filter_var($Email, FILTER_VALIDATE_EMAIL); }
 
-        public function IsPasswordValid($Password) 
+        public function IsPasswordValid($Password)
         { return strlen($Password) > 3 && ctype_upper($Password[0]) && strpbrk($Password, '0123456789'); }
 
         public function GetAll($Role) 
@@ -174,5 +174,27 @@
                 }
             }
         }
+
+        public function DeleteUser($userId)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $queryDeleteUser = "DELETE FROM users WHERE Id = '" . $userId . "'";
+
+                $result = $this->db->delete($queryDeleteUser);
+
+                if($result === false)
+                {
+                    echo "Error in Query";
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+
+        
     }
 ?>
