@@ -1,68 +1,49 @@
 <?php
-  // require_once '../Models/User.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\User.php';
   require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\AdminController.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\DBController.php';
+  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\User.php';
+  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\Admin.php';
 
-  $admin = new AdminController;
+  $AdminController = new AdminController;
+  $Admin = new Admin;
   $errmsg = "";
-  if(isset($_POST["userid"]))
+
+  session_start();
+
+  if (isset($_SESSION['userid'])) 
   {
-      if(!empty($_POST["userid"]))
+      $result = $AdminController->ShowAdminData($_SESSION['userid']);
+      if($result === false)
       {
-          $errmsg = $admin->DeleteUser($_POST["userid"]);
+          $errmsg = "Error";
+      }
+  } 
+  else 
+  {
+      $errmsg = "Error";
+  }
+
+  if(isset($_POST["Name"]) && isset($_POST["Username"]) && isset($_POST["Email"]) && isset($_POST["Password"]))
+  {
+      if(!empty($_POST["Name"]) && !empty($_POST["Username"]) && !empty($_POST["Email"]) && !empty($_POST["Password"]))
+      {
+          $Admin->setID($_SESSION['userid']);
+          $Admin->setName($_POST["Name"]);
+          $Admin->setUsername($_POST["Username"]);
+          $Admin->setEmail($_POST["Email"]);
+          $Admin->setPassword($_POST["Password"]);
+
+          $errmsg = $AdminController->EditAdmin($Admin);
+          
+          if($errmsg === "")
+          {
+              header("Location: AdminDashBoard.php");
+          }
       }
       else
       {
-        $errmsg = "Delete failed";
+          $errmsg = "Please fill all fields";
       }
   }
-
-  if(isset($_POST["editadminid"]))
-  {
-      if(!empty($_POST["editadminid"]))
-      {
-          session_start();
-          $_SESSION["userid"] = $_POST["editadminid"];
-          header("Location: EditAdmin.php");
-      }
-      else
-      {
-        $errmsg = "Error";
-      }
-  }
-
-  if(isset($_POST["editmemberid"]))
-  {
-      if(!empty($_POST["editmemberid"]))
-      {
-          session_start();
-          $_SESSION["memberid"] = $_POST["editmemberid"];
-          header("Location: EditMember.php");
-      }
-      else
-      {
-        $errmsg = "Error";
-      }
-  }
-
-  if(isset($_POST["editstudentid"]))
-  {
-      if(!empty($_POST["editstudentid"]))
-      {
-          session_start();
-          $_SESSION["studentid"] = $_POST["editstudentid"];
-          header("Location: EditStudent.php");
-      }
-      else
-      {
-        $errmsg = "Error";
-      }
-  }
-
-  $Admins = $admin->GetAll("Admin");
-  $Students = $admin->GetAll("Student");
-  $Members = $admin->GetAll("Faculty");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -120,6 +101,8 @@
                 </div>
               </a>
               <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+                <a class="dropdown-item" href="#">
+                  <i class="mdi mdi-cached me-2 text-success"></i> Activity Log </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">
                   <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
@@ -262,188 +245,47 @@
           </ul>
         </nav>
         <!-- partial -->
-          <!-- Admin Table-->
         <div class="main-panel">
           <div class="content-wrapper">
-            <div class="row">
-              <div class="col-lg-12 grid-margin stretch-card">
+          <div class="row">
+              <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Admins</h4>
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <!-- <th>Profile</th> -->
-                          <th>Id</th>
-                          <th>Name</th>
-                          <th>User Name</th>
-                          <th>Email</th>
-                          <th>Edit</th>
-                          <th>Delete</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php 
-                        foreach($Admins as $admin)
-                        {
+                    <h4 class="card-title">Edit Admin Data</h4>
+                    <form class="forms-sample" method = "Post">
+                    <?php 
+                      if($errmsg!="")
+                      {
                           ?>
-                            <tr>
-                              <td><?php echo $admin["Id"]?></td>
-                              <td><?php echo $admin["Name"]?></td>
-                              <td><?php echo $admin["UserName"]?></td>
-                              <td><?php echo $admin["Email"]?></td>
-                              <td>
-                                <form action="" method="post">
-                                  <input type="hidden" name="editadminid" value="<?php echo $admin["Id"]?>"/>
-                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                                    <i class="fa fa-edit"></i>
-                                  </button>
-                                </form>
-                              </td>
-                              <td>
-                                <form action="" method="post">
-                                  <input type="hidden" name="userid" value="<?php echo $admin["Id"]?>"/>
-                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                                    <i class="fa fa-trash-o"></i>
-                                  </button>
-                                </form>
-                              </td>
+                              <div class="alert alert-danger" role="alert"><?php echo $errmsg ?></div>
                           <?php
-                          }
-                          ?>
-                        </tr>
-                      </tbody>
-                    </table>
+                      }
+                    ?>
+                    <div class="form-group">
+                        <label for="exampleInputConfirmPassword1">Name</label>
+                        <input type="text" class="form-control" id="InputName" placeholder="Name" name = "Name" value="<?php echo $result[0]["Name"]?>">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1">Username</label>
+                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username" name="Username" value="<?php echo $result[0]["UserName"]?>">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="Email" value="<?php echo $result[0]["Email"]?>">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="Password" value="<?php echo $result[0]["Password"]?>">
+                      </div>
+                      <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                      <button class="btn btn-light">Cancel</button>
+                    </form>
                   </div>
                 </div>
               </div>
-          </div>
-          <a href="/Learning-Management-System/Views/pages/samples/AddAdmin.php" class="btn btn-gradient-primary btn-fw">
-              Add Admin
-          </a>
-        <!-- Members -->
-        <div class="row mt-4">
-          <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">Faculty Members</h4>
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <!-- <th>Profile</th> -->
-                          <th>Id</th>
-                          <th>Name</th>
-                          <th>User Name</th>
-                          <th>Email</th>
-                          <th>Edit</th>
-                          <th>Delete</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php 
-                        foreach($Members as $Member)
-                        {
-                          ?>
-                            <tr>
-                              <td><?php echo $Member["Id"]?></td>
-                              <td><?php echo $Member["Name"]?></td>
-                              <td><?php echo $Member["UserName"]?></td>
-                              <td><?php echo $Member["Email"]?></td>
-                              <td>
-                                <form action="" method="post">
-                                  <input type="hidden" name="editmemberid" value="<?php echo $Member["Id"]?>"/>
-                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                                    <i class="fa fa-edit"></i>
-                                  </button>
-                                </form>
-                              </td>
-                              <td>
-                                <form action="" method="post">
-                                  <input type="hidden" name="userid" value="<?php echo $Member["Id"]?>"/>
-                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                                    <i class="fa fa-trash-o"></i>
-                                  </button>
-                                </form>
-                            </td>
-                          <?php
-                          }
-                          ?>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <div class="mt-2">
-              <a href="/Learning-Management-System/Views/pages/samples/AddFacultyMember.php" class="btn btn-gradient-primary btn-sm-custom">
-                  Add Member
-              </a>
-          </div>
-          <!-- Students -->
-          <div class="row mt-4">
-          <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">Students</h4>
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <!-- <th>Profile</th> -->
-                          <th>Id</th>
-                          <th>Name</th>
-                          <th>User Name</th>
-                          <th>Email</th>
-                          <th>Edit</th>
-                          <th>Delete</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php 
-                        foreach($Students as $Student)
-                        {
-                          ?>
-                            <tr>
-                              <td><?php echo $Student["Id"]?></td>
-                              <td><?php echo $Student["Name"]?></td>
-                              <td><?php echo $Student["UserName"]?></td>
-                              <td><?php echo $Student["Email"]?></td>
-                              <td>
-                                <form action="" method="post">
-                                  <input type="hidden" name="editstudentid" value="<?php echo $Student["Id"]?>"/>
-                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                                    <i class="fa fa-edit"></i>
-                                  </button>
-                                </form>
-                              </td>
-                              <td>
-                                <form action="" method="post">
-                                  <input type="hidden" name="userid" value="<?php echo $Student["Id"]?>"/>
-                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                                    <i class="fa fa-trash-o"></i>
-                                  </button>
-                                </form>
-                              </td>
-                          <?php
-                          }
-                          ?>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <div class="mt-2">
-              <a href="/Learning-Management-System/Views/pages/samples/AddStudent.php" class="btn btn-gradient-primary btn-sm-custom">
-                  Add Student
-              </a>
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
-          <br>
           <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>

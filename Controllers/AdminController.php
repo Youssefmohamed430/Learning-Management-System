@@ -195,6 +195,194 @@
             }
         }
 
+        public function ShowAdminData($adminid)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $query = "SELECT * FROM users WHERE Id = '" . $adminid . "'";
+
+                $result = $this->db->select($query); 
+
+                if($result === false)
+                {
+                    echo "Error in Query";
+                    return false;
+                }
+                else
+                {
+                    return $result;
+                }
+            }
         
+        }
+
+        public function ShowMemberData($memberid)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $query = "SELECT * FROM users JOIN facultymember ON Id = UserId WHERE Id = '" . $memberid . "'";
+
+                $result = $this->db->select($query); 
+
+                if($result === false)
+                {
+                    echo "Error in Query";
+                    return false;
+                }
+                else
+                {
+                    $member = new FacultyMember;
+                    $member->setId($result[0]["Id"]);
+                    $member->setName($result[0]["Name"]);
+                    $member->setUsername($result[0]["UserName"]);
+                    $member->setEmail($result[0]["Email"]);
+                    $member->setPassword($result[0]["Password"]);
+                    $member->setSsNo($result[0]["SsNo"]);
+
+                    return $member;
+                }
+            }
+        }
+
+        public function ShowStudentData($studentid)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $query = "SELECT * FROM users JOIN student ON Id = UserId WHERE Id = '" . $studentid . "'";
+
+                $result = $this->db->select($query); 
+
+                if($result === false)
+                {
+                    echo "Error in Query";
+                    return false;
+                }
+                else
+                {
+                    $student = new Student;
+                    $student->setId($result[0]["Id"]);
+                    $student->setName($result[0]["Name"]);
+                    $student->setUsername($result[0]["UserName"]);
+                    $student->setEmail($result[0]["Email"]);
+                    $student->setPassword($result[0]["Password"]);
+                    $student->setAge($result[0]["Age"]);
+
+                    return $student;
+                }
+            }
+        }
+
+        public function EditAdmin($adminmodel)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $Updatequery = "UPDATE users SET 
+                    Name = '" . $adminmodel->getName() . "',
+                    UserName = '" . $adminmodel->getUsername() . "',
+                    Password = '" . $adminmodel->getPassword() . "',
+                    Email = '" . $adminmodel->getEmail() . "'
+                    WHERE id = " . $adminmodel->getId();
+
+                $result = $this->db->Update($Updatequery);
+
+                if($result === false)
+                {
+                    echo "Error in Query";
+                    return false;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+
+        public function EditMember($Membermodel)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $name     = $Membermodel->getName();
+                $username = $Membermodel->getUsername();
+                $password = $Membermodel->getPassword();
+                $email    = $Membermodel->getEmail();
+                $id       = $Membermodel->getId();
+                $ssno     = $Membermodel->getSsNo();
+                
+                $Updatequery = "
+                    UPDATE users SET 
+                        Name = '$name',
+                        UserName = '$username',
+                        Password = '$password',
+                        Email = '$email'
+                    WHERE Id = '$id'
+                ";
+                
+                $Updatequerymember = "
+                    UPDATE facultymember SET 
+                        SsNo = '$ssno'
+                    WHERE UserId = '$id'
+                ";
+
+                $result1 = $this->db->Update($Updatequery);
+                $result2 = $this->db->Update($Updatequerymember);
+
+                if($result1 === false || $result2 === false)
+                {
+                    echo "Error in Query";
+                    return false;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+
+        public function EditStudent($Studentmodel)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $name     = $Studentmodel->getName();
+                $username = $Studentmodel->getUsername();
+                $password = $Studentmodel->getPassword();
+                $email    = $Studentmodel->getEmail();
+                $id       = $Studentmodel->getId();
+                $age     = $Studentmodel->getAge();
+                
+                $Updatequery = "
+                    UPDATE users SET 
+                        Name = '$name',
+                        UserName = '$username',
+                        Password = '$password',
+                        Email = '$email'
+                    WHERE Id = '$id'
+                ";
+                
+                $UpdatequeryStudent= "
+                    UPDATE student SET 
+                        Age = '$age'
+                    WHERE UserId = '$id'
+                ";
+
+                $result1 = $this->db->Update($Updatequery);
+                $result2 = $this->db->Update($UpdatequeryStudent);
+
+                if($result1 === false || $result2 === false)
+                {
+                    echo "Error in Query";
+                    return false;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
     }
 ?>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2025 at 06:07 PM
+-- Generation Time: May 02, 2025 at 06:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -215,7 +215,7 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`UserId`, `Age`) VALUES
-(3, 19),
+(3, 20),
 (20, 18),
 (28, 21);
 
@@ -258,7 +258,7 @@ INSERT INTO `users` (`Id`, `Name`, `UserName`, `Password`, `Email`, `RoleName`) 
 (6, 'admintwo', 'admin2', 'Admin234', 'admintwo@gmail.com', 'Admin'),
 (12, 'membertwo', 'member2', 'Member234', 'member2@gmail.com', 'Faculty'),
 (13, 'memberthree', 'member3', 'Member345', 'memberthree@gmail.com', 'Faculty'),
-(20, 'Student3', 'student3', 'Student345', 'Student3@gmaill.com', 'Student'),
+(20, 'Studentthree', 'student3', 'Student345', 'Student3@gmaill.com', 'Student'),
 (26, 'adminthree', 'admin3', 'Admin345', 'adminthree@gmail.com', 'Admin'),
 (27, 'memberone', 'member1', 'Member123', 'member1@gmail.com', 'Faculty'),
 (28, 'Student1', 'student1', 'Student123', 'Student1@gmail.com', 'Student');

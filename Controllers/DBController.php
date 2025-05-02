@@ -75,5 +75,18 @@
                 return $result;
             }
         }
+        public function Update($qry)
+        {
+            $result=$this->connection->query($qry);
+            if(!$result)
+            {
+                echo "Error : ".mysqli_error($this->connection);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 ?>
