@@ -3,7 +3,7 @@
         private $CrsId;
         private $CrsName;
         private $Description;
-
+        private $FacultyId;
     
         public function getCrsId() { return $this->CrsId; }
         public function setCrsId($CrsId) { $this->CrsId = $CrsId; }

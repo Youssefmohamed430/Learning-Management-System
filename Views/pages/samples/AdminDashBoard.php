@@ -70,7 +70,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Purple Admin</title>
+    <title>Admin Dashboard</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../../assets/vendors/ti-icons/css/themify-icons.css">
@@ -257,6 +257,18 @@
               <a class="nav-link" href="../../index.html">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../samples/ManageCourses.php">
+                  <span class="menu-title">Courses</span>
+                  <i class="fa fa-video-camera menu-icon"></i> 
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../samples/AssignCourseToMember.php">
+                  <span class="menu-title">Assign Course to Admin</span>
+                  <i class="fa fa-plus-circle menu-icon"></i>
               </a>
             </li>
           </ul>
