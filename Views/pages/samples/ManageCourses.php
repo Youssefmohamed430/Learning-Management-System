@@ -12,6 +12,28 @@
   {
     $errmsg = "Error";
   }
+
+  if(isset($_POST["Crsid"]))
+  {
+    if(!empty($_POST["Crsid"]))
+    {
+        $errmsg = $CrsController->DeleteCourse($_POST["Crsid"]);
+    }
+  }
+
+  if(isset($_POST["editCrsid"]))
+  {
+    if(!empty($_POST["editCrsid"]))
+    {
+      session_start();
+      $_SESSION["Crsid"] = $_POST["editCrsid"];
+      header("Location: EditCourse.php");
+    }
+    else
+    {
+      $errmsg = "Error";
+    }
+  }
 ?>
 
 <!DOCTYPE html>
@@ -242,7 +264,20 @@
                                 <td><?php echo $course["CrsId"]?></td>
                                 <td><?php echo $course["CrsName"]?></td>
                                 <td><?php echo $course["Description"]?></td>
-                                <td><?php echo $course["Name"]?></td>
+                                <?php
+                                  if($course["Name"] == NULL)
+                                  {
+                                    ?>
+                                      <td>N/A</td>
+                                    <?php
+                                  }
+                                  else
+                                  {
+                                    ?>
+                                      <td><?php echo $course["Name"]?></td>
+                                    <?php
+                                  }
+                                ?>
                                 <td>
                                   <form action="" method="post">
                                     <input type="hidden" name="editCrsid" value="<?php echo $course["CrsId"]?>"/>
@@ -269,7 +304,7 @@
                   </div>
                 </div>
             </div>
-            <a href="/Learning-Management-System/Views/pages/samples/AddAdmin.php" class="btn btn-gradient-primary btn-fw">
+            <a href="/Learning-Management-System/Views/pages/samples/AddCourse.php" class="btn btn-gradient-primary btn-fw">
                 Add Course
             </a>
           </div>

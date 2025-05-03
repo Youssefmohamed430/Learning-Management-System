@@ -24,15 +24,11 @@
           $course->setCrsId($_POST["courses"]);
           $course->setTeacherId($_POST["members"]);
 
-          $result = $coursecontroller->AssignCoursetoMember($course);
+          $errmsg = $coursecontroller->AssignCoursetoMember($course);
 
-          if($result === false)
+          if($errmsg === "")
           {
-              $errmsg = "Error";
-          }
-          else
-          {
-              header("Location: AdminDashBoard.php");
+              header("Location: ManageCourses.php");
           }
       }
   }
@@ -246,6 +242,14 @@
                     <h4 class="card-title">Assign Course</h4>
                     <br>
                     <form class="forms-sample" method="Post">
+                        <?php 
+                          if($errmsg != "")
+                          {
+                              ?>
+                                  <div class="alert alert-danger" role="alert"><?php echo $errmsg ?></div>
+                              <?php
+                          }
+                        ?>
                       <div class="form-group">
                         <label for="exampleInputUsername1" style="font-size : 20px">Faculty Members</label>
                         <select class="form-select" name="members">
