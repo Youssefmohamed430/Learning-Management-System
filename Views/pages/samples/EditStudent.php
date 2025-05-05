@@ -1,9 +1,9 @@
 <?php
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\AdminController.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\User.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\Admin.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\FacultyMember.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\Student.php';
+  require_once '../../../Controllers/AdminController.php';
+  require_once '../../../Models/User.php';
+  require_once '../../../Models/Admin.php';
+  require_once '../../../Models/Student.php';
+  require_once '../../../Models/FacultyMember.php';
 
   $AdminController = new AdminController;
   $student = new Student;

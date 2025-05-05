@@ -1,6 +1,6 @@
 <?php
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\AdminController.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\User.php';
+  require_once '../../../Controllers/AdminController.php';
+  require_once '../../../Models/User.php';
 
   $AdminController = new AdminController;
   $Admin = new User;

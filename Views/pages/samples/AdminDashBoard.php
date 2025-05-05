@@ -1,8 +1,5 @@
 <?php
-  // require_once '../Models/User.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\User.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\AdminController.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\DBController.php';
+  require_once '../../../Controllers/AdminController.php';
 
   $admin = new AdminController;
   $errmsg = "";

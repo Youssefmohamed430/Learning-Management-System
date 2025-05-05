@@ -1,6 +1,6 @@
 <?php
 
-require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\DBController.php';
+require_once 'DBController.php';
 
     class MemberController
     {

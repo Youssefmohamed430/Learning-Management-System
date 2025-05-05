@@ -1,8 +1,8 @@
 <?php
     // require_once '../Models/User.php';
-    require_once 'C:\xampp\htdocs\Learning-Management-System\Models\User.php';
-    require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\AdminController.php';
-    require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\DBController.php';
+    // require_once__DIR__ '../../Models/User.php' ;
+    require_once 'E:\Xampp\htdocs\Learning-Management-System\Models\User.php';
+    require_once 'DBController.php';
 
 
     class AdminController

@@ -1,9 +1,8 @@
 <?php
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\User.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Models\Course.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\AdminController.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\CoursesController.php';
-  require_once 'C:\xampp\htdocs\Learning-Management-System\Controllers\DBController.php';
+  require_once '../../../Controllers/AdminController.php';
+  require_once '../../../Controllers/CoursesController.php';
+  require_once '../../../Controllers/DBController.php';
+  require_once '../../../Models/Course.php';
 
   $errmsg = "";
   $CrsController = new CoursesController;
