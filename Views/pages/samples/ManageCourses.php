@@ -3,6 +3,15 @@
   require_once '../../../Controllers/CoursesController.php';
   require_once '../../../Controllers/DBController.php';
   require_once '../../../Models/Course.php';
+  session_start();
+if (!isset($_SESSION["role"])) {
+
+  header("location: Login.php ");
+} else {
+  if ($_SESSION["role"] != "Admin") {
+    header("location: Login.php ");
+  }
+}
   $errmsg = "";
 
   $CrsController = new CoursesController;

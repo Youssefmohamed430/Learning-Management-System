@@ -1,7 +1,15 @@
 <?php
   require_once '../../../Controllers/AdminController.php';
   require_once '../../../Models/User.php';
-
+  session_start();
+  if (!isset($_SESSION["role"])) {
+  
+    header("location: Login.php ");
+  } else {
+    if ($_SESSION["role"] != "Admin") {
+      header("location: Login.php ");
+    }
+  }
   $AdminController = new AdminController;
   $Admin = new User;
   $errmsg = "";
