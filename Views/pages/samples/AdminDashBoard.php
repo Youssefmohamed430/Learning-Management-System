@@ -1,5 +1,8 @@
 <?php
   require_once '../../../Controllers/AdminController.php';
+  require_once '../../../Controllers/UserController.php';
+  require_once '../../../Controllers/MemberController.php';
+  require_once '../../../Controllers/StudentController.php';
 
 session_start();
 if (!isset($_SESSION["role"])) {
@@ -10,8 +13,10 @@ if (!isset($_SESSION["role"])) {
     header("location: Login.php ");
   }
 }
-
   $admin = new AdminController;
+  $Member = new MemberController;
+  $Student = new AdminController;
+
   $errmsg = "";
   if(isset($_POST["userid"]))
   {
@@ -68,8 +73,8 @@ if (!isset($_SESSION["role"])) {
   }
 
   $Admins = $admin->GetAll("Admin");
-  $Students = $admin->GetAll("Student");
-  $Members = $admin->GetAll("Faculty");
+  $Students = $Student->GetAll("Student");
+  $Members = $Member->GetAll("Faculty");
 ?>
 <!DOCTYPE html>
 <html lang="en">

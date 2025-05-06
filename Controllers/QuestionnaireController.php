@@ -24,7 +24,7 @@ require_once 'DBController.php';
             }
         }
 
-        public function AssignQuestionsToQuestionnaire($QuestionnaireId,$arrayquestions,$numberOfQuestions)
+        public function AssignQuestionsToQuestionnaire($QuestionnaireId,$arrayquestions)
         {
             $this->db = new DbController;
 

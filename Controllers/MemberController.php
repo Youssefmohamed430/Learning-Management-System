@@ -1,28 +1,132 @@
 <?php
 
 require_once 'DBController.php';
+require_once '../../../Controllers/UserController.php';
+require_once 'E:\Xampp\htdocs\Learning-Management-System\Controllers\ValidationController.php';
 
-    class MemberController
+
+    class MemberController extends UserController
     {
         protected $db;
+        public $validationController;
+        
 
-        public function GetAllMembers() 
+        function __construct() {
+            $this->validationController = new ValidationController;
+        }
+
+        public function AddUser($member)
         {
-            $this->db = new DbController;
-            if($this->db->openConnection()) 
-            {
-                $query = "SELECT * FROM users WHERE RoleName = 'Faculty'";
+            $this->db = new DBController;
+            if(!$this->validationController->IsUserNameValid($member->getUsername()))
+                return "User Name must at least 3 letters";
 
-                $result = $this->db->select($query);
+            if($this->validationController->IsUserNameToken($member->getUsername()))
+                return "User Name Is Already registerd";
+            
+            if(!$this->validationController->IsPasswordValid($member->getPassword()))
+                return "Password must at least 3 letters , first letter capital and contain numbers!";
+            
+            if(!$this->validationController->IsEmailValid($member->getEmail()))
+                return "InValid Email!";
+
+            if($this->validationController->IsSSnToken($member->getSsNo()))
+                return "SSn Is Already registerd";
+
+            if($this->db->openConnection())
+            {
+                $queryInsertUser = "INSERT INTO users VALUES 
+                ('', '" . $member->getName() . "', '" . $member->getUsername() . "'
+                ,'" . $member->getPassword() . "','" . $member->getEmail() . "'
+                ,'" . $member->getRoleName() . "')";
+
+                $result = $this->db->insert($queryInsertUser);
+
                 if($result === false)
                 {
+                    echo "Error in Query";
+                }
+                else
+                {
+                    $querySelect = "SELECT * FROM users WHERE UserName = '" . $member->getUsername() . "'";
+                    $SelectResult = $this->db->select($querySelect);
+                    $queryInsertFaculty = "INSERT INTO facultymember VALUES 
+                    ('" . $SelectResult[0]["Id"] . "', '" . $member->getSsNo() . "')";
+                    $result = $this->db->insert($queryInsertFaculty);
+                    return "";
+                }
+            }
+        }
+
+        public function UpdateUser($Membermodel)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $name     = $Membermodel->getName();
+                $username = $Membermodel->getUsername();
+                $password = $Membermodel->getPassword();
+                $email    = $Membermodel->getEmail();
+                $id       = $Membermodel->getId();
+                $ssno     = $Membermodel->getSsNo();
+                
+                $Updatequery = "
+                    UPDATE users SET 
+                        Name = '$name',
+                        UserName = '$username',
+                        Password = '$password',
+                        Email = '$email'
+                    WHERE Id = '$id'
+                ";
+                
+                $Updatequerymember = "
+                    UPDATE facultymember SET 
+                        SsNo = '$ssno'
+                    WHERE UserId = '$id'
+                ";
+
+                $result1 = $this->db->Update($Updatequery);
+                $result2 = $this->db->Update($Updatequerymember);
+
+                if($result1 === false || $result2 === false)
+                {
+                    echo "Error in Query";
                     return false;
                 }
                 else
                 {
-                    return $result;
+                    return "";
                 }
             }
-        }   
+        }
+
+        public function ShowUserData($memberid)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $query = "SELECT * FROM users JOIN facultymember ON Id = UserId WHERE Id = '" . $memberid . "'";
+
+                $result = $this->db->select($query); 
+
+                if($result === false)
+                {
+                    echo "Error in Query";
+                    return false;
+                }
+                else
+                {
+                    $member = new FacultyMember;
+                    $member->setId($result[0]["Id"]);
+                    $member->setName($result[0]["Name"]);
+                    $member->setUsername($result[0]["UserName"]);
+                    $member->setEmail($result[0]["Email"]);
+                    $member->setPassword($result[0]["Password"]);
+                    $member->setSsNo($result[0]["SsNo"]);
+
+                    return $member;
+                }
+            }
+        }
     }
 ?>

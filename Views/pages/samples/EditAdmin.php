@@ -1,6 +1,5 @@
 <?php
   require_once '../../../Controllers/AdminController.php';
-  require_once '../../../Models/User.php';
   require_once '../../../Models/Admin.php';
   session_start();
   if (!isset($_SESSION["role"])) {
@@ -19,7 +18,7 @@
 
   if (isset($_SESSION['userid'])) 
   {
-      $result = $AdminController->ShowAdminData($_SESSION['userid']);
+      $result = $AdminController->ShowUserData($_SESSION['userid']);
       if($result === false)
       {
           $errmsg = "Error";
@@ -40,7 +39,7 @@
           $Admin->setEmail($_POST["Email"]);
           $Admin->setPassword($_POST["Password"]);
 
-          $errmsg = $AdminController->EditAdmin($Admin);
+          $errmsg = $AdminController->UpdateUser($Admin);
           
           if($errmsg === "")
           {

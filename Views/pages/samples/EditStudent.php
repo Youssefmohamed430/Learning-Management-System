@@ -1,9 +1,6 @@
 <?php
-  require_once '../../../Controllers/AdminController.php';
-  require_once '../../../Models/User.php';
-  require_once '../../../Models/Admin.php';
+  require_once '../../../Controllers/StudentController.php';
   require_once '../../../Models/Student.php';
-  require_once '../../../Models/FacultyMember.php';
   session_start();
   if (!isset($_SESSION["role"])) {
   
@@ -13,7 +10,7 @@
       header("location: Login.php ");
     }
   }
-  $AdminController = new AdminController;
+  $StudentController = new StudentController;
   $student = new Student;
   $errmsg = "";
 
@@ -21,7 +18,7 @@
 
   if (isset($_SESSION['studentid'])) 
   {
-      $result = $AdminController->ShowStudentData($_SESSION['studentid']);
+      $result = $StudentController->ShowUserData($_SESSION['studentid']);
       if($result === false)
       {
           $errmsg = "Error";
@@ -44,7 +41,7 @@
           $student->setRoleName("Faculty");
           $student->setAge($_POST["age"]);
 
-          $errmsg = $AdminController->EditStudent($student);
+          $errmsg = $StudentController->UpdateUser($student);
           
           if($errmsg === "")
           {

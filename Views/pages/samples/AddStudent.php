@@ -1,6 +1,6 @@
 
 <?php
-  require_once '../../../Controllers/AdminController.php';
+  require_once '../../../Controllers/StudentController.php';
   require_once '../../../Models/User.php';
   require_once '../../../Models/Student.php';
 
@@ -13,7 +13,7 @@ if (!isset($_SESSION["role"])) {
     header("location: Login.php ");
   }
 }
-  $AdminController = new AdminController;
+  $studentController = new StudentController;
   $student = new Student;
   $errmsg = "";
 
@@ -27,11 +27,9 @@ if (!isset($_SESSION["role"])) {
           $student->setPassword($_POST["Password"]);
           $student->setRoleName("Student");
           $student->setAge($_POST["age"]);
-          if($AdminController->AddStudent($student) != "")
-          {
-              $errmsg = $AdminController->AddStudent($student);
-          }
-          else
+
+          $errmsg = $studentController->AddUser($student);
+          if($errmsg == "")
           {
             header("Location: AdminDashBoard.php");
           }

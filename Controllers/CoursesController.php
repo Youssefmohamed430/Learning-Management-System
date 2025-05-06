@@ -9,7 +9,7 @@ require_once 'DBController.php';
         public function IsAssignedToAnotherMember($courseId)
         {
             $this->db = new DbController;
-            if ($this->db->openConnection()) 
+            if ($this->db->openConnection())
             {
                 $qry = "SELECT FacultyId FROM course WHERE CrsId = '$courseId'";
                 $result = $this->db->select($qry);
