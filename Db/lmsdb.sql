@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 03, 2025 at 03:11 PM
+-- Generation Time: May 06, 2025 at 10:20 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,10 +41,9 @@ CREATE TABLE `course` (
 INSERT INTO `course` (`CrsId`, `CrsName`, `FacultyId`, `Description`) VALUES
 (4, 'Database', 27, 'Database Course'),
 (5, 'Computer Science', 12, 'Computer Science'),
-(6, 'Signals', 27, 'Signals'),
 (11, 'Network', 13, 'Network'),
-(15, 'AI', 30, 'artificial intelligence'),
-(16, 'IT', 12, 'Internet Technology\r\n');
+(15, 'AI', 12, 'artificial intelligence'),
+(17, 'IT-1', 27, 'Internet Technology-1');
 
 -- --------------------------------------------------------
 
@@ -137,7 +136,7 @@ INSERT INTO `facultymember` (`UserId`, `SsNo`) VALUES
 (12, '3040278937925'),
 (13, '3030987750254'),
 (27, '3020810948304345'),
-(30, '301080254657');
+(33, '309019038052542');
 
 -- --------------------------------------------------------
 
@@ -222,8 +221,7 @@ CREATE TABLE `student` (
 INSERT INTO `student` (`UserId`, `Age`) VALUES
 (3, 20),
 (20, 18),
-(28, 21),
-(31, 21);
+(28, 21);
 
 -- --------------------------------------------------------
 
@@ -265,11 +263,10 @@ INSERT INTO `users` (`Id`, `Name`, `UserName`, `Password`, `Email`, `RoleName`) 
 (12, 'membertwo', 'member2', 'Member234', 'member2@gmail.com', 'Faculty'),
 (13, 'memberthree', 'member3', 'Member345', 'memberthree@gmail.com', 'Faculty'),
 (20, 'Studentthree', 'student3', 'Student345', 'Student3@gmaill.com', 'Student'),
-(26, 'adminthree', 'admin3', 'Admin345', 'adminthree@gmail.com', 'Admin'),
 (27, 'memberone', 'member1', 'Member123', 'member1@gmail.com', 'Faculty'),
 (28, 'Student1', 'student1', 'Student123', 'Student1@gmail.com', 'Student'),
-(30, 'memberfour', 'member4', 'Member456', 'member4@gmail.com', 'Faculty'),
-(31, 'Studentfour', 'student4', 'Student456', 'Student4@gmail.com', 'Student');
+(32, 'adminthree', 'admin3', 'Admin345', 'adminthree3@gmail.com', 'Admin'),
+(33, 'memberfour', 'member4', 'Member456', 'member4@gmail.com', 'Faculty');
 
 --
 -- Indexes for dumped tables
@@ -388,7 +385,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `course`
 --
 ALTER TABLE `course`
-  MODIFY `CrsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `CrsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `coursevideos`
@@ -400,7 +397,7 @@ ALTER TABLE `coursevideos`
 -- AUTO_INCREMENT for table `evalquestion`
 --
 ALTER TABLE `evalquestion`
-  MODIFY `QuestionId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `QuestionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `evaluation`
@@ -418,7 +415,7 @@ ALTER TABLE `exam`
 -- AUTO_INCREMENT for table `facultymember`
 --
 ALTER TABLE `facultymember`
-  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `notifications`
@@ -430,7 +427,7 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `questionnaire`
 --
 ALTER TABLE `questionnaire`
-  MODIFY `QuestionnaireId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `QuestionnaireId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `questionresponse`
@@ -460,7 +457,7 @@ ALTER TABLE `student`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- Constraints for dumped tables

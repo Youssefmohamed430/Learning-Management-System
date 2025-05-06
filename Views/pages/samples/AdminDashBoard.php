@@ -268,6 +268,12 @@
                   <i class="fa fa-plus-circle menu-icon"></i>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../samples/AddQuestionnaire.php">
+                  <span class="menu-title">Add Evaluation</span>
+                  <i class="fa fa-pencil-square-o menu-icon"></i>
+              </a>
+            </li>
           </ul>
         </nav>
         <!-- partial -->

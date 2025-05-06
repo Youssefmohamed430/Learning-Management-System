@@ -1,44 +1,47 @@
+
 <?php
   require_once '../../../Controllers/AdminController.php';
-  require_once '../../../Controllers/CoursesController.php';
-  require_once '../../../Controllers/DBController.php';
-  require_once '../../../Models/Course.php';
+  require_once '../../../Models/User.php';
+  require_once '../../../Models/Student.php';
+  require_once '../../../Controllers/QuestionnaireController.php';
+
+  $AdminController = new AdminController;
+  $student = new Student;
   $errmsg = "";
+  $Types = ["Teacher-Eval","Course-Eval","Student-Eval","Admin-Eval"];
+  $NumberOfQuestions = 0 ;
 
-  $CrsController = new CoursesController;
-  
-  $courses = $CrsController->GetAllCourses();
-  if($courses === false)
+  if(isset($_POST["Types"]) && isset($_POST["number"]))
   {
-    $errmsg = "Error";
-  }
+      if(!empty($_POST["Types"]) && !empty($_POST["number"]))
+      {
+          session_start();
+          $_SESSION["number"] = $_POST["number"];
 
-  if(isset($_POST["Crsid"]))
-  {
-    if(!empty($_POST["Crsid"]))
-    {
-        $errmsg = $CrsController->DeleteCourse($_POST["Crsid"]);
-    }
-  }
+          $questionnaireController = new QuestionnaireController;
 
-  if(isset($_POST["editCrsid"]))
-  {
-    if(!empty($_POST["editCrsid"]))
-    {
-      session_start();
-      $_SESSION["Crsid"] = $_POST["editCrsid"];
-      header("Location: EditCourse.php");
-    }
-    else
-    {
-      $errmsg = "Error";
-    }
+          $questionnaireid = $questionnaireController->AddQuestionnaire($_POST["Types"]);
+
+          $_SESSION["questionnaireid"] = $questionnaireid;
+
+          if($questionnaireid === false)
+          {
+              $errmsg = "Error";
+          }
+          else
+          {
+            header("Location: AddQuestions.php");
+          }
+      }
+      else
+      {
+          $errmsg = "Please fill all fields";
+      }
   }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -57,14 +60,14 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.png" />
-  </head>
-  <body>
+</head>
+    <body>
     <div class="container-scroller">
-      <!-- partial:../../partials/_navbar.html -->
-      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <!-- partial:../../partials/_navbar.html -->
+        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-          <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../assets/images/logo.svg" alt="logo" /></a>
-          <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../assets/images/logo-mini.svg" alt="logo" /></a>
+            <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../assets/images/logo.svg" alt="logo" /></a>
+            <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../assets/images/logo-mini.svg" alt="logo" /></a>
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-stretch">
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -233,86 +236,45 @@
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="../samples/AssignCourseToMember.php">
-                  <span class="menu-title">Assign Course to Admin</span>
-                  <i class="fa fa-plus-circle menu-icon"></i>
-              </a>
-            </li>
-            </ul>
+          </ul>
         </nav>
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-            <div class="row">
-                <div class="col-lg-12 grid-margin stretch-card">
-                  <div class="card">
-                    <div class="card-body">
-                      <h4 class="card-title">Courses</h4>
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <!-- <th>Profile</th> -->
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Faculty Member</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <?php 
-                          foreach($courses as $course)
-                          {
-                            ?>
-                              <tr>
-                                <td><?php echo $course["CrsId"]?></td>
-                                <td><?php echo $course["CrsName"]?></td>
-                                <td><?php echo $course["Description"]?></td>
-                                <?php
-                                  if($course["Name"] == NULL)
-                                  {
-                                    ?>
-                                      <td>N/A</td>
-                                    <?php
-                                  }
-                                  else
-                                  {
-                                    ?>
-                                      <td><?php echo $course["Name"]?></td>
-                                    <?php
-                                  }
-                                ?>
-                                <td>
-                                  <form action="" method="post">
-                                    <input type="hidden" name="editCrsid" value="<?php echo $course["CrsId"]?>"/>
-                                    <button type="submit" class="btn btn-gradient-primary btn-fw">
-                                      <i class="fa fa-edit"></i>
-                                    </button>
-                                  </form>
-                                </td>
-                                <td>
-                                  <form action="" method="post">
-                                    <input type="hidden" name="Crsid" value="<?php echo $course["CrsId"]?>"/>
-                                    <button type="submit" class="btn btn-gradient-primary btn-fw">
-                                      <i class="fa fa-trash-o"></i>
-                                    </button>
-                                  </form>
-                                </td>
-                            <?php
-                            }
-                            ?>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+          <div class="row">
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Add New Student</h4>
+                    <form class="forms-sample" method = "Post">
+                    <?php 
+                      if($errmsg!="")
+                      {
+                          ?>
+                              <div class="alert alert-danger" role="alert"><?php echo $errmsg ?></div>
+                          <?php
+                      }
+                    ?>
+                    <div class="form-group">
+                        <label for="exampleInputUsername1" style="font-size : 20px">Type</label>
+                        <select class="form-select" name="Types">
+                          <?php
+                              foreach ($Types as $type) 
+                              {?>
+                                <option value="<?php echo $type ?>"><?php echo $type ?></option>
+                              <?php
+                              } ?>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1">Number Of Qusetions</label>
+                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Number" name="number">
+                      </div>
+                      <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                    </form>
                   </div>
                 </div>
-            </div>
-            <a href="/Learning-Management-System/Views/pages/samples/AddCourse.php" class="btn btn-gradient-primary btn-fw">
-                Add Course
-            </a>
+              </div>
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
