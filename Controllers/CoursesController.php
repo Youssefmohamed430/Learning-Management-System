@@ -169,5 +169,43 @@ require_once 'DBController.php';
                 }
             }
         }
+        // zenhoum
+    public function GetMYCourses($studentid) 
+    {
+        $this->db = new DbController;
+        if($this->db->openConnection()) 
+        {
+            $query = "SELECT CrsName, Course.CrsId, Description FROM course JOIN courseregisteration ON course.CrsId=courseregisteration.CrsId JOIN student ON courseregisteration.StuId= student.UserId where student.UserId='$studentid';";
+
+            $result = $this->db->select($query);
+            if($result === false)
+            {
+                return false;
+            }
+            else
+            {
+                return $result;
+            }
+        }
     }
+    public function GetCourseVideos($couseid){
+        $this->db = new DbController;
+        if($this->db->openConnection()) 
+        {
+            $query = "SELECT VideoPath FROM coursevideos join course ON coursevideos.CrsId=course.CrsId WHERE course.CrsId='$couseid';";
+
+            $result = $this->db->select($query);
+            if($result === false)
+            {
+                return false;
+            }
+            else
+            {
+                return $result;
+            }
+        }
+
+    } 
+    }
+
 ?>
