@@ -1,64 +1,27 @@
-<?php 
-
-require_once '../../../Models/Exam.php';
-require_once '../../../Models/Question.php';
-require_once '../../../Models/StudentAnswer.php';
-require_once '../../../Controllers/DBController.php';
-
-// session_start();
-// if (!isset($_SESSION["role"])) {
-
-//   header("location: Login.php ");
-// } else {
-//   if ($_SESSION["role"] != "Student") {
-//     header("location: Login.php ");
-//   }
-// }
-
-$errMsg = "";
-$successMsg = "";
-
-$DbController = new DbController;
-$exam = new Exam;
-if (isset($_SESSION["courseid"])){
-
-    $query = "SELECT * FROM exam WHERE CrsId  = ". $_SESSION["courseid"];
-    $result = $DbController -> select($query);
-    if (!empty($result))
+<?php
+if(isset($_POST["courseid"]))
+{
+    if(!empty($_POST["courseid"]))
     {
-      $exam -> setExamId($result[0]["ExamId"]);
-      $exam -> setTitle($result[0]["Title"]);
-      $exam -> setType($result[0]["Type"]);
-      $exam -> setDate($result[0]["Date"]);
-
-      $query = "SELECT * FROM questions WHERE ExamId  = ". $exam -> getExamId();
-      $result = $DbController -> select($query);
-  
-      $questions = [];
-      foreach($result as $row)
-      {
-        $examQuestion = new Question;
-        $examQuestion ->setQId($row["QuestionId "]);
-        $examQuestion ->setText($row["Text"]);
-        $examQuestion ->setCorrectAnswer($row["CorrectAnswer"]);
-
-        $questions[] = $examQuestion;
-      }
+        session_start();
+        $_SESSION["courseid"] = $_POST["courseid"];
     }
-    else {
-      $errMsg = "No exam found for this course.";
+    else
+    {
+      $errmsg = "Error";
     }
-
-    
-    
 }
 
+require_once '../../../Controllers/CoursesController.php';
+require_once '../../../Controllers/AdminController.php';
+require_once '../../../Models/User.php';
+require_once '../../../Models/Course.php';
 
+$coursescontroller = new CoursesController;
+session_start();
+$mycourses = $coursescontroller->GetMYCourses($_SESSION["Id"]);
 
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -73,8 +36,6 @@ if (isset($_SESSION["courseid"])){
     <link rel="stylesheet" href="../../assets/vendors/font-awesome/css/font-awesome.min.css">
     <!-- endinject -->
     <!-- Plugin css for this page -->
-    <link rel="stylesheet" href="../../assets/vendors/select2/select2.min.css">
-    <link rel="stylesheet" href="../../assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <!-- endinject -->
@@ -254,79 +215,64 @@ if (isset($_SESSION["courseid"])){
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../../index.html">
-                <span class="menu-title">Dashboard</span>
+                <span class="menu-title">My Course</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-                <span class="menu-title">Basic UI Elements</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-              </a>
-              <div class="collapse" id="ui-basic">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" href="../../pages/ui-features/buttons.html">Buttons</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="../../pages/ui-features/dropdowns.html">Dropdowns</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="../../pages/ui-features/typography.html">Typography</a>
-                  </li>
-                </ul>
-              </div>
             </li>
           </ul>
         </nav>
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-
-            <div class="row">
-              <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <!-- Exam title -->
-                    <h4 class="card-title"><?php echo $exam -> getTitle() ?></h4>
-                    <p class="card-description"> Basic form elements </p>
-                    <form class="forms-sample">
-                      <div class="form-group">
-
-
-                      <label for="exampleInputName1">title</label>
-                      <input type="text" class="form-control" id="exampleInputName1" placeholder="Enter the answer">
-
-
-
-
-
-
+          <div class="row">
+              <div class="col-md-6 grid-margin stretch-card">
+              <?php
+              if (count($mycourses )==0){
+                ?>
+                    <div class="alert alert-danger" role="alert" style="font-size : 50px; ">
+                          Not Courses register
+                    </div>
+                <?php
+              }
+                else  {
+                    foreach ($mycourses as $course ){
+                        ?>
+                        <div class="card"  style="width: 18rem; min-width: 80px;">
+                        <img class="card-img-top" src="../../../imgs/LMS.jpg" alt="Card image cap">
+                        <div class="card-body">
+                          <!-- <h4 class="card-title"></h4>
+                          <p class="card-text">.</p> -->
+                          <h4 class="card-title"><?php echo $course["CrsName"]; ?></h4>
+                          <p class="card-text"><?php echo $course["Description"]; ?></p>
+                          <form action="Coursedetails.php" method="post">
+                                  <input type="hidden" name="courseid" value="<?php echo $course["CrsId"]?>"/>
+                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
+                                    watch course
+                                  </button>
+                                </form>
+                        </div>
                       </div>
-                      
-                      <div class="form-group">
-                        <label for="exampleTextarea1">Textarea</label>
-                        <textarea class="form-control" id="exampleTextarea1" placeholder="Enter the answer" rows="4"></textarea>
-                      </div>
-                      <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-                    </form>
-                  </div>
-                </div>
+                      <?php
+                    }
+                }
+              ?>
+            
               </div>
-            </div>
           </div>
+        </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
-          <footer class="footer">
+          <!-- courses -->
+        <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
               <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
             </div>
           </footer>
-          <!-- partial -->
+           <!-- partial -->
         </div>
         <!-- main-panel ends -->
+
       </div>
       <!-- page-body-wrapper ends -->
     </div>
@@ -335,8 +281,6 @@ if (isset($_SESSION["courseid"])){
     <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
-    <script src="../../assets/vendors/select2/select2.min.js"></script>
-    <script src="../../assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
     <!-- End plugin js for this page -->
     <!-- inject:js -->
     <script src="../../assets/js/off-canvas.js"></script>
@@ -346,9 +290,6 @@ if (isset($_SESSION["courseid"])){
     <script src="../../assets/js/jquery.cookie.js"></script>
     <!-- endinject -->
     <!-- Custom js for this page -->
-    <script src="../../assets/js/file-upload.js"></script>
-    <script src="../../assets/js/typeahead.js"></script>
-    <script src="../../assets/js/select2.js"></script>
     <!-- End custom js for this page -->
   </body>
 </html>
