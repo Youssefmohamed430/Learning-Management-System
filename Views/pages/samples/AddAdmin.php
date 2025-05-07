@@ -1,9 +1,17 @@
 <?php
   require_once '../../../Controllers/AdminController.php';
-  require_once '../../../Models/User.php';
-
+  require_once '../../../Models/Admin.php';
+  session_start();
+  if (!isset($_SESSION["role"])) {
+  
+    header("location: Login.php ");
+  } else {
+    if ($_SESSION["role"] != "Admin") {
+      header("location: Login.php ");
+    }
+  }
   $AdminController = new AdminController;
-  $Admin = new User;
+  $Admin = new Admin;
   $errmsg = "";
 
   if(isset($_POST["Name"]) && isset($_POST["Username"]) && isset($_POST["Email"]) && isset($_POST["Password"]))
@@ -15,13 +23,11 @@
           $Admin->setEmail($_POST["Email"]);
           $Admin->setPassword($_POST["Password"]);
           $Admin->setRoleName("Admin");
-          if($AdminController->AddAdmin($Admin) != "")
+          $errmsg = $AdminController->AddUser($Admin);
+
+          if($errmsg == "")
           {
-              $errmsg = $AdminController->AddAdmin($Admin);
-          }
-          else
-          {
-            header("Location: AdminDashBoard.php");
+              header("Location: AdminDashBoard.php");
           }
       }
       else

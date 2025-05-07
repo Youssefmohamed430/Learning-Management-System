@@ -1,14 +1,23 @@
 <?php
     require_once '../../../Controllers/AdminController.php';
     require_once '../../../Controllers/CoursesController.php';
-    require_once '../../../Controllers/MemberController.php';
+    require_once '../../../Controllers/UserController.php';
     require_once '../../../Models/Course.php';
+    session_start();
+    if (!isset($_SESSION["role"])) {
+
+      header("location: Login.php ");
+    } else {
+      if ($_SESSION["role"] != "Admin") {
+        header("location: Login.php ");
+      }
+    }
   $coursecontroller = new CoursesController;
   $Admincontroller = new AdminController;
-  $Membercontroller = new MemberController;
+  $admin = new AdminController;
 
   $courses = $coursecontroller->GetAllCourses();
-  $members = $Membercontroller->GetAllMembers();
+  $members = $admin->GetAll("Faculty");
 
   $errmsg = "";
   if($courses === false)

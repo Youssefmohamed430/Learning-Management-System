@@ -1,10 +1,16 @@
 <?php
-  require_once '../../../Controllers/AdminController.php';
-  require_once '../../../Models/User.php';
-  require_once '../../../Models/Admin.php';
+  require_once '../../../Controllers/MemberController.php';
   require_once '../../../Models/FacultyMember.php';
-
-  $AdminController = new AdminController;
+  session_start();
+  if (!isset($_SESSION["role"])) {
+  
+    header("location: Login.php ");
+  } else {
+    if ($_SESSION["role"] != "Admin") {
+      header("location: Login.php ");
+    }
+  }
+  $MemberController = new MemberController;
   $Member = new FacultyMember;
   $errmsg = "";
 
@@ -12,7 +18,7 @@
 
   if (isset($_SESSION['memberid'])) 
   {
-      $result = $AdminController->ShowMemberData($_SESSION['memberid']);
+      $result = $MemberController->ShowUserData($_SESSION['memberid']);
       if($result === false)
       {
           $errmsg = "Error";
@@ -35,7 +41,7 @@
           $Member->setRoleName("Faculty");
           $Member->setSsNo($_POST["SSN"]);
 
-          $errmsg = $AdminController->EditMember($Member);
+          $errmsg = $MemberController->UpdateUser($Member);
           
           if($errmsg === "")
           {

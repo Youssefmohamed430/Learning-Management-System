@@ -57,8 +57,8 @@
             }
             else
             {
-                return true;
-                // return $this->connection->insert_id;
+                // return true;
+                return $this->connection->insert_id;
             }
         }
         

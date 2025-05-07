@@ -1,56 +1,26 @@
 <?php
-  require_once '../../../Controllers/AdminController.php';
-  require_once '../../../Models/Admin.php';
-  session_start();
-  if (!isset($_SESSION["role"])) {
-  
-    header("location: Login.php ");
-  } else {
-    if ($_SESSION["role"] != "Admin") {
-      header("location: Login.php ");
+require_once '../../../Controllers/CoursesController.php';
+require_once '../../../Controllers/DBController.php';
+require_once '../../../Models/Course.php';
+session_start();
+$coursescontroller = new CoursesController;
+
+if (isset($_SESSION['courseid'])) {
+    $coursevideos = $coursescontroller->GetCourseVideos($_SESSION['courseid']);
+
+
+    $videoIndex = isset($_POST['videoIndex']) ? (int)$_POST['videoIndex'] : 0;
+
+    if (isset($coursevideos[$videoIndex])) {
+        $currentvideo = $coursevideos[$videoIndex]["VideoPath"];
+    } else {
+        $currentvideo = $coursevideos[0]["VideoPath"];
     }
-  }
-  $AdminController = new AdminController;
-  $Admin = new Admin;
-  $errmsg = "";
+} 
+else {
+    $errmsg = "Error";
+}
 
-  session_start();
-
-  if (isset($_SESSION['userid'])) 
-  {
-      $result = $AdminController->ShowUserData($_SESSION['userid']);
-      if($result === false)
-      {
-          $errmsg = "Error";
-      }
-  } 
-  else 
-  {
-      $errmsg = "Error";
-  }
-
-  if(isset($_POST["Name"]) && isset($_POST["Username"]) && isset($_POST["Email"]) && isset($_POST["Password"]))
-  {
-      if(!empty($_POST["Name"]) && !empty($_POST["Username"]) && !empty($_POST["Email"]) && !empty($_POST["Password"]))
-      {
-          $Admin->setID($_SESSION['userid']);
-          $Admin->setName($_POST["Name"]);
-          $Admin->setUsername($_POST["Username"]);
-          $Admin->setEmail($_POST["Email"]);
-          $Admin->setPassword($_POST["Password"]);
-
-          $errmsg = $AdminController->UpdateUser($Admin);
-          
-          if($errmsg === "")
-          {
-              header("Location: AdminDashBoard.php");
-          }
-      }
-      else
-      {
-          $errmsg = "Please fill all fields";
-      }
-  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -244,9 +214,44 @@
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+                <span class="menu-title">my course</span>
+                <i class="menu-arrow"></i>
+                <i class="fa fa-mortar-board"></i>
+              </a>
+              <div class="collapse" id="auth">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item">
+                  <form method="post" style="display:inline;">
+                    <input type="hidden" name="videoIndex" value="0">
+                    <button type="submit" class="nav-link">Video 1</button>
+                  </form>
+                  </li>
+                  <li class="nav-item">
+                  <form method="post" style="display:inline;">
+                    <input type="hidden" name="videoIndex" value="1">
+                    <button type="submit" class="nav-link">Video 2</button>
+                  </form>
+                  </li>
+                  <li class="nav-item">
+                  <form method="post" style="display:inline;">
+                    <input type="hidden" name="videoIndex" value="2">
+                    <button type="submit" class="nav-link">Video 3</button>
+                  </form>
+                  </li>
+                  <li class="nav-item">
+                  <form method="post" style="display:inline;">
+                    <input type="hidden" name="videoIndex" value="3">
+                    <button type="submit" class="nav-link">Video 4</button>
+                  </form>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="../../index.html">
-                <span class="menu-title">Dashboard</span>
-                <i class="mdi mdi-home menu-icon"></i>
+              <i class=" fa fa-mortar-board"></i>
+                <span class="menu-title">exam</span>
               </a>
             </li>
           </ul>
@@ -254,46 +259,10 @@
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-          <div class="row">
-              <div class="col-md-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Edit Admin Data</h4>
-                    <form class="forms-sample" method = "Post">
-                    <?php 
-                      if($errmsg!="")
-                      {
-                          ?>
-                              <div class="alert alert-danger" role="alert"><?php echo $errmsg ?></div>
-                          <?php
-                      }
-                    ?>
-                    <div class="form-group">
-                        <label for="exampleInputConfirmPassword1">Name</label>
-                        <input type="text" class="form-control" id="InputName" placeholder="Name" name = "Name" value="<?php echo $result[0]["Name"]?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputUsername1">Username</label>
-                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username" name="Username" value="<?php echo $result[0]["UserName"]?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="Email" value="<?php echo $result[0]["Email"]?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="Password" value="<?php echo $result[0]["Password"]?>">
-                      </div>
-                      <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-                      <button class="btn btn-light">Cancel</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <!-- content-wrapper ends -->
-          <!-- partial:../../partials/_footer.html -->
-          <footer class="footer">
+          <video id="1" controls class="w-100" >
+            <source src="<?php echo htmlspecialchars($currentvideo); ?>" type="video/mp4" />
+          </video>
+        <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
               <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>

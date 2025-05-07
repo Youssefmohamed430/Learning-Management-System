@@ -1,6 +1,9 @@
+
 <?php
   require_once '../../../Controllers/AdminController.php';
-  require_once '../../../Models/Admin.php';
+  require_once '../../../Models/User.php';
+  require_once '../../../Models/Student.php';
+  require_once '../../../Controllers/QuestionnaireController.php';
   session_start();
   if (!isset($_SESSION["role"])) {
   
@@ -11,39 +14,31 @@
     }
   }
   $AdminController = new AdminController;
-  $Admin = new Admin;
+  $student = new Student;
   $errmsg = "";
+  $Types = ["Teacher-Eval","Course-Eval","Student-Eval","Admin-Eval"];
+  $NumberOfQuestions = 0 ;
 
-  session_start();
-
-  if (isset($_SESSION['userid'])) 
+  if(isset($_POST["Types"]) && isset($_POST["number"]))
   {
-      $result = $AdminController->ShowUserData($_SESSION['userid']);
-      if($result === false)
+      if(!empty($_POST["Types"]) && !empty($_POST["number"]))
       {
-          $errmsg = "Error";
-      }
-  } 
-  else 
-  {
-      $errmsg = "Error";
-  }
+          session_start();
+          $_SESSION["number"] = $_POST["number"];
 
-  if(isset($_POST["Name"]) && isset($_POST["Username"]) && isset($_POST["Email"]) && isset($_POST["Password"]))
-  {
-      if(!empty($_POST["Name"]) && !empty($_POST["Username"]) && !empty($_POST["Email"]) && !empty($_POST["Password"]))
-      {
-          $Admin->setID($_SESSION['userid']);
-          $Admin->setName($_POST["Name"]);
-          $Admin->setUsername($_POST["Username"]);
-          $Admin->setEmail($_POST["Email"]);
-          $Admin->setPassword($_POST["Password"]);
+          $questionnaireController = new QuestionnaireController;
 
-          $errmsg = $AdminController->UpdateUser($Admin);
-          
-          if($errmsg === "")
+          $questionnaireid = $questionnaireController->AddQuestionnaire($_POST["Types"]);
+
+          $_SESSION["questionnaireid"] = $questionnaireid;
+
+          if($questionnaireid === false)
           {
-              header("Location: AdminDashBoard.php");
+              $errmsg = "Error";
+          }
+          else
+          {
+            header("Location: AddQuestions.php");
           }
       }
       else
@@ -54,7 +49,7 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -73,14 +68,14 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.png" />
-  </head>
-  <body>
+</head>
+    <body>
     <div class="container-scroller">
-      <!-- partial:../../partials/_navbar.html -->
-      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <!-- partial:../../partials/_navbar.html -->
+        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-          <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../assets/images/logo.svg" alt="logo" /></a>
-          <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../assets/images/logo-mini.svg" alt="logo" /></a>
+            <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../assets/images/logo.svg" alt="logo" /></a>
+            <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../assets/images/logo-mini.svg" alt="logo" /></a>
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-stretch">
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -258,7 +253,7 @@
               <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Edit Admin Data</h4>
+                    <h4 class="card-title">Add New Student</h4>
                     <form class="forms-sample" method = "Post">
                     <?php 
                       if($errmsg!="")
@@ -269,23 +264,21 @@
                       }
                     ?>
                     <div class="form-group">
-                        <label for="exampleInputConfirmPassword1">Name</label>
-                        <input type="text" class="form-control" id="InputName" placeholder="Name" name = "Name" value="<?php echo $result[0]["Name"]?>">
+                        <label for="exampleInputUsername1" style="font-size : 20px">Type</label>
+                        <select class="form-select" name="Types">
+                          <?php
+                              foreach ($Types as $type) 
+                              {?>
+                                <option value="<?php echo $type ?>"><?php echo $type ?></option>
+                              <?php
+                              } ?>
+                        </select>
                       </div>
                       <div class="form-group">
-                        <label for="exampleInputUsername1">Username</label>
-                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username" name="Username" value="<?php echo $result[0]["UserName"]?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="Email" value="<?php echo $result[0]["Email"]?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="Password" value="<?php echo $result[0]["Password"]?>">
+                        <label for="exampleInputUsername1">Number Of Qusetions</label>
+                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Number" name="number">
                       </div>
                       <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-                      <button class="btn btn-light">Cancel</button>
                     </form>
                   </div>
                 </div>

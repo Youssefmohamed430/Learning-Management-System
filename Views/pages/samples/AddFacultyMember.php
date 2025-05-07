@@ -1,10 +1,18 @@
 
 <?php
-  require_once '../../../Controllers/AdminController.php';
-  require_once '../../../Models/User.php';
+  require_once '../../../Controllers/MemberController.php';
+  require_once '../../../Controllers/UserController.php';
   require_once '../../../Models/FacultyMember.php';
-
-  $AdminController = new AdminController;
+  session_start();
+  if (!isset($_SESSION["role"])) {
+  
+    header("location: Login.php ");
+  } else {
+    if ($_SESSION["role"] != "Admin") {
+      header("location: Login.php ");
+    }
+  }
+  $memberController = new MemberController;
   $Member = new FacultyMember;
   $errmsg = "";
 
@@ -18,11 +26,9 @@
           $Member->setPassword($_POST["Password"]);
           $Member->setRoleName("Faculty");
           $Member->setSsNo($_POST["SSN"]);
-          if($AdminController->AddFacultyMember($Member) != "")
-          {
-              $errmsg = $AdminController->AddFacultyMember($Member);
-          }
-          else
+
+          $errmsg = $memberController->AddUser($Member);
+          if($errmsg == "")
           {
             header("Location: AdminDashBoard.php");
           }

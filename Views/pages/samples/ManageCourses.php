@@ -3,6 +3,15 @@
   require_once '../../../Controllers/CoursesController.php';
   require_once '../../../Controllers/DBController.php';
   require_once '../../../Models/Course.php';
+  session_start();
+if (!isset($_SESSION["role"])) {
+
+  header("location: Login.php ");
+} else {
+  if ($_SESSION["role"] != "Admin") {
+    header("location: Login.php ");
+  }
+}
   $errmsg = "";
 
   $CrsController = new CoursesController;
@@ -231,6 +240,12 @@
               <a class="nav-link" href="../../index.html">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../samples/AssignCourseToMember.php">
+                  <span class="menu-title">Assign Course to Admin</span>
+                  <i class="fa fa-plus-circle menu-icon"></i>
               </a>
             </li>
             </ul>
