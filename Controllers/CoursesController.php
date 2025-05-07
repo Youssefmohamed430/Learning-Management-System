@@ -188,6 +188,7 @@ require_once 'DBController.php';
             }
         }
     }
+    
     public function GetCourseVideos($couseid){
         $this->db = new DbController;
         if($this->db->openConnection()) 

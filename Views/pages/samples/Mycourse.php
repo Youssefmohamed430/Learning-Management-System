@@ -5,7 +5,6 @@ if(isset($_POST["courseid"]))
     {
         session_start();
         $_SESSION["courseid"] = $_POST["courseid"];
-       
     }
     else
     {
@@ -13,13 +12,14 @@ if(isset($_POST["courseid"]))
     }
 }
 
-require_once 'D:\xampp\htdocs\Learning-Management-System\Controllers\CoursesController.php';
-require_once 'D:\xampp\htdocs\Learning-Management-System\Controllers\DBController.php';
-require_once 'D:\xampp\htdocs\Learning-Management-System\Controllers\AdminController.php';
-require_once 'D:\xampp\htdocs\Learning-Management-System\Models\User.php';
-require_once 'D:\xampp\htdocs\Learning-Management-System\Models\Course.php';
+require_once '../../../Controllers/CoursesController.php';
+require_once '../../../Controllers/AdminController.php';
+require_once '../../../Models/User.php';
+require_once '../../../Models/Course.php';
+
 $coursescontroller = new CoursesController;
-$mycourses = $coursescontroller->GetMYCourses(3);
+session_start();
+$mycourses = $coursescontroller->GetMYCourses($_SESSION["Id"]);
 
 ?>
 <!DOCTYPE html>
@@ -222,26 +222,23 @@ $mycourses = $coursescontroller->GetMYCourses(3);
           </ul>
         </nav>
         <!-- partial -->
-       
         <div class="main-panel">
           <div class="content-wrapper">
-           <div class="row">
+          <div class="row">
               <div class="col-md-6 grid-margin stretch-card">
               <?php
               if (count($mycourses )==0){
                 ?>
-                     <div class="alert alert-danger" role="alert">
-                          not course register
+                    <div class="alert alert-danger" role="alert" style="font-size : 50px; ">
+                          Not Courses register
                     </div>
-
                 <?php
               }
                 else  {
                     foreach ($mycourses as $course ){
                         ?>
                         <div class="card"  style="width: 18rem; min-width: 80px;">
-                   
-                        <img class="card-img-top" src=" ../../../imgs/OIP.jpg" alt="Card image cap">
+                        <img class="card-img-top" src="../../../imgs/LMS.jpg" alt="Card image cap">
                         <div class="card-body">
                           <!-- <h4 class="card-title"></h4>
                           <p class="card-text">.</p> -->
@@ -250,16 +247,14 @@ $mycourses = $coursescontroller->GetMYCourses(3);
                           <form action="Coursedetails.php" method="post">
                                   <input type="hidden" name="courseid" value="<?php echo $course["CrsId"]?>"/>
                                   <button type="submit" class="btn btn-gradient-primary btn-fw">
-                                     watch course
+                                    watch course
                                   </button>
                                 </form>
-                         
                         </div>
                       </div>
                       <?php
                     }
                 }
-
               ?>
             
               </div>
@@ -267,10 +262,8 @@ $mycourses = $coursescontroller->GetMYCourses(3);
         </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
-           <!-- courses -->
-    
-         
-         <footer class="footer">
+          <!-- courses -->
+        <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
               <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>

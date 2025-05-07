@@ -4,7 +4,7 @@ require_once '../../../Controllers/DBController.php';
 require_once '../../../Models/Course.php';
 session_start();
 $coursescontroller = new CoursesController;
-
+$currentvideo = "";
 if (isset($_SESSION['courseid'])) {
     $coursevideos = $coursescontroller->GetCourseVideos($_SESSION['courseid']);
 
@@ -260,7 +260,9 @@ else {
         <div class="main-panel">
           <div class="content-wrapper">
           <video id="1" controls class="w-100" >
-            <source src="<?php echo htmlspecialchars($currentvideo); ?>" type="video/mp4" />
+            <!-- <source src="<?php echo htmlspecialchars($currentvideo); ?>" type="video/mp4" /> -->
+            <source src="<?php echo $currentvideo; ?>" type="video/mp4" />
+            <!-- <source src="../../../Videos/GNS3 Tutorial (6)_ DHCP Configuration Lab [Step-by-Step].mp4" type="video/mp4" /> -->
           </video>
         <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
