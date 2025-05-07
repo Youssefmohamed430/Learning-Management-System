@@ -169,5 +169,88 @@ require_once 'DBController.php';
                 }
             }
         }
+        // zenhoum
+    public function GetMYCourses($studentid) 
+    {
+        $this->db = new DbController;
+        if($this->db->openConnection()) 
+        {
+            $query = "SELECT CrsName, Course.CrsId, Description FROM course JOIN courseregisteration ON course.CrsId=courseregisteration.CrsId JOIN student ON courseregisteration.StuId= student.UserId where student.UserId='$studentid';";
+
+            $result = $this->db->select($query);
+            if($result === false)
+            {
+                return false;
+            }
+            else
+            {
+                return $result;
+            }
+        }
     }
+    
+    public function GetCourseVideos($couseid){
+        $this->db = new DbController;
+        if($this->db->openConnection()) 
+        {
+            $query = "SELECT VideoPath FROM coursevideos join course ON coursevideos.CrsId=course.CrsId WHERE course.CrsId='$couseid';";
+
+            $result = $this->db->select($query);
+            if($result === false)
+            {
+                return false;
+            }
+            else
+            {
+                return $result;
+            }
+        }
+
+    } 
+    
+    public function UploadCourseVideo($videoModel)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $crsId = $videoModel->getCrsId();
+                $videoPath = $videoModel->getVideoPath();
+                
+                $query = "INSERT INTO coursevideos (VideoPath, CrsId) VALUES ('$videoPath', '$crsId')";
+                
+                $result = $this->db->insert($query);
+                
+                if($result === false)
+                {
+                    return "Error uploading video";
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            return "Database connection error";
+        }
+
+        public function GetFacultyCourses($facultyId)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $query = "SELECT CrsId, CrsName FROM course WHERE FacultyId = '$facultyId'";
+                $result = $this->db->select($query);
+                
+                if($result === false)
+                {
+                    return false;
+                }
+                else
+                {
+                    return $result;
+                }
+            }
+            return false;
+        }
+    }
+
 ?>

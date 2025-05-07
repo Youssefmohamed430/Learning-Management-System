@@ -19,10 +19,10 @@
       {
         if($_SESSION["role"] = "Admin")
             header("Location: AdminDashBoard.php");
-        // else if($_SESSION["role"] = "Faculty")
-        //     header("Location: MemberDashBoard.php");
-        // else
-        //   header("Location: StudentDashBoard.php");
+        else if($_SESSION["role"] = "Faculty")
+            header("Location: index.html");
+        else
+          header("Location: index.html");
       }
     }
   }
