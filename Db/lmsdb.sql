@@ -267,7 +267,7 @@ INSERT INTO `users` (`Id`, `Name`, `UserName`, `Password`, `Email`, `RoleName`) 
 (28, 'Student1', 'student1', 'Student123', 'Student1@gmail.com', 'Student'),
 (32, 'adminthree', 'admin3', 'Admin345', 'adminthree3@gmail.com', 'Admin'),
 (33, 'memberfour', 'member4', 'Member456', 'member4@gmail.com', 'Faculty');
-
+INSERT INTO `coursevideos` ( `VideoPath`, `CrsId`) VALUES ( '../../../Videos/GNS3 Tutorial (6)_ DHCP Configuration Lab [Step-by-Step].mp4', '4'), ( '../../../Videos/UML Diagrams - Package Diagram.mp4', '4');
 --
 -- Indexes for dumped tables
 --
