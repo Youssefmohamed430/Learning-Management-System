@@ -207,6 +207,50 @@ require_once 'DBController.php';
         }
 
     } 
+    
+    public function UploadCourseVideo($videoModel)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $crsId = $videoModel->getCrsId();
+                $videoPath = $videoModel->getVideoPath();
+                
+                $query = "INSERT INTO coursevideos (VideoPath, CrsId) VALUES ('$videoPath', '$crsId')";
+                
+                $result = $this->db->insert($query);
+                
+                if($result === false)
+                {
+                    return "Error uploading video";
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            return "Database connection error";
+        }
+
+        public function GetFacultyCourses($facultyId)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $query = "SELECT CrsId, CrsName FROM course WHERE FacultyId = '$facultyId'";
+                $result = $this->db->select($query);
+                
+                if($result === false)
+                {
+                    return false;
+                }
+                else
+                {
+                    return $result;
+                }
+            }
+            return false;
+        }
     }
 
 ?>
