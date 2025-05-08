@@ -221,30 +221,36 @@ else {
               </a>
               <div class="collapse" id="auth">
                 <ul class="nav flex-column sub-menu">
+                  <?php
+                if (count($coursevideos )==0){
+                ?>
+                    <div class="alert alert-danger" role="alert" style="font-size : 50px; ">
+                          Not video Course
+                    </div>
+                <?php
+              }
+                else  {
+                    foreach ($coursevideos as $coursevideo ){
+                        ?>
+                       <li class="nav-item">
+                  <form method="post" style="display:inline;">
+                    <input type="hidden" name="videoIndex" value="0">
+                    <button type="submit" class="nav-link"><?php echo $coursevideo["VideoId"];?></button>
+                  </form>
+                  </li>
+                      <?php
+                    }
+                }
+              ?>
                   <li class="nav-item">
                   <form method="post" style="display:inline;">
                     <input type="hidden" name="videoIndex" value="0">
                     <button type="submit" class="nav-link">Video 1</button>
                   </form>
                   </li>
-                  <li class="nav-item">
-                  <form method="post" style="display:inline;">
-                    <input type="hidden" name="videoIndex" value="1">
-                    <button type="submit" class="nav-link">Video 2</button>
-                  </form>
-                  </li>
-                  <li class="nav-item">
-                  <form method="post" style="display:inline;">
-                    <input type="hidden" name="videoIndex" value="2">
-                    <button type="submit" class="nav-link">Video 3</button>
-                  </form>
-                  </li>
-                  <li class="nav-item">
-                  <form method="post" style="display:inline;">
-                    <input type="hidden" name="videoIndex" value="3">
-                    <button type="submit" class="nav-link">Video 4</button>
-                  </form>
-                  </li>
+                 
+                
+              
                 </ul>
               </div>
             </li>
@@ -259,10 +265,8 @@ else {
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-          <video id="1" controls class="w-100" >
-            <!-- <source src="<?php echo htmlspecialchars($currentvideo); ?>" type="video/mp4" /> -->
-            <source src="<?php echo $currentvideo; ?>" type="video/mp4" />
-            <!-- <source src="../../../Videos/GNS3 Tutorial (6)_ DHCP Configuration Lab [Step-by-Step].mp4" type="video/mp4" /> -->
+          <video controls class="w-100">
+               <source src="<?php echo $currentvideo; ?>" type="video/mp4">   
           </video>
         <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
