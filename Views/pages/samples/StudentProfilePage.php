@@ -8,29 +8,28 @@
   require_once '../../../Controllers/CoursesController.php';
   require_once '../../../Controllers/ScheduleController.php';
 
- session_start();
- $_SESSION["studentId"] = 3;
-// if (!isset($_SESSION["role"])) {
 
-//   header("location: Login.php ");
-// } else {
-//   if ($_SESSION["role"] != "Student") {
-//     header("location: Login.php ");
-//   }
-// }
+if (!isset($_SESSION["role"])) {
 
-// if(isset($_POST["id"]))
-// {
-//     if(!empty($_POST["id"]))
-//     {
-//         session_start();
-//         $_SESSION["studentId"] = $_POST["id"];
-//     }
-//     else
-//     {
-//       $errmsg = "Error";
-//     }
-// }
+  header("location: Login.php ");
+} else {
+  if ($_SESSION["role"] != "Student") {
+    header("location: Login.php ");
+  }
+}
+
+if(isset($_POST["id"]))
+{
+    if(!empty($_POST["id"]))
+    {
+        session_start();
+        $_SESSION["studentId"] = $_POST["id"];
+    }
+    else
+    {
+      $errmsg = "Error";
+    }
+}
 
 $studentInfo = new Student;
 $studentController = new StudentController;
