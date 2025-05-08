@@ -1,8 +1,8 @@
 <?php
 
 require_once 'DBController.php';
-require_once 'E:\Xampp\htdocs\Learning-Management-System\Controllers\UserController.php';
-require_once 'E:\Xampp\htdocs\Learning-Management-System\Controllers\ValidationController.php';
+require_once 'C:\Xampp\htdocs\Learning-Management-System\Controllers\UserController.php';
+require_once 'C:\Xampp\htdocs\Learning-Management-System\Controllers\ValidationController.php';
 
 
     class MemberController extends UserController

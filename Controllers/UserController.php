@@ -1,5 +1,5 @@
 <?php
-require_once 'E:\Xampp\htdocs\Learning-Management-System\Models\User.php';
+require_once 'C:\Xampp\htdocs\Learning-Management-System\Models\User.php';
     abstract class UserController
     {
         private $db;

@@ -333,8 +333,8 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="../Views/pages/samples/CreateExam.php">
-                  <span class="menu-title">Create Exam</span>
+                <a class="nav-link" href="../Views/pages/samples/Exams.php">
+                  <span class="menu-title">Exams</span>
                   <i class="fa fa-file-text menu-icon"></i> 
                 </a>
               </li>
