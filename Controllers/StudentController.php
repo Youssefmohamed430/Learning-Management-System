@@ -128,13 +128,14 @@
         }
 
         // ahmed
-        public function getTranscript($studentId)
+        public function getTranscript($studentid)
         {
             $this->db = new DBController;
             if($this->db->openConnection())
             {
-                $query = "SELECT courseregisteration.CrsId, course.CrsName, courseregisteration.Grade FROM courseregisteration
-                 JOIN course ON courseregisteration.CrsId = course.CrsId WHERE courseregisteration.StuId = " . $studentId;
+                $query = "SELECT courseregisteration.CrsId, course.CrsName, courseregisteration.Grade 
+                FROM courseregisteration JOIN course ON courseregisteration.CrsId = course.CrsId 
+                WHERE courseregisteration.StuId = '". $studentid ."' AND courseregisteration.Grade IS NOT NUll;";
                 $result = $this->db->select($query); 
 
                 if($result === false)
