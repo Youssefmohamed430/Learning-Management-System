@@ -6,36 +6,39 @@
   require_once '../../../Controllers/DBController.php';
   require_once '../../../Controllers/StudentController.php';
   require_once '../../../Controllers/CoursesController.php';
+  require_once '../../../Controllers/ScheduleController.php';
 
-  // h
-session_start();
-if (!isset($_SESSION["role"])) {
+ session_start();
+ $_SESSION["studentId"] = 3;
+// if (!isset($_SESSION["role"])) {
 
-  header("location: Login.php ");
-} else {
-  if ($_SESSION["role"] != "Student") {
-    header("location: Login.php ");
-  }
-}
+//   header("location: Login.php ");
+// } else {
+//   if ($_SESSION["role"] != "Student") {
+//     header("location: Login.php ");
+//   }
+// }
 
-if(isset($_POST["id"]))
-{
-    if(!empty($_POST["id"]))
-    {
-        session_start();
-        $_SESSION["studentId"] = $_POST["id"];
-    }
-    else
-    {
-      $errmsg = "Error";
-    }
-}
+// if(isset($_POST["id"]))
+// {
+//     if(!empty($_POST["id"]))
+//     {
+//         session_start();
+//         $_SESSION["studentId"] = $_POST["id"];
+//     }
+//     else
+//     {
+//       $errmsg = "Error";
+//     }
+// }
 
 $studentInfo = new Student;
 $studentController = new StudentController;
+$calenderController = new ScheduleController;
 
 $studentInfo = $studentController -> ShowUserData($_SESSION["studentId"]);
-$transcript = $studentController -> getTranscript($studentInfo -> getUserId());
+$transcript = $studentController -> getTranscript($_SESSION["studentId"]);
+$calender = $calenderController -> getCalender($_SESSION["studentId"]);
 ?>
 
 
@@ -78,134 +81,12 @@ $transcript = $studentController -> getTranscript($studentInfo -> getUserId());
           </button>
           <div class="search-field d-none d-md-block">
             <form class="d-flex align-items-center h-100" action="#">
-              <div class="input-group">
-                <div class="input-group-prepend bg-transparent">
-                  <i class="input-group-text border-0 mdi mdi-magnify"></i>
-                </div>
-                <input type="text" class="form-control bg-transparent border-0" placeholder="Search projects">
-              </div>
             </form>
           </div>
           <ul class="navbar-nav navbar-nav-right">
-            <li class="nav-item nav-profile dropdown">
-              <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                <div class="nav-profile-img">
-                  <img src="../../assets/images/faces/face1.jpg" alt="image">
-                  <span class="availability-status online"></span>
-                </div>
-                <div class="nav-profile-text">
-                  <p class="mb-1 text-black">David Greymaax</p>
-                </div>
-              </a>
-              <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                <a class="dropdown-item" href="#">
-                  <i class="mdi mdi-cached me-2 text-success"></i> Activity Log </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">
-                  <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
-              </div>
-            </li>
-            <li class="nav-item d-none d-lg-block full-screen-link">
-              <a class="nav-link">
-                <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="mdi mdi-email-outline"></i>
-                <span class="count-symbol bg-warning"></span>
-              </a>
-              <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list" aria-labelledby="messageDropdown">
-                <h6 class="p-3 mb-0">Messages</h6>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <img src="../../assets/images/faces/face4.jpg" alt="image" class="profile-pic">
-                  </div>
-                  <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                    <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
-                    <p class="text-gray mb-0"> 1 Minutes ago </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <img src="../../assets/images/faces/face2.jpg" alt="image" class="profile-pic">
-                  </div>
-                  <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                    <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Cregh send you a message</h6>
-                    <p class="text-gray mb-0"> 15 Minutes ago </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <img src="../../assets/images/faces/face3.jpg" alt="image" class="profile-pic">
-                  </div>
-                  <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                    <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Profile picture updated</h6>
-                    <p class="text-gray mb-0"> 18 Minutes ago </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <h6 class="p-3 mb-0 text-center">4 new messages</h6>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-                <i class="mdi mdi-bell-outline"></i>
-                <span class="count-symbol bg-danger"></span>
-              </a>
-              <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                <h6 class="p-3 mb-0">Notifications</h6>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-success">
-                      <i class="mdi mdi-calendar"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                    <h6 class="preview-subject font-weight-normal mb-1">Event today</h6>
-                    <p class="text-gray ellipsis mb-0"> Just a reminder that you have an event today </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-warning">
-                      <i class="mdi mdi-cog"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                    <h6 class="preview-subject font-weight-normal mb-1">Settings</h6>
-                    <p class="text-gray ellipsis mb-0"> Update dashboard </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-info">
-                      <i class="mdi mdi-link-variant"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                    <h6 class="preview-subject font-weight-normal mb-1">Launch Admin</h6>
-                    <p class="text-gray ellipsis mb-0"> New admin wow! </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <h6 class="p-3 mb-0 text-center">See all notifications</h6>
-              </div>
-            </li>
             <li class="nav-item nav-logout d-none d-lg-block">
               <a class="nav-link" href="#">
                 <i class="mdi mdi-power"></i>
-              </a>
-            </li>
-            <li class="nav-item nav-settings d-none d-lg-block">
-              <a class="nav-link" href="#">
-                <i class="mdi mdi-format-line-spacing"></i>
               </a>
             </li>
           </ul>
@@ -253,84 +134,129 @@ $transcript = $studentController -> getTranscript($studentInfo -> getUserId());
             <div class="col-md-12 grid-margin">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Personal Information</h4>
-                    <p class="card-description"> Use class <code>.text-primary</code>, <code>.text-secondary</code> etc. for text in theme colors </p>
+                  <div style="margin-bottom: 10px;" class="d-flex align-items-center">
+                    <h4 class="card-title mb-0">Personal Information</h4>
+                    <i style="margin-left: 10px;" class="fa fa-id-card-o mr-2"></i>
+                  </div>
                     <div class="row">
                       <div class="col-md-6">
-                        <p class="text-primary">.text-primary</p>
-                        <p class="text-success">.text-success</p>
-                        <p class="text-danger">.text-danger</p>
-                        <p class="text-warning">.text-warning</p>
-                        <p class="text-info">.text-info</p>
+                        <p > <?php echo $studentInfo-> getRoleName() ?> </p> 
+                        <p > Name: <?php echo $studentInfo-> getName() ?> </p> 
+                        <p > Age: <?php echo $studentInfo-> getAge() ?> </p>
+                        <p > Email: <?php echo $studentInfo-> getEmail() ?> </p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             <div class="row">
+
               <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Course Calender</h4>
-                    <p class="card-description"> Add class <code>.table</code>
-                    </p>
+                  <div class="d-flex justify-content-center align-items-center" style="margin-bottom: 10px;">
+                      <h4 class="card-title mb-0">Student Transcript</h4>
+                      <i class="fa fa-check-square-o ml-3" style="font-size: 24px; margin-left: 7px;"></i>
+                  </div>
                     <table class="table">
                       <thead>
                         <tr>
-                          <th>Profile</th>
-                          <th>VatNo.</th>
-                          <th>Created</th>
-                          <th>Status</th>
+                          <th>Course ID</th>
+                          <th>Course Name</th>
+                          <th>Grade</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>Jacob</td>
-                          <td>53275531</td>
-                          <td>12 May 2017</td>
-                          <td><label class="badge badge-danger">Pending</label></td>
-                        </tr>
-                        <tr>
-                          <td>Messsy</td>
-                          <td>53275532</td>
-                          <td>15 May 2017</td>
-                          <td><label class="badge badge-warning">In progress</label></td>
-                        </tr>
-                        <tr>
-                          <td>John</td>
-                          <td>53275533</td>
-                          <td>14 May 2017</td>
-                          <td><label class="badge badge-info">Fixed</label></td>
-                        </tr>
-                        <tr>
-                          <td>Peter</td>
-                          <td>53275534</td>
-                          <td>16 May 2017</td>
-                          <td><label class="badge badge-success">Completed</label></td>
-                        </tr>
-                        <tr>
-                          <td>Dave</td>
-                          <td>53275535</td>
-                          <td>20 May 2017</td>
-                          <td><label class="badge badge-warning">In progress</label></td>
-                        </tr>
+
+                      <?php
+                        if(count($transcript) > 0) {
+                            foreach($transcript as $course) {
+                        ?>
+                            <tr>
+                                <td><?php echo $course['CrsId']; ?></td>
+                                <td><?php echo $course['CrsName']; ?></td>
+                                <td><?php echo $course['Grade']; ?></td>
+                            </tr>
+                        <?php
+                            }
+                        } else {
+                        ?>
+                            <tr>
+                                <td colspan="3"> The Transcript is not available at this time.  </td>
+                            </tr>
+                    <?php
+                    }
+                    ?>
+                          
                       </tbody>
                     </table>
                   </div>
                 </div>
               </div>
+
               <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                  <div class="d-flex justify-content-center align-items-center" style="margin-bottom: 10px;">
+                      <h4 class="card-title mb-0">Student Course Calendar</h4>
+                      <i class="mdi mdi-calendar ml-2" style="font-size: 24px;margin-left: 6px;"></i>
+                  </div>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Course</th>
+                          <th>Course Description</th>
+                          <th>Teacher</th>
+                          <th>Exam Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+                      <?php
+                        if(count($calender) > 0) {
+                            foreach($calender as $row) {
+                        ?>
+                          <tr>
+                            <td> <?php echo $row['CrsName'] ?> </td>
+                            <td> <?php echo $row['Description'] ?> </td>
+                            <td> <?php echo $row['Name'] ?> </td>
+                            <?php 
+                              if ($row['Grade'] === NULL){
+
+                                ?>
+                                <td><label class="badge badge-danger">Exam Not Taken</label></td>
+                                </tr>
+                            <?php 
+                                }
+                                  else{
+                                  ?>
+                                    <td><label class="badge badge-success">Exam Taken</label></td>
+                                    </tr>
+                                  <?php
+                                }
+                              ?>
+                            <?php
+                            }
+                        } else {
+                        ?>
+                            <tr>
+                                <td colspan="3">The course calendar is not available at this time.</td>
+                            </tr>
+                      <?php
+                      }
+                    ?>
+
+                      </tbody>
+
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
-          <footer class="footer">
-            <div class="d-sm-flex justify-content-center justify-content-sm-between">
-              <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
-              <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
-            </div>
-          </footer>
           <!-- partial -->
         </div>
         <!-- main-panel ends -->

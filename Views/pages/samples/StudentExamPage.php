@@ -5,24 +5,24 @@ require_once '../../../Models/Question.php';
 require_once '../../../Models/StudentAnswer.php';
 require_once '../../../Controllers/DBController.php';
 
-session_start();
-if (!isset($_SESSION["role"])) {
+// session_start();
+// if (!isset($_SESSION["role"])) {
 
-  header("location: Login.php ");
-} else {
-  if ($_SESSION["role"] != "Student") {
-    header("location: Login.php ");
-  }
-}
+//   header("location: Login.php ");
+// } else {
+//   if ($_SESSION["role"] != "Student") {
+//     header("location: Login.php ");
+//   }
+// }
 
 $errMsg = "";
 $successMsg = "";
 
 $DbController = new DbController;
 $exam = new Exam;
-if (isset($_SESSION["courseid"])){
+if (isset($_POST["courseid"])){
 
-    $query = "SELECT * FROM exam WHERE CrsId  = ". $_SESSION["courseid"];
+    $query = "SELECT * FROM exam WHERE CrsId  = ". $_POST["courseid"];
     $result = $DbController -> select($query);
     if (!empty($result))
     {
@@ -303,11 +303,6 @@ if (isset($_SESSION["courseid"])){
 
 
 
-                      </div>
-                      
-                      <div class="form-group">
-                        <label for="exampleTextarea1">Textarea</label>
-                        <textarea class="form-control" id="exampleTextarea1" placeholder="Enter the answer" rows="4"></textarea>
                       </div>
                       <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                     </form>
