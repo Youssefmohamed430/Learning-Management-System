@@ -315,17 +315,30 @@
                 <?php
             if ($_SESSION["role"] == "Faculty") { ?>
               <li class="nav-item">
-                <a class="nav-link" href="../Views/pages/samples/Mycourse.php">
-                  <span class="menu-title">Profile</span>
-                  <i class="fa fa-user-circle-o menu-icon"></i>
+                <a class="nav-link" href="../Views/pages/samples/UploadCourseMaterial.php">
+                  <span class="menu-title">Upload Course Material</span>
+                  <i class="fa fa-video-camera menu-icon"></i> 
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="../Views/pages/samples/UploadCourseMaterial.php">
-                  <span class="menu-title">Upload Course Material</span>
-                  <i class="fa fa-cloud-upload menu-icon"></i> 
+                <a class="nav-link" href="../Views/pages/samples/ViewFeedbacks.php">
+                  <span class="menu-title">View Feedbacks</span>
+                  <i class="fa fa-comments menu-icon"></i> 
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="../Views/pages/samples/EvaluateCoTeachers.php">
+                  <span class="menu-title">Evaluate Co-Teachers</span>
+                  <i class="fa fa-edit menu-icon"></i> 
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="../Views/pages/samples/CreateExam.php">
+                  <span class="menu-title">Create Exam</span>
+                  <i class="fa fa-file-text menu-icon"></i> 
+                </a>
+              </li>
+
               <?php
               }?>
           </ul>

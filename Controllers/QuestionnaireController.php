@@ -39,5 +39,49 @@ require_once 'DBController.php';
                 }
             }
         }
+        public function GetFacultyFeedbacks($facultyId)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                // Get all evaluations where faculty member is  evaluatee
+                $query = "SELECT 
+                            e.EvaluationId, 
+                            e.Comment, 
+                            e.Date, 
+                            u.Name as EvaluatorName,
+                            q.Type as QuestionnaireType
+                        FROM evaluation e
+                        JOIN users u ON e.evaluator_id = u.Id
+                        JOIN questionnaire q ON e.QuestionnaireId = q.QuestionnaireId
+                        WHERE e.evaluatee_id = '$facultyId'
+                        ORDER BY e.Date DESC";
+                
+                $evaluations = $this->db->select($query);
+                
+                // get the question response for eache eval
+                if($evaluations !== false && count($evaluations) > 0) {
+                    foreach($evaluations as &$eval) {
+                        $evalId = $eval['EvaluationId'];
+                        $responseQuery = "SELECT 
+                                            r.ResponseId, 
+                                            r.Rating, 
+                                            r.ResponseText, 
+                                            q.Text as QuestionText
+                                        FROM questionresponse r
+                                        JOIN evalquestion q ON r.questionId = q.QuestionId
+                                        WHERE r.evaluationId = '$evalId'";
+                        
+                        $responses = $this->db->select($responseQuery);
+                        $eval['Responses'] = $responses !== false ? $responses : [];
+                    }
+                }
+                
+                return $evaluations !== false ? $evaluations : [];
+            }
+            return [];
+        }
     }
+
+
 ?>

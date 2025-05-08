@@ -1,6 +1,7 @@
 <?php
-require_once '../../../Controllers/CoursesController.php';
-require_once '../../../Models/CourseVideos.php';
+require_once '../../../Controllers/QuestionnaireController.php';
+require_once '../../../Models/Evaluation.php';
+require_once '../../../Models/QuestionResponse.php';
 
 session_start();
 if (!isset($_SESSION["role"])) {
@@ -11,61 +12,25 @@ if (!isset($_SESSION["role"])) {
     }
 }
 
-$coursesController = new CoursesController();
+$questionnaireController = new QuestionnaireController();
 $facultyId = $_SESSION["Id"];
-$courses = $coursesController->GetFacultyCourses($facultyId);
+$feedbacks = $questionnaireController->GetFacultyFeedbacks($facultyId);
 
-$errmsg = "";
-$successmsg = "";
 
-// Handle form
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
-    // Handle file upload
-    $targetDir = "../../../Videos/";
-    if (!file_exists($targetDir)) {
-        mkdir($targetDir, 0777, true);
+$ratings = [];
+$comments = [];
+
+foreach ($feedbacks as $feedback) {
+    if (!empty($feedback['Comment'])) {
+        $comments[] = $feedback;
     }
-    
-    $targetFile = $targetDir . basename($_FILES["videoFile"]["name"]);
-    $uploadOk = 1;
-    $videoFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-    
-    // Check if file is a video
-    $validExtensions = array("mp4", "avi", "mov", "wmv");
-    if (!in_array($videoFileType, $validExtensions)) {
-        $errmsg = "Sorry, only MP4, AVI, MOV & WMV files are allowed.";
-        $uploadOk = 0;
-    }
-    
-    // Check if file already exists
-    if (file_exists($targetFile)) {
-        $errmsg = "Sorry, file already exists.";
-        $uploadOk = 0;
-    }
-   
-    
-    // Upload file if everything is ok
-    if ($uploadOk == 1) {
-        if (move_uploaded_file($_FILES["videoFile"]["tmp_name"], $targetFile)) {
-            $videoModel = new CoursesVideos();
-            $videoModel->setCrsId($_POST["courseId"]);
-            $videoModel->setVideoPath($targetFile);
-            
-            $result = $coursesController->UploadCourseVideo($videoModel);
-            
-            if ($result === "") {
-                $successmsg = "The video has been uploaded successfully.";
-            } else {
-                $errmsg = $result;
-                // Delete the uploaded file if DB insertion failed
-                unlink($targetFile);
-            }
-        } else {
-            $errmsg = "Sorry, there was an error uploading your file.";
-        }
+    if (!empty($feedback['Responses'])) {
+        $ratings[] = $feedback;
     }
 }
 
+// Determine which tab to show
+$activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'ratings';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Upload Course Material</title>
+    <title>View Feedbacks</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../../assets/vendors/ti-icons/css/themify-icons.css">
@@ -89,9 +54,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.png" />
     <style>
+        .rating-stars {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+        .feedback-card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
         .nav-tabs .nav-link.active {
-          font-weight: bold;
-          border-bottom: 3px solid #4b49ac;
+            font-weight: bold;
+            border-bottom: 3px solid #4b49ac;
         }
     </style>
   </head>
@@ -159,13 +132,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
               </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="UploadCourseMaterial.php">
+                <a class="nav-link" href="UploadCourseMaterial.php">
                   <span class="menu-title">Upload Course Material</span>
                   <i class="fa fa-video-camera menu-icon"></i> 
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="ViewFeedbacks.php">
+                <a class="nav-link active" href="ViewFeedbacks.php">
                   <span class="menu-title">View Feedbacks</span>
                   <i class="fa fa-comments menu-icon"></i> 
                 </a>
@@ -191,49 +164,107 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
               <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Upload Course Material</h4>
+                    <h4 class="card-title">View Feedbacks</h4>
                     
-                    <?php if (!empty($errmsg)): ?>
-                      <div class="alert alert-danger">
-                        <?php echo $errmsg; ?>
-                      </div>
-                    <?php endif; ?>
+                    <ul class="nav nav-tabs" id="feedbackTabs" role="tablist">
+                      <li class="nav-item">
+                        <a class="nav-link <?php echo $activeTab === 'ratings' ? 'active' : '' ?>" 
+                           id="ratings-tab" 
+                           href="?tab=ratings" 
+                           role="tab">Ratings</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link <?php echo $activeTab === 'comments' ? 'active' : '' ?>" 
+                           id="comments-tab" 
+                           href="?tab=comments" 
+                           role="tab">Comments</a>
+                      </li>
+                    </ul>
                     
-                    <?php if (!empty($successmsg)): ?>
-                      <div class="alert alert-success">
-                        <?php echo $successmsg; ?>
-                      </div>
-                    <?php endif; ?>
-                    
-                    <form method="post" enctype="multipart/form-data" class="forms-sample">
-                      <div class="form-group">
-                        <label for="courseSelect">Select Course</label>
-                        <select class="form-control" id="courseSelect" name="courseId" required>
-                          <option value="">-- Select Course --</option>
-                          <?php foreach ($courses as $course): ?>
-                            <option value="<?php echo $course['CrsId']; ?>" <?php echo (isset($_POST['courseId']) && $_POST['courseId'] == $course['CrsId']) ? 'selected' : ''; ?>>
-                              <?php echo $course['CrsName']; ?>
-                            </option>
-                          <?php endforeach; ?>
-                        </select>
-                      </div>
-                      
-                      <div class="form-group">
-                            <label>Video Upload</label>
-                            <div class="input-group col-xs-12">
-                                <input type="file" name="videoFile" id="videoFile" class="form-control" style="display: none;" required>
-                                <input type="text" class="form-control file-upload-info" id="file-info" disabled placeholder="Upload Video">
-                                <span class="input-group-append">
-                                    <button class="file-upload-browse btn btn-gradient-primary" type="button" id="browse-btn">Browse</button>
-                                </span>
+                    <div class="tab-content mt-4" id="feedbackTabsContent">
+                      <!-- Ratings Tab -->
+                      <div class="tab-pane fade <?php echo $activeTab === 'ratings' ? 'show active' : '' ?>" 
+                           id="ratings" 
+                           role="tabpanel" 
+                           aria-labelledby="ratings-tab">
+                           
+                        <?php if (empty($ratings)): ?>
+                          <div class="alert alert-info">
+                            No ratings available yet.
+                          </div>
+                        <?php else: ?>
+                          <?php foreach ($ratings as $rating): ?>
+                            <div class="card feedback-card">
+                              <div class="card-header">
+                                <h5>Evaluation from <?php echo htmlspecialchars($rating['EvaluatorName']); ?>
+                                  <small class="float-right text-muted"><?php echo date('M d, Y', strtotime($rating['Date'])); ?></small>
+                                </h5>
+                                <p class="text-muted">Questionnaire: <?php echo htmlspecialchars($rating['QuestionnaireType']); ?></p>
+                              </div>
+                              <div class="card-body">
+                                <?php foreach ($rating['Responses'] as $response): ?>
+                                  <div class="mb-3">
+                                    <h6><?php echo htmlspecialchars($response['QuestionText']); ?></h6>
+                                    <?php if (!empty($response['Rating'])): ?>
+                                      <div class="rating-stars">
+                                        <?php 
+                                        $filledStars = (int)$response['Rating'];
+                                        $emptyStars = 5 - $filledStars;
+                                        
+                                        for ($i = 0; $i < $filledStars; $i++) {
+                                            echo '<i class="mdi mdi-star"></i>';
+                                        }
+                                  
+                                        for ($i = 0; $i < $emptyStars; $i++) {
+                                            echo '<i class="mdi mdi-star-outline"></i>';
+                                        }
+                                        ?>
+                                        <span class="ml-2">(<?php echo $response['Rating']; ?>/5)</span>
+                                      </div>
+                                    <?php endif; ?>
+                                    <?php if (!empty($response['ResponseText'])): ?>
+                                      <div class="mt-2 p-2 bg-light rounded">
+                                        <p class="mb-0"><?php echo htmlspecialchars($response['ResponseText']); ?></p>
+                                      </div>
+                                    <?php endif; ?>
+                                  </div>
+                                  <hr>
+                                <?php endforeach; ?>
+                              </div>
                             </div>
-                            <small class="form-text text-muted">Supported formats: MP4, AVI, MOV, WMV</small>
-                        </div>
+                          <?php endforeach; ?>
+                        <?php endif; ?>
+                      </div>
                       
-                      <button type="submit" name="upload" class="btn btn-gradient-primary mr-2">Upload</button>
-                    </form>
-                    
-                    <hr>
+                      <!-- Comments Tab -->
+                      <div class="tab-pane fade <?php echo $activeTab === 'comments' ? 'show active' : '' ?>" 
+                           id="comments" 
+                           role="tabpanel" 
+                           aria-labelledby="comments-tab">
+                           
+                        <?php if (empty($comments)): ?>
+                          <div class="alert alert-info">
+                            No comments available yet.
+                          </div>
+                        <?php else: ?>
+                          <?php foreach ($comments as $comment): ?>
+                            <div class="card feedback-card">
+                              <div class="card-header">
+                                <h5>Comment from <?php echo htmlspecialchars($comment['EvaluatorName']); ?>
+                                  <small class="float-right text-muted"><?php echo date('M d, Y', strtotime($comment['Date'])); ?></small>
+                                </h5>
+                                <p class="text-muted">Questionnaire: <?php echo htmlspecialchars($comment['QuestionnaireType']); ?></p>
+                              </div>
+                              <div class="card-body">
+                                <blockquote class="blockquote">
+                                  <p><?php echo htmlspecialchars($comment['Comment']); ?></p>
+                                </blockquote>
+                              </div>
+                            </div>
+                          <?php endforeach; ?>
+                        <?php endif; ?>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -267,36 +298,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
     <script src="../../assets/js/todolist.js"></script>
     <script src="../../assets/js/jquery.cookie.js"></script>
     <!-- endinject -->
-    <!-- Custom js for this page -->
-    <script>
-        $(document).ready(function() {
-            // Handle file browse button click
-            $('#browse-btn').click(function() {
-                $('#videoFile').click();
-            });
-
-            // Update the file info when a file is selected
-            $('#videoFile').change(function() {
-                var fileName = $(this).val().split('\\').pop();
-                $('#file-info').val(fileName);
-            });
-
-            // Handle course selection change
-            $('#courseSelect').change(function() {
-                if ($(this).val()) {
-                    window.location.href = 'UploadCourseMaterial.php?courseId=' + $(this).val();
-                }
-            });
-            
-            // Initialize with courseId from URL if present
-            const urlParams = new URLSearchParams(window.location.search);
-            const courseId = urlParams.get('courseId');
-            if (courseId) {
-                $('#courseSelect').val(courseId);
-            }
-            
-        });
-    </script>
-    <!-- End custom js for this page -->
   </body>
 </html>
