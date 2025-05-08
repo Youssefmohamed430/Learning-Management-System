@@ -1,25 +1,25 @@
 <?php
-require_once '../../../Controllers/CoursesController.php';
-require_once '../../../Controllers/DBController.php';
-require_once '../../../Models/Course.php';
-session_start();
-$coursescontroller = new CoursesController;
-$currentvideo = "";
-if (isset($_SESSION['courseid'])) {
-    $coursevideos = $coursescontroller->GetCourseVideos($_SESSION['courseid']);
-
-
-    $videoIndex = isset($_POST['videoIndex']) ? (int)$_POST['videoIndex'] : 0;
-
-    if (isset($coursevideos[$videoIndex])) {
-        $currentvideo = $coursevideos[$videoIndex]["VideoPath"];
-    } else {
-        $currentvideo = $coursevideos[0]["VideoPath"];
+if(isset($_POST["courseid"]))
+{
+    if(!empty($_POST["courseid"]))
+    {
+        session_start();
+        $_SESSION["courseid"] = $_POST["courseid"];
     }
-} 
-else {
-    $errmsg = "Error";
+    else
+    {
+      $errmsg = "Error";
+    }
 }
+
+require_once '../../../Controllers/CoursesController.php';
+require_once '../../../Controllers/AdminController.php';
+require_once '../../../Models/User.php';
+require_once '../../../Models/Course.php';
+
+$coursescontroller = new CoursesController;
+session_start();
+$mycourses = $coursescontroller->GetMYCourses($_SESSION["Id"]);
 
 ?>
 <!DOCTYPE html>
@@ -214,44 +214,9 @@ else {
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-                <span class="menu-title">my course</span>
-                <i class="menu-arrow"></i>
-                <i class="fa fa-mortar-board"></i>
-              </a>
-              <div class="collapse" id="auth">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                  <form method="post" style="display:inline;">
-                    <input type="hidden" name="videoIndex" value="0">
-                    <button type="submit" class="nav-link">Video 1</button>
-                  </form>
-                  </li>
-                  <li class="nav-item">
-                  <form method="post" style="display:inline;">
-                    <input type="hidden" name="videoIndex" value="1">
-                    <button type="submit" class="nav-link">Video 2</button>
-                  </form>
-                  </li>
-                  <li class="nav-item">
-                  <form method="post" style="display:inline;">
-                    <input type="hidden" name="videoIndex" value="2">
-                    <button type="submit" class="nav-link">Video 3</button>
-                  </form>
-                  </li>
-                  <li class="nav-item">
-                  <form method="post" style="display:inline;">
-                    <input type="hidden" name="videoIndex" value="3">
-                    <button type="submit" class="nav-link">Video 4</button>
-                  </form>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="../../index.html">
-              <i class=" fa fa-mortar-board"></i>
-                <span class="menu-title">exam</span>
+                <span class="menu-title">My Course</span>
+                <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
           </ul>
@@ -259,20 +224,55 @@ else {
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-          <video id="1" controls class="w-100" >
-            <!-- <source src="<?php echo htmlspecialchars($currentvideo); ?>" type="video/mp4" /> -->
-            <source src="<?php echo $currentvideo; ?>" type="video/mp4" />
-            <!-- <source src="../../../Videos/GNS3 Tutorial (6)_ DHCP Configuration Lab [Step-by-Step].mp4" type="video/mp4" /> -->
-          </video>
+          <div class="row">
+              <div class="col-md-6 grid-margin stretch-card">
+              <?php
+              if (count($mycourses )==0){
+                ?>
+                    <div class="alert alert-danger" role="alert" style="font-size : 50px; ">
+                          Not Courses register
+                    </div>
+                <?php
+              }
+                else  {
+                    foreach ($mycourses as $course ){
+                        ?>
+                        <div class="card"  style="width: 18rem; min-width: 80px;">
+                        <img class="card-img-top" src="../../../imgs/LMS.jpg" alt="Card image cap">
+                        <div class="card-body">
+                          <!-- <h4 class="card-title"></h4>
+                          <p class="card-text">.</p> -->
+                          <h4 class="card-title"><?php echo $course["CrsName"]; ?></h4>
+                          <p class="card-text"><?php echo $course["Description"]; ?></p>
+                          <form action="Coursedetails.php" method="post">
+                                  <input type="hidden" name="courseid" value="<?php echo $course["CrsId"]?>"/>
+                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
+                                    watch course
+                                  </button>
+                                </form>
+                        </div>
+                      </div>
+                      <?php
+                    }
+                }
+              ?>
+            
+              </div>
+          </div>
+        </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <!-- courses -->
         <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
               <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
             </div>
           </footer>
-          <!-- partial -->
+           <!-- partial -->
         </div>
         <!-- main-panel ends -->
+
       </div>
       <!-- page-body-wrapper ends -->
     </div>
