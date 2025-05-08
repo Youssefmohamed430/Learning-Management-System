@@ -120,8 +120,31 @@
                     $student->setEmail($result[0]["Email"]);
                     $student->setPassword($result[0]["Password"]);
                     $student->setAge($result[0]["Age"]);
+                    $student->setRoleName($result[0]["RoleName"]);
 
                     return $student;
+                }
+            }
+        }
+
+        // ahmed
+        public function getTranscript($studentId)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $query = "SELECT courseregisteration.CrsId, course.CrsName, courseregisteration.Grade FROM courseregisteration
+                 JOIN course ON courseregisteration.CrsId = course.CrsId WHERE courseregisteration.StuId = " . $studentId;
+                $result = $this->db->select($query); 
+
+                if($result === false)
+                {
+                    echo "Error in Query";
+                    return false;
+                }
+                else
+                {
+                    return $result;
                 }
             }
         }

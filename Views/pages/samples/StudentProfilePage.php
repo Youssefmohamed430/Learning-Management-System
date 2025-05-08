@@ -1,10 +1,29 @@
 <?php
-if(isset($_POST["courseid"]))
+
+require_once '../../../Models/Student.php';
+require_once '../../../Models/User.php';
+require_once '../../../Models/CourseRegisteration.php';
+require_once '../../../Controllers/DBController.php';
+require_once '../../../Controllers/StudentController.php';
+require_once '../../../Controllers/CoursesController.php';
+
+
+session_start();
+if (!isset($_SESSION["role"])) {
+
+  header("location: Login.php ");
+} else {
+  if ($_SESSION["role"] != "Student") {
+    header("location: Login.php ");
+  }
+}
+
+if(isset($_POST["id"]))
 {
-    if(!empty($_POST["courseid"]))
+    if(!empty($_POST["id"]))
     {
         session_start();
-        $_SESSION["courseid"] = $_POST["courseid"];
+        $_SESSION["studentId"] = $_POST["id"];
     }
     else
     {
@@ -12,16 +31,17 @@ if(isset($_POST["courseid"]))
     }
 }
 
-require_once '../../../Controllers/CoursesController.php';
-require_once '../../../Controllers/AdminController.php';
-require_once '../../../Models/User.php';
-require_once '../../../Models/Course.php';
+$studentInfo = new Student;
+$studentController = new StudentController;
 
-$coursescontroller = new CoursesController;
-session_start();
-$mycourses = $coursescontroller->GetMYCourses($_SESSION["Id"]);
-
+$studentInfo = $studentController -> ShowUserData($_SESSION["studentId"]);
+$transcript = $studentController -> getTranscript($studentInfo -> getUserId());
 ?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -215,64 +235,105 @@ $mycourses = $coursescontroller->GetMYCourses($_SESSION["Id"]);
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../../index.html">
-                <span class="menu-title">My Course</span>
+                <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
-            </li>
           </ul>
         </nav>
+        
+        
+
+
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-          <div class="row">
-              <div class="col-md-6 grid-margin stretch-card">
-              <?php
-              if (count($mycourses )==0){
-                ?>
-                    <div class="alert alert-danger" role="alert" style="font-size : 50px; ">
-                          Not Courses register
-                    </div>
-                <?php
-              }
-                else  {
-                    foreach ($mycourses as $course ){
-                        ?>
-                        <div class="card"  style="width: 18rem; min-width: 80px;">
-                        <img class="card-img-top" src="../../../imgs/LMS.jpg" alt="Card image cap">
-                        <div class="card-body">
-                          <!-- <h4 class="card-title"></h4>
-                          <p class="card-text">.</p> -->
-                          <h4 class="card-title"><?php echo $course["CrsName"]; ?></h4>
-                          <p class="card-text"><?php echo $course["Description"]; ?></p>
-                          <form action="Coursedetails.php" method="post">
-                                  <input type="hidden" name="courseid" value="<?php echo $course["CrsId"]?>"/>
-                                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                                    watch course
-                                  </button>
-                                </form>
-                        </div>
+            <div class="page-header">
+
+            </div>
+            <div class="col-md-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Personal Information</h4>
+                    <p class="card-description"> Use class <code>.text-primary</code>, <code>.text-secondary</code> etc. for text in theme colors </p>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <p class="text-primary">.text-primary</p>
+                        <p class="text-success">.text-success</p>
+                        <p class="text-danger">.text-danger</p>
+                        <p class="text-warning">.text-warning</p>
+                        <p class="text-info">.text-info</p>
                       </div>
-                      <?php
-                    }
-                }
-              ?>
-            
+                    </div>
+                  </div>
+                </div>
               </div>
+            <div class="row">
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Course Calender</h4>
+                    <p class="card-description"> Add class <code>.table</code>
+                    </p>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Profile</th>
+                          <th>VatNo.</th>
+                          <th>Created</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Jacob</td>
+                          <td>53275531</td>
+                          <td>12 May 2017</td>
+                          <td><label class="badge badge-danger">Pending</label></td>
+                        </tr>
+                        <tr>
+                          <td>Messsy</td>
+                          <td>53275532</td>
+                          <td>15 May 2017</td>
+                          <td><label class="badge badge-warning">In progress</label></td>
+                        </tr>
+                        <tr>
+                          <td>John</td>
+                          <td>53275533</td>
+                          <td>14 May 2017</td>
+                          <td><label class="badge badge-info">Fixed</label></td>
+                        </tr>
+                        <tr>
+                          <td>Peter</td>
+                          <td>53275534</td>
+                          <td>16 May 2017</td>
+                          <td><label class="badge badge-success">Completed</label></td>
+                        </tr>
+                        <tr>
+                          <td>Dave</td>
+                          <td>53275535</td>
+                          <td>20 May 2017</td>
+                          <td><label class="badge badge-warning">In progress</label></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 grid-margin stretch-card">
+              </div>
+            </div>
           </div>
-        </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
-          <!-- courses -->
-        <footer class="footer">
+          <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
               <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
             </div>
           </footer>
-           <!-- partial -->
+          <!-- partial -->
         </div>
         <!-- main-panel ends -->
-
       </div>
       <!-- page-body-wrapper ends -->
     </div>

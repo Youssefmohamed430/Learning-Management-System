@@ -5,15 +5,15 @@ require_once '../../../Models/Question.php';
 require_once '../../../Models/StudentAnswer.php';
 require_once '../../../Controllers/DBController.php';
 
-// session_start();
-// if (!isset($_SESSION["role"])) {
+session_start();
+if (!isset($_SESSION["role"])) {
 
-//   header("location: Login.php ");
-// } else {
-//   if ($_SESSION["role"] != "Student") {
-//     header("location: Login.php ");
-//   }
-// }
+  header("location: Login.php ");
+} else {
+  if ($_SESSION["role"] != "Student") {
+    header("location: Login.php ");
+  }
+}
 
 $errMsg = "";
 $successMsg = "";
