@@ -1,6 +1,6 @@
 <?php
   require_once '../../../Controllers/AdminController.php';
-  require_once '../../../Controllers/UserController.php';
+  require_once 'E:\Xampp\htdocs\Learning-Management-System\Controllers\UserController.php';
   require_once '../../../Controllers/MemberController.php';
   require_once '../../../Controllers/StudentController.php';
 
@@ -175,27 +175,9 @@ if (!isset($_SESSION["role"])) {
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../../index.html">
+              <a class="nav-link" href="../../index.php">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="../samples/ManageCourses.php">
-                  <span class="menu-title">Courses</span>
-                  <i class="fa fa-video-camera menu-icon"></i> 
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="../samples/AssignCourseToMember.php">
-                  <span class="menu-title">Assign Course to Admin</span>
-                  <i class="fa fa-plus-circle menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="../samples/AddQuestionnaire.php">
-                  <span class="menu-title">Add Evaluation</span>
-                  <i class="fa fa-pencil-square-o menu-icon"></i>
               </a>
             </li>
           </ul>

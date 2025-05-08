@@ -237,13 +237,13 @@ if (!isset($_SESSION["role"])) {
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../../index.html">
+              <a class="nav-link" href="../../index.php">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../samples/AssignCourseToMember.php">
+              <a class="nav-link" href="AssignCourseToMember.php">
                   <span class="menu-title">Assign Course to Admin</span>
                   <i class="fa fa-plus-circle menu-icon"></i>
               </a>

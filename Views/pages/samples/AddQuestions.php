@@ -34,11 +34,11 @@
   {
       $errmsg = "Error";
   }
-  // else
-  // {
-  //     header("Location: AdminDashBoard.php");
-  //     exit();
-  // }
+  else
+  {
+      header("Location: index.php");
+      exit();
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -232,7 +232,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../../index.html">
+              <a class="nav-link" href="../../../index.php">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
