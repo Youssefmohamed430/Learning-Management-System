@@ -9,27 +9,28 @@
   require_once '../../../Controllers/ScheduleController.php';
 
 
-if (!isset($_SESSION["role"])) {
+// if (!isset($_SESSION["role"])) {
 
-  header("location: Login.php ");
-} else {
-  if ($_SESSION["role"] != "Student") {
-    header("location: Login.php ");
-  }
-}
-
-if(isset($_POST["id"]))
-{
-    if(!empty($_POST["id"]))
-    {
-        session_start();
-        $_SESSION["studentId"] = $_POST["id"];
-    }
-    else
-    {
-      $errmsg = "Error";
-    }
-}
+//   header("location: Login.php ");
+// } else {
+//   if ($_SESSION["role"] != "Student") {
+//     header("location: Login.php ");
+//   }
+// }
+session_start();
+$_SESSION["studentId"] = 3;
+// if(isset($_POST["id"]))
+// {
+//     if(!empty($_POST["id"]))
+//     {
+//         session_start();
+//         $_SESSION["studentId"] = $_POST["id"];
+//     }
+//     else
+//     {
+//       $errmsg = "Error";
+//     }
+// }
 
 $studentInfo = new Student;
 $studentController = new StudentController;
@@ -127,27 +128,24 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-            <div class="page-header">
-
-            </div>
             <div class="col-md-12 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                  <div style="margin-bottom: 10px;" class="d-flex align-items-center">
+              <div class="card">
+                <div class="card-body text-center">
+                  <div style="margin-bottom: 10px;" class="d-flex justify-content-center align-items-center">
                     <h4 class="card-title mb-0">Personal Information</h4>
-                    <i style="margin-left: 10px;" class="fa fa-id-card-o mr-2"></i>
+                     <i style="margin-left: 10px;" class="fa fa-id-card-o"></i>
                   </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <p > <?php echo $studentInfo-> getRoleName() ?> </p> 
-                        <p > Name: <?php echo $studentInfo-> getName() ?> </p> 
-                        <p > Age: <?php echo $studentInfo-> getAge() ?> </p>
-                        <p > Email: <?php echo $studentInfo-> getEmail() ?> </p>
+                <div class="row justify-content-center">
+                      <div style="font-size: 15px;" class="col-md-6">
+                        <p><?php echo $studentInfo->getRoleName(); ?></p>
+                        <p>Name: <?php echo $studentInfo->getName(); ?></p>
+                        <p>Age: <?php echo $studentInfo->getAge(); ?></p>
+                        <p>Email: <?php echo $studentInfo->getEmail(); ?></p>
                       </div>
-                    </div>
-                  </div>
                 </div>
               </div>
+            </div>
+          </div>
             <div class="row">
 
               <div class="col-lg-12 grid-margin stretch-card">
@@ -160,9 +158,9 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
                     <table class="table">
                       <thead>
                         <tr>
-                          <th>Course ID</th>
-                          <th>Course Name</th>
-                          <th>Grade</th>
+                          <th style="font-size: medium;">Course ID</th>
+                          <th style="font-size: medium;">Course Name</th>
+                          <th style="font-size: medium;">Grade</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -180,9 +178,13 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
                             }
                         } else {
                         ?>
-                            <tr>
-                                <td colspan="3"> The Transcript is not available at this time.  </td>
-                            </tr>
+                        <tr>
+                          <td colspan="3" class="p-0">
+                            <div class="alert alert-danger text-center m-0 w-100" role="alert">
+                              The Transcript is not available at this time
+                            </div>
+                          </td>
+                        </tr>
                     <?php
                     }
                     ?>
@@ -203,10 +205,10 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
                     <table class="table">
                       <thead>
                         <tr>
-                          <th>Course</th>
-                          <th>Course Description</th>
-                          <th>Teacher</th>
-                          <th>Exam Status</th>
+                          <th style="font-size: medium;">Course</th>
+                          <th style="font-size: medium;">Course Description</th>
+                          <th style="font-size: medium;">Teacher</th>
+                          <th style="font-size: medium;">Exam Status</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -226,8 +228,7 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
                                 <td><label class="badge badge-danger">Exam Not Taken</label></td>
                                 </tr>
                             <?php 
-                                }
-                                  else{
+                                }else{
                                   ?>
                                     <td><label class="badge badge-success">Exam Taken</label></td>
                                     </tr>
@@ -238,9 +239,13 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
                             }
                         } else {
                         ?>
-                            <tr>
-                                <td colspan="3">The course calendar is not available at this time.</td>
-                            </tr>
+                          <tr>
+                              <td colspan="4" class="p-0">
+                                  <div class="alert alert-danger text-center m-0 w-100" role="alert">
+                                      The Course Calendar is not available at this time
+                                  </div>
+                              </td>
+                          </tr>
                       <?php
                       }
                     ?>
