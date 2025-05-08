@@ -7,16 +7,16 @@
   require_once '../../../Controllers/StudentController.php';
   require_once '../../../Controllers/CoursesController.php';
 
+  // h
+session_start();
+if (!isset($_SESSION["role"])) {
 
-// session_start();
-// if (!isset($_SESSION["role"])) {
-
-//   header("location: Login.php ");
-// } else {
-//   if ($_SESSION["role"] != "Student") {
-//     header("location: Login.php ");
-//   }
-// }
+  header("location: Login.php ");
+} else {
+  if ($_SESSION["role"] != "Student") {
+    header("location: Login.php ");
+  }
+}
 
 if(isset($_POST["id"]))
 {
