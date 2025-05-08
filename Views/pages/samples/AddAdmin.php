@@ -27,7 +27,7 @@
 
           if($errmsg == "")
           {
-              header("Location: AdminDashBoard.php");
+              header("Location: ManageUsers.php");
           }
       }
       else
@@ -228,7 +228,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../../index.html">
+              <a class="nav-link" href="../../index.php">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>

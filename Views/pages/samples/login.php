@@ -17,12 +17,7 @@
       }
       else
       {
-        if($_SESSION["role"] = "Admin")
-            header("Location: AdminDashBoard.php");
-        else if($_SESSION["role"] = "Faculty")
-            header("Location: index.html");
-        else
-          header("Location: index.html");
+        header("Location: ../../index.php");
       }
     }
   }
