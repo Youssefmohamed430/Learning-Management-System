@@ -48,6 +48,26 @@ class ExamController {
                 }   
             }
     }
+    public function GetExam($ExamId){
+    $this->db = new DbController;
+    if($this->db->openConnection()) 
+    {
+        $query = "SELECT ExamId, Title, Type, Date, CrsId 
+        FROM exam 
+        WHERE ExamId = '$ExamId'";
+
+        $result = $this->db->select($query);
+        if($result === false)
+        {
+            return false;
+        }
+        else
+        {
+            return $result;
+        }
+    }
+}
+
     public function DeleteExam($ExamId) 
     {
         $this->db = new DBController;

@@ -2,6 +2,7 @@
 require_once '../../../Models/Exam.php';
 require_once '../../../Controllers/ExamController.php';
 require_once '../../../Controllers/DBController.php';
+require_once '../../../Controllers/QuestionsController.php';
 
 session_start();
 // if (!isset($_SESSION["role"])) {
@@ -12,37 +13,33 @@ session_start();
 //     }
 // }
 $errmsg = "";
-
+$ExamId = $_SESSION['ExamId'];
+$QsController = new QuestionsController;
 $ExmController = new ExamController;
+$Questions = $QsController->getAllQuestion($ExamId);
 
-$Exames = $ExmController->getAllExames();
-if($Exames === false)
+if (isset($_SESSION['ExamId'])) 
+  {
+      $result = $ExmController->GetExam($_SESSION['ExamId']);
+      if($result === false)
+      {
+          $errmsg = "Error";
+      }
+  }
+if($Questions === false)
   {
     $errmsg = "Error";
   }
-  if(isset($_POST["DeleteExam"]))
+  if(isset($_POST["DeleteQ"]))
   {
-    if(!empty($_POST["DeleteExam"]))
+    if(!empty($_POST["DeleteQ"]))
     {
-        $errmsg = $ExmController->DeleteExam($_POST["DeleteExam"]);
-    }
-  }
-
-  if(isset($_POST["addQ"]))
-  {
-    if(!empty($_POST["addQ"]))
-    {
-      session_start();
-      $_SESSION["ExamId"] = $_POST["EditExam"];
-      header("Location: EditExam.php");
-    }
-    else
-    {
-      $errmsg = "Error";
+        $errmsg = $ExmController->DeleteExam($_POST["DeleteQ"]);
     }
   }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -153,29 +150,40 @@ if($Exames === false)
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-          <table class="table">
+            <form class="form-inline">
+            <div class="form-group mb-2">
+            <label for="staticEmail2" class="sr-only">Email</label>
+            <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="email@example.com">
+          </div>
+          <div class="form-group mx-sm-3 mb-2">
+          <label for="inputPassword2" class="sr-only">Password</label>
+          <input type="password" class="form-control" id="inputPassword2" placeholder="Password">
+          </div>
+          <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
+</form>
+            <table class="table">
               <thead>
                   <tr>
-                    <th>Exam Id</th>
-                    <th>Title</th>
-                    <th>Course</th>
-                    <th>Edit Exam</th>
-                    <th>Delete Exam</th>
+                    <th>Question number</th>
+                    <th>The Question</th>
+                    <th>Correct Answer</th>
+                    <th>Edit Question</th>
+                    <th>Delete Question</th>
                     </tr>
               </thead>
           <tbody>
               <?php 
-                foreach($Exames as $Exam)
+                foreach($Questions as $Q)
                 {
                   ?>
                   <tr>
-                  <td><?php echo $Exam["ExamId"]?></td>
-                  <td><?php echo $Exam["Title"]?></td>
-                  <td><?php echo $Exam["CrsName"]?></td>
+                  <td><?php echo $Q["QId"]?></td>
+                  <td><?php echo $Q["Text"]?></td>
+                  <td><?php echo $Q["CorrectAnswer"]?></td>
                   
                   <td>
                   <form action="" method="post">
-                  <input type="hidden" name="EditExam" value="<?php echo $Exam["ExamId"]?>"/>
+                  <input type="hidden" name="EditQuestion" value="<?php echo $Q["QId"]?>"/>
                   <button type="submit" class="btn btn-gradient-primary btn-fw">
                   <i class="fa fa-edit"></i>
                   </button>
@@ -183,7 +191,7 @@ if($Exames === false)
                   </td>
                   <td>
                   <form action="" method="post">
-                  <input type="hidden" name="DeleteExam" value="<?php echo $Exam["ExamId"]?>"/>
+                  <input type="hidden" name="DeleteQuestion" value="<?php echo $Q["QId"]?>"/>
                   <button type="submit" class="btn btn-gradient-primary btn-fw">
                   <i class="fa fa-trash-o"></i>
                   </button>
@@ -195,10 +203,6 @@ if($Exames === false)
                   </tr>
                   </tbody>
                 </table>
-                <br>
-                <a href="CreateExam.php" class="btn btn-gradient-primary btn-fw">
-                Create Exam
-                </a>
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
