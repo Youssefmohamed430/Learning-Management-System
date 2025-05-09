@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2025 at 10:20 AM
+-- Generation Time: May 07, 2025 at 09:32 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -43,7 +43,7 @@ INSERT INTO `course` (`CrsId`, `CrsName`, `FacultyId`, `Description`) VALUES
 (5, 'Computer Science', 12, 'Computer Science'),
 (11, 'Network', 13, 'Network'),
 (15, 'AI', 12, 'artificial intelligence'),
-(17, 'IT-1', 27, 'Internet Technology-1');
+(19, 'IT', 12, 'Internet Technology');
 
 -- --------------------------------------------------------
 
@@ -62,7 +62,9 @@ CREATE TABLE `courseregisteration` (
 --
 
 INSERT INTO `courseregisteration` (`CrsId`, `StuId`, `Grade`) VALUES
-(4, 3, NULL);
+(4, 3, NULL),
+(5, 3, NULL),
+(11, 20, NULL);
 
 -- --------------------------------------------------------
 
@@ -75,6 +77,14 @@ CREATE TABLE `coursevideos` (
   `VideoPath` varchar(255) NOT NULL,
   `CrsId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coursevideos`
+--
+
+INSERT INTO `coursevideos` (`VideoId`, `VideoPath`, `CrsId`) VALUES
+(1, '../../../Videos/GNS3 Tutorial (6)_ DHCP Configuration Lab [Step-by-Step].mp4', 11),
+(2, '../../../Videos/UML Diagrams - Package Diagram.mp4', 5);
 
 -- --------------------------------------------------------
 
@@ -163,6 +173,9 @@ CREATE TABLE `questionnaire` (
   `Type` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+INSERT INTO `questionnaire` (`QuestionnaireId`, `Type`) 
+VALUES ('3', 'ghg'), ('4', 'gghgh');
+
 -- --------------------------------------------------------
 
 --
@@ -172,6 +185,7 @@ CREATE TABLE `questionnaire` (
 CREATE TABLE `questionresponse` (
   `ResponseId` int(11) NOT NULL,
   `Rating` int(11) NOT NULL,
+  `ResponseText` varchar(255) NOT NULL,
   `evaluationId` int(11) NOT NULL,
   `questionId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -385,19 +399,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `course`
 --
 ALTER TABLE `course`
-  MODIFY `CrsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `CrsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `coursevideos`
 --
 ALTER TABLE `coursevideos`
-  MODIFY `VideoId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `VideoId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `evalquestion`
 --
 ALTER TABLE `evalquestion`
-  MODIFY `QuestionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `QuestionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `evaluation`
@@ -427,7 +441,7 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `questionnaire`
 --
 ALTER TABLE `questionnaire`
-  MODIFY `QuestionnaireId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `QuestionnaireId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `questionresponse`
@@ -451,13 +465,13 @@ ALTER TABLE `schedule`
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- Constraints for dumped tables

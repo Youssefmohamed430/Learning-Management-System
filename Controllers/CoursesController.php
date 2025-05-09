@@ -169,5 +169,45 @@ require_once 'DBController.php';
                 }
             }
         }
+        public function RegisterCourse($courseId, $stuId)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $isRegistered = $this->IsStudentRegistered($stuId, $courseId);
+                if($isRegistered)
+                {
+                    return "You are already registered for this course";
+                }
+                $courseCount = $this->db->select("SELECT COUNT(*) as count FROM courseregisteration WHERE StuId = '$stuId'");
+                
+                if($courseCount !== false && $courseCount[0]['count'] >= 7) {
+                    return "You have reached the maximum limit of 7 courses";
+                }
+
+                $query = "INSERT INTO courseregisteration (StuId,CrsId) VALUES ('$stuId','$courseId')";
+                $result = $this->db->insert($query);
+                if($result === false)
+                {
+                    return "Error";
+                }
+                else
+                {
+                    return "Course Registered Successfully";
+                }
+            }
+        }
+        public function IsStudentRegistered($stuId, $courseId)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $query = "SELECT * FROM courseregisteration WHERE StuId = '$stuId' AND CrsId = '$courseId'";
+                $result = $this->db->select($query);
+                return ($result !== false && !empty($result));
+            }
+            return false;
+        }
     }
+    
 ?>

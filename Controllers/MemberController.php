@@ -1,8 +1,8 @@
 <?php
 
-require_once 'DBController.php';
-require_once '../../../Controllers/UserController.php';
-require_once 'E:\Xampp\htdocs\Learning-Management-System\Controllers\ValidationController.php';
+require_once __DIR__ . '/DBController.php';
+require_once __DIR__ . '/UserController.php';
+require_once __DIR__ . '/ValidationController.php';
 
 
     class MemberController extends UserController
@@ -127,6 +127,24 @@ require_once 'E:\Xampp\htdocs\Learning-Management-System\Controllers\ValidationC
                     return $member;
                 }
             }
+        }
+        public function GetAllFaculty()
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $query = "SELECT Id, Name FROM users WHERE RoleName = 'Faculty'";
+                $result = $this->db->select($query);
+                if($result === false)
+                {
+                    return false;
+                }
+                else
+                {   
+                    return $result;
+                }
+            }
+            return false;
         }
     }
 ?>

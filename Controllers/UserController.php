@@ -1,5 +1,5 @@
 <?php
-require_once 'E:\Xampp\htdocs\Learning-Management-System\Models\User.php';
+require_once __DIR__ . '/../Models/User.php';
     abstract class UserController
     {
         private $db;
@@ -46,5 +46,6 @@ require_once 'E:\Xampp\htdocs\Learning-Management-System\Models\User.php';
                 }
             }
         }
+        
     }
 ?>

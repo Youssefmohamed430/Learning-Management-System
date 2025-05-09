@@ -1,9 +1,9 @@
 <?php
-    require_once 'E:\Xampp\htdocs\Learning-Management-System\Models\User.php';
-    require_once 'E:\Xampp\htdocs\Learning-Management-System\Controllers\ValidationController.php';
+    require_once __DIR__ . '/../Models/User.php';
+    require_once 'ValidationController.php';
     require_once 'DBController.php';
     // require_once '../Controllers/UserController.php';
-    require_once 'E:\Xampp\htdocs\Learning-Management-System\Controllers\UserController.php';
+    require_once 'UserController.php';
 
 
     class AdminController extends UserController
