@@ -3,7 +3,9 @@
 require_once '../../../Models/Exam.php';
 require_once '../../../Models/Question.php';
 require_once '../../../Models/StudentAnswer.php';
-require_once '../../../Controllers/DBController.php';
+require_once '../../../Controllers/QuestionsController.php';
+require_once '../../../Controllers/ExamController.php';
+require_once '../../../Controllers/StudentAnswerController.php';
 
 // session_start();
 // if (!isset($_SESSION["role"])) {
@@ -15,45 +17,48 @@ require_once '../../../Controllers/DBController.php';
 //   }
 // }
 
-$errMsg = "";
+$errmsg = "";
 $successMsg = "";
 
-$DbController = new DbController;
-$exam = new Exam;
-if (isset($_POST["courseid"])){
+session_start();
+$_SESSION["courseId"] = 15;
 
-    $query = "SELECT * FROM exam WHERE CrsId  = ". $_POST["courseid"];
-    $result = $DbController -> select($query);
-    if (!empty($result))
+// if(isset($_POST["courseId"]))
+// {
+//     if(!empty($_POST["courseId"]))
+//     {
+//         session_start();
+//         $_SESSION["courseId"] = $_POST["courseId"];
+//     }
+//     else
+//     {
+//       $errmsg = "Error";
+//     }
+// }
+
+$examController = new ExamController;
+$questionsController = new QuestionsController;
+$studentAnswercontroller = new StudentAnswerController;
+
+$exam = $examController -> getCourseExam($_SESSION["courseId"]);
+$questions = $questionsController -> getAllQuestion($exam[0]['ExamId']);
+
+if(isset($_POST["answer"]))
+{
+    if(!empty($_POST["answer"]))
     {
-      $exam -> setExamId($result[0]["ExamId"]);
-      $exam -> setTitle($result[0]["Title"]);
-      $exam -> setType($result[0]["Type"]);
-      $exam -> setDate($result[0]["Date"]);
-
-      $query = "SELECT * FROM questions WHERE ExamId  = ". $exam -> getExamId();
-      $result = $DbController -> select($query);
-  
-      $questions = [];
-      foreach($result as $row)
-      {
-        $examQuestion = new Question;
-        $examQuestion ->setQId($row["QuestionId "]);
-        $examQuestion ->setText($row["Text"]);
-        $examQuestion ->setCorrectAnswer($row["CorrectAnswer"]);
-
-        $questions[] = $examQuestion;
-      }
+        session_start();
+        $_SESSION["answer"] = $_POST["answer"];
+        $studentAnswer = new StudentAnswer;
+        $studentAnswer -> setAnswer($_POST["answer"]);
+        $tempIsCorrect = $studentAnswercontroller -> isCorrect($_POST["answer"]); 
+        
     }
-    else {
-      $errMsg = "No exam found for this course.";
+    else
+    {
+      $errmsg = "Error";
     }
-
-    
-    
 }
-
-
 
 ?>
 
@@ -158,38 +163,35 @@ if (isset($_POST["courseid"])){
               <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <!-- Exam title -->
-                    <h4 class="card-title">Title</h4>
-                    <p class="card-description"> Basic form elements </p>
-                     <!-- <div class="alert alert-success" role="alert">
-                          This is a success alert—check it out!
-                        </div>
-                        <div class="alert alert-danger" role="alert">
-                          This is a danger alert—check it out!
-                    </div>  -->
+                    <h4 class="card-title"> <?php echo $exam[0]['Title'] ?></h4>
+                    <p class="card-description"> A <?php echo $exam[0]['Type'] ?> Course Exam</p>
+
                     <form method="post" class="forms-sample">
                       <div class="form-group">
-
-
-
-
-                      <label for="exampleInputName1">Question</label>
-                      <input type="text" class="form-control" id="exampleInputName1" placeholder="Enter the answer">
-
-
-
-                      
-
-
-                      </div>
+                        <?php
+                              foreach($questions as $question) {
+                            ?>
+                              <label for="exampleInputName1"><?php echo $question['Text'] ?></label>
+                              <input required name="answer" value="<?php echo $question["QuestionId"]?>" type="text" class="form-control" id="exampleInputName1" placeholder="Enter the answer">
+                              <br>
+                            <?php
+                                }
+                            ?>
+                        </div>
                       <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                     </form>
+
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
+                  <!-- <div class="alert alert-success" role="alert">
+                          This is a success alert—check it out!
+                        </div>
+                        <div class="alert alert-danger" role="alert">
+                          This is a danger alert—check it out!
+                    </div>  -->
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
           <footer class="footer">

@@ -68,6 +68,27 @@ class ExamController {
     }
 }
 
+    public function getCourseExam($courseId)
+    {
+        $this->db = new DbController;
+        if($this->db->openConnection()) 
+        {
+            $query = "SELECT * FROM exam WHERE CrsId = '" .$courseId."'";;
+
+            $result = $this->db->select($query);
+            if($result === false)
+            {
+                return false;
+            }
+            else
+            {
+                return $result;
+            }   
+        }
+
+    }
+
+
     public function DeleteExam($ExamId) 
     {
         $this->db = new DBController;
