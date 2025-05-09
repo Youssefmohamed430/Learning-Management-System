@@ -4,23 +4,9 @@ require_once '../../../Controllers/DBController.php';
 require_once '../../../Models/Course.php';
 session_start();
 $coursescontroller = new CoursesController;
-$currentvideo = "";
 if (isset($_SESSION['courseid'])) {
     $coursevideos = $coursescontroller->GetCourseVideos($_SESSION['courseid']);
-
-
-    $videoIndex = isset($_POST['videoIndex']) ? (int)$_POST['videoIndex'] : 0;
-
-    if (isset($coursevideos[$videoIndex])) {
-        $currentvideo = $coursevideos[$videoIndex]["VideoPath"];
-    } else {
-        $currentvideo = $coursevideos[0]["VideoPath"];
-    }
-} 
-else {
-    $errmsg = "Error";
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -219,32 +205,6 @@ else {
                 <i class="menu-arrow"></i>
                 <i class="fa fa-mortar-board"></i>
               </a>
-              <div class="collapse" id="auth">
-                <ul class="nav flex-column sub-menu">
-                  <?php
-                if (count($coursevideos )==0){
-                ?>
-                    <div class="alert alert-danger" role="alert" style="font-size : 50px; ">
-                          Not video Course
-                    </div>
-                <?php
-              }
-                else  {
-                    foreach ($coursevideos as $index=> $coursevideo ){
-                        ?>
-                       <li class="nav-item">
-                  <form method="post" style="display:inline;">
-                    <input type="hidden" name="videoIndex" value="<?php echo $index; ?>">
-                    <button type="submit" class="nav-link"><?php echo $coursevideo["VideoId"];?></button>
-                  </form>
-                  </li>
-                      <?php
-                    }
-                }
-              ?>
-                  
-                </ul>
-              </div>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../../index.html">
@@ -257,9 +217,24 @@ else {
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-          <video controls class="w-100">
-               <source src="<?php echo $currentvideo; ?>" type="video/mp4">   
-          </video>
+            <?php
+           if (count($coursevideos )==0){
+                ?>
+                    <div class="alert alert-danger" role="alert" style="font-size : 50px; ">
+                          Not video Course
+                    </div>
+                <?php
+                  }
+                else  {
+                    foreach ($coursevideos as $coursevideo ){
+                        ?>
+                       <video  controls class="w-100" >
+                       <source src="<?php echo $coursevideo["VideoPath"]  ?>" type="video/mp4" />
+                      </video>
+                      <?php
+                    }
+                }
+              ?>
         <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
