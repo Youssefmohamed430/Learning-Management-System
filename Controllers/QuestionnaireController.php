@@ -81,6 +81,27 @@ require_once 'DBController.php';
             }
             return [];
         }
+        public function getAllQuestionnaires(){
+            $this->db = new DBController;
+            if($this->db->openConnection()) 
+            {
+                $query = "SELECT * 
+                FROM questionnaire 
+                LEFT JOIN evaluation ON questionnaire.QuestionnaireId = evaluation.QuestionnaireId";
+
+
+                $result = $this->db->select($query);
+                if($result === false)
+                {
+                    return false;
+                }
+                else
+                {
+                    return $result;
+                }   
+            }
+
+        }
     }
 
 

@@ -54,9 +54,9 @@ class QuestionsController{
         $this->db = new DBController;
         if($this->db->openConnection())
         {
-            $queryDeletecourse = "DELETE FROM questions WHERE questions.QuestionId = '$QId'";
+            $queryDelete = "DELETE FROM questions WHERE questions.QuestionId = '$QId'";
 
-            $result = $this->db->delete($queryDeletecourse);
+            $result = $this->db->delete($queryDelete);
             if($result === false)
             {
                 echo "Error in Query";

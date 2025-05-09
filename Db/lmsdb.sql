@@ -173,6 +173,9 @@ CREATE TABLE `questionnaire` (
   `Type` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+INSERT INTO `questionnaire` (`QuestionnaireId`, `Type`) 
+VALUES ('3', 'ghg'), ('4', 'gghgh');
+
 -- --------------------------------------------------------
 
 --

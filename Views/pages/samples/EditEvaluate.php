@@ -1,8 +1,8 @@
 <?php
-
+require_once '../../../Models/Exam.php';
+require_once '../../../Controllers/ExamController.php';
 require_once '../../../Controllers/DBController.php';
-require_once '../../../Controllers/EvaluateController.php';
-
+require_once '../../../Controllers/CoursesController.php';
 session_start();
 // if (!isset($_SESSION["role"])) {
 //     header("location: Login.php");
@@ -11,35 +11,35 @@ session_start();
 //         header("location: Login.php");
 //     }
 // }
+$coursecontroller = new CoursesController;
+$ExmController = new ExamController;
 $errmsg = "";
-$EvController = new EvaluateController;
-$Evaluations = $EvController->getAllEvaluations();
-if($Evaluations === false){
-  $errmsg = "Error";
-}
+$courses = $coursecontroller->GetAllCourses();
 
-if(isset($_POST["DeleteEvaluate"]))
-{
-  if(!empty($_POST["DeleteEvaluate"]))
-  {
-    $errmsg = $EvController->DeleteEvaluate($_POST["DeleteEvaluate"]);
-  }
-}
 
-if(isset($_POST["EditEvaluate"]))
+if(isset($_POST["ExamId"]) &&isset($_POST["Title"]) && isset($_POST["CrsId"]) && isset($_POST["Date"]) && isset($_POST["Type"]))
 {
-  if(!empty($_POST["EditEvaluate"]))
+  if(!empty($_POST["ExamId"])  &&!empty($_POST["Title"])  && !empty($_POST["CrsId"]) && !empty($_POST["Date"]) && !empty($_POST["Type"]))
   {
-    session_start();
-    $_SESSION["ExamId"] = $_POST["EditEvaluate"];
-    header("Location: EditEvaluate.php");
+    $Exam = new Exam;
+        $Exam->setExamId($_SESSION['ExamId']);
+        $Exam->setTitle($_POST["Title"]);
+        $Exam->setType($_POST["Type"]);
+        $Exam->setDate($_POST["Date"]);
+        $Exam->setCrsId($_POST["CrsId"]);
+
+        $errmsg = $ExmController->EditExam($Exam);
+
+        if($errmsg === "")
+        {
+            header("Location: Exams.php");
+        }
+    }
   }
-  else
-  {
-    $errmsg = "Error";
-  }
-}
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -150,56 +150,41 @@ if(isset($_POST["EditEvaluate"]))
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-          <table class="table">
-              <thead>
-                  <tr>
-                    <th>Evaluation Id</th>
-                    <th>Comment</th>
-                    <th>Date</th>
-                    <th>evaluator_id</th>
-                    <th>evaluatee_id</th>
-                    <th>Add Questions</th>
-                    <th>Delete Exam</th>
-                    </tr>
-              </thead>
-          <tbody>
-              <?php 
-                foreach($Evaluations as $Evaluate)
-                {
-                  ?>
-                  <tr>
-                  <td><?php echo $EvaluateEvaluate["EvaluationId"]?></td>
-                  <td><?php echo $Evaluate["Comment"]?></td>
-                  <td><?php echo $EvaluateEvaluate["Date"]?></td>
-                  <td><?php echo $Evaluate["evaluator_id"]?></td>
-                  <td><?php echo $Evaluate["evaluatee_id"]?></td>
-                  
-                  <td>
-                  <form action="" method="post">
-                  <input type="hidden" name="EditEvaluate" value="<?php echo $Exam["ExamId"]?>"/>
-                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                  <i class="fa fa-edit"></i>
-                  </button>
-                  </form>
-                  </td>
-                  <td>
-                  <form action="" method="post">
-                  <input type="hidden" name="DeleteEvaluate" value="<?php echo $Exam["ExamId"]?>"/>
-                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                  <i class="fa fa-trash-o"></i>
-                  </button>
-                  </form>
-                  </td>
-                  <?php
-                  }
-                  ?>
-                  </tr>
-                  </tbody>
-                </table>
-                <br>
-                <a href="CreateEvaluate.php" class="btn btn-gradient-primary btn-fw">
-                Create Exam
-                </a>
+          <div class="card-body">
+                    <h4 class="card-title">Exams</h4>
+                    <br>
+                    <form class="forms-sample" method = "Post">
+                      <div class="form-group">
+                        <label for="exampleInputName1">Exam Title</label>
+                        <input type="text" class="form-control" id="exampleInputName1" placeholder="Exam Title" name = "Title" required >
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputEmail3">Exam Id</label>
+                        <input type="number" class="form-control" id="exampleInputEmail3" placeholder="Exam ID" name = "ExamId" required value = 1>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1" style="font-size : 20px">Courses</label>
+                        <select class="form-select " name="CrsId">
+                          <?php
+                              foreach ($courses as $course) 
+                              {?>
+                                <option value="<?php echo $course["CrsId"] ?>"><?php echo $course["CrsName"] ?></option>
+                              <?php
+                              } ?>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputCity1">Date</label>
+                        <input type="Date" class="form-control" id="exampleInputCity1" placeholder="Date" name="Date" required >
+                        </div>
+                      <div class="form-group">
+                        <label for="exampleInputCity1">Exam Type</label>
+                        <input type="text" class="form-control" id="exampleInputCity1" value = "post" name="Type" required >
+                      </div>
+                      <button type="submit" class="btn btn-gradient-primary me-2" >Submit</button>
+                      <a class="btn btn-light" href = "Exams.php">Cancel</a>
+                    </form>
+                  </div>
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->

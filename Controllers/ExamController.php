@@ -106,9 +106,9 @@ class ExamController {
         $this->db = new DBController;
         if($this->db->openConnection())
         {
-            $queryDeletecourse = "DELETE FROM exam WHERE ExamId = '$ExamId'";
+            $queryDelete = "DELETE FROM exam WHERE ExamId = '$ExamId'";
 
-            $result = $this->db->delete($queryDeletecourse);
+            $result = $this->db->delete($queryDelete);
 
             if($result === false)
             {

@@ -46,5 +46,21 @@ require_once 'C:\Xampp\htdocs\Learning-Management-System\Models\User.php';
                 }
             }
         }
+        public function getAllUser() {
+            $this->db = new DbController;
+
+            if ($this->db->openConnection()) {
+            $query = "SELECT * FROM `users` WHERE RoleName = 'Faculty';";
+
+            $result = $this->db->select($query);
+
+            if ($result === false) {
+                return false;
+            } else {
+                return $result;
+            }
+        }
+}
+
     }
 ?>

@@ -1,9 +1,10 @@
 <?php
-
+require_once '../../../Models/Evaluation.php';
 require_once '../../../Controllers/DBController.php';
+require_once '../../../Controllers/QuestionnaireController.php';
 require_once '../../../Controllers/EvaluateController.php';
-
 session_start();
+
 // if (!isset($_SESSION["role"])) {
 //     header("location: Login.php");
 // } else {
@@ -11,35 +12,34 @@ session_start();
 //         header("location: Login.php");
 //     }
 // }
-$errmsg = "";
+
+$QrController = new QuestionnaireController;
 $EvController = new EvaluateController;
-$Evaluations = $EvController->getAllEvaluations();
-if($Evaluations === false){
-  $errmsg = "Error";
+$errmsg = "";
+$Questionnaires = $QrController->getAllQuestionnaires();
+
+if (isset($_POST["Comment"]) && isset($_POST["QR"]) && isset($_POST["Date"]) && isset($_POST["EVE"]) && isset($_POST["EVR"])) {
+    if (!empty($_POST["Comment"]) && !empty($_POST["QR"]) && !empty($_POST["Date"]) && !empty($_POST["EVR"]) && !empty($_POST["EVE"])) {
+
+        $Evaluate = new Evaluation(0, $_POST["Comment"], $_POST["Date"], $_POST["EVR"], $_POST["EVE"], $_POST["QR"]);
+
+        $errmsg = $EvController->AddEvaluate($Evaluate);
+
+        if ($errmsg === "") {
+            echo "✅ Data inserted successfully!";
+            // header("Location: EvaluateCoTeachers.php"); // Uncomment later
+        } else {
+            echo "❌ $errmsg";
+        }
+    }
 }
 
-if(isset($_POST["DeleteEvaluate"]))
-{
-  if(!empty($_POST["DeleteEvaluate"]))
-  {
-    $errmsg = $EvController->DeleteEvaluate($_POST["DeleteEvaluate"]);
-  }
-}
 
-if(isset($_POST["EditEvaluate"]))
-{
-  if(!empty($_POST["EditEvaluate"]))
-  {
-    session_start();
-    $_SESSION["ExamId"] = $_POST["EditEvaluate"];
-    header("Location: EditEvaluate.php");
-  }
-  else
-  {
-    $errmsg = "Error";
-  }
-}
+
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -150,56 +150,45 @@ if(isset($_POST["EditEvaluate"]))
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-          <table class="table">
-              <thead>
-                  <tr>
-                    <th>Evaluation Id</th>
-                    <th>Comment</th>
-                    <th>Date</th>
-                    <th>evaluator_id</th>
-                    <th>evaluatee_id</th>
-                    <th>Add Questions</th>
-                    <th>Delete Exam</th>
-                    </tr>
-              </thead>
-          <tbody>
-              <?php 
-                foreach($Evaluations as $Evaluate)
-                {
-                  ?>
-                  <tr>
-                  <td><?php echo $EvaluateEvaluate["EvaluationId"]?></td>
-                  <td><?php echo $Evaluate["Comment"]?></td>
-                  <td><?php echo $EvaluateEvaluate["Date"]?></td>
-                  <td><?php echo $Evaluate["evaluator_id"]?></td>
-                  <td><?php echo $Evaluate["evaluatee_id"]?></td>
-                  
-                  <td>
-                  <form action="" method="post">
-                  <input type="hidden" name="EditEvaluate" value="<?php echo $Exam["ExamId"]?>"/>
-                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                  <i class="fa fa-edit"></i>
-                  </button>
-                  </form>
-                  </td>
-                  <td>
-                  <form action="" method="post">
-                  <input type="hidden" name="DeleteEvaluate" value="<?php echo $Exam["ExamId"]?>"/>
-                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                  <i class="fa fa-trash-o"></i>
-                  </button>
-                  </form>
-                  </td>
-                  <?php
-                  }
-                  ?>
-                  </tr>
-                  </tbody>
-                </table>
-                <br>
-                <a href="CreateEvaluate.php" class="btn btn-gradient-primary btn-fw">
-                Create Exam
-                </a>
+          <div class="card-body">
+                    <h4 class="card-title">Exams</h4>
+                    <br>
+                    <form class="forms-sample" method = "Post">
+                      <div class="form-group">
+                        <label for="exampleInputEmail3">Evalation Id</label>
+                        <input type="number" class="form-control" id="exampleInputEmail3" placeholder="Evalation Id" name = "EID" required value = 1>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputName1">Comment</label>
+                        <input type="text" class="form-control" id="exampleInputName1" placeholder="Comment" name = "Comment" required >
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1" style="font-size : 20px">Questionnaires</label>
+                        <select class="form-select " name="QR">
+                          <?php
+                              foreach ($Questionnaires as $Questionnaire) 
+                              {?>
+                                <option value="<?php echo $Questionnaire["QuestionnaireId"] ?>"><?php echo $Questionnaire["Type"] ?></option>
+                              <?php
+                              } ?>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputCity1">Date</label>
+                        <input type="Date" class="form-control" id="exampleInputCity1" placeholder="Date" name="Date" required >
+                        </div>
+                      <div class="form-group">
+                        <label for="exampleInputCity1">Evaluatee id</label>
+                        <input type="Number" class="form-control" id="exampleInputCity1" value = "1" name="EVE" required >
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputCity1">Evaluator id</label>
+                        <input type="Number" class="form-control" id="exampleInputCity1" value = "1" name="EVR" required >
+                      </div>
+                      <button type="submit" class="btn btn-gradient-primary me-2" >Submit</button>
+                      <a class="btn btn-light" href = "Exams.php">Cancel</a>
+                    </form>
+                  </div>
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
