@@ -109,6 +109,38 @@ class ExamController {
             }
         }
     }
+    public function EditExam($Exam)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+
+                $Title = $Exam->getTitle();
+                $Type = $Exam->getType();
+                $Date = $Exam->getDate();
+                $CrsId = $Exam->getCrsId();
+                $TmpExamId = $Exam->getExamId();
+                
+                $Updatequery = "UPDATE exam SET 
+                Title = '$Title',
+                Type = '$Type',
+                Date = '$Date',
+                CrsId = '$CrsId'
+                WHERE ExamId = '$TmpExamId'";
+
+                $result = $this->db->Update($Updatequery);
+
+                if($result === false)
+                {
+                    echo "Error in Query";
+                    return false;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
 }
 
 

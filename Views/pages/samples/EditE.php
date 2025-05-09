@@ -17,9 +17,9 @@ $errmsg = "";
 $courses = $coursecontroller->GetAllCourses();
 
 
-if(isset($_POST["ExamId"]) &&isset($_POST["Title"]) && isset($_POST["CrsId"]) && isset($_POST["Date"]) && isset($_POST["Type"]))
+if(isset($_POST["Title"]) && isset($_POST["CrsId"]) && isset($_POST["Date"]) && isset($_POST["Type"]))
 {
-  if(!empty($_POST["ExamId"])  &&!empty($_POST["Title"])  && !empty($_POST["CrsId"]) && !empty($_POST["Date"]) && !empty($_POST["Type"]))
+  if(!empty($_POST["Title"])  && !empty($_POST["CrsId"]) && !empty($_POST["Date"]) && !empty($_POST["Type"]))
   {
     $Exam = new Exam;
         $Exam->setExamId($_SESSION['ExamId']);
@@ -157,10 +157,6 @@ if(isset($_POST["ExamId"]) &&isset($_POST["Title"]) && isset($_POST["CrsId"]) &&
                       <div class="form-group">
                         <label for="exampleInputName1">Exam Title</label>
                         <input type="text" class="form-control" id="exampleInputName1" placeholder="Exam Title" name = "Title" required >
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputEmail3">Exam Id</label>
-                        <input type="number" class="form-control" id="exampleInputEmail3" placeholder="Exam ID" name = "ExamId" required value = 1>
                       </div>
                       <div class="form-group">
                         <label for="exampleInputUsername1" style="font-size : 20px">Courses</label>
