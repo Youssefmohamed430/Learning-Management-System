@@ -172,7 +172,7 @@ if(isset($_POST["answer"]))
                               foreach($questions as $question) {
                             ?>
                               <label for="exampleInputName1"><?php echo $question['Text'] ?></label>
-                              <input required name="answer" value="<?php echo $question["QuestionId"]?>" type="text" class="form-control" id="exampleInputName1" placeholder="Enter the answer">
+                              <input required name="answer" type="text" class="form-control" id="exampleInputName1" placeholder="Enter the answer">
                               <br>
                             <?php
                                 }
