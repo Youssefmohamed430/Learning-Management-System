@@ -1,36 +1,31 @@
 <?php
 
   require_once '../../../Models/Student.php';
-  require_once '../../../Models/User.php';
-  require_once '../../../Models/CourseRegisteration.php';
-  require_once '../../../Controllers/DBController.php';
   require_once '../../../Controllers/StudentController.php';
-  require_once '../../../Controllers/CoursesController.php';
   require_once '../../../Controllers/ScheduleController.php';
 
 
-// if (!isset($_SESSION["role"])) {
+if (!isset($_SESSION["role"])) {
 
-//   header("location: Login.php ");
-// } else {
-//   if ($_SESSION["role"] != "Student") {
-//     header("location: Login.php ");
-//   }
-// }
-session_start();
-$_SESSION["studentId"] = 3;
-// if(isset($_POST["id"]))
-// {
-//     if(!empty($_POST["id"]))
-//     {
-//         session_start();
-//         $_SESSION["studentId"] = $_POST["id"];
-//     }
-//     else
-//     {
-//       $errmsg = "Error";
-//     }
-// }
+  header("location: Login.php ");
+} else {
+  if ($_SESSION["role"] != "Student") {
+    header("location: Login.php ");
+  }
+}
+
+if(isset($_POST["userid"]))
+{
+    if(!empty($_POST["userid"]))
+    {
+        session_start();
+        $_SESSION["studentId"] = $_POST["userid"];
+    }
+    else
+    {
+      $errmsg = "Error";
+    }
+}
 
 $studentInfo = new Student;
 $studentController = new StudentController;
@@ -205,10 +200,10 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
                     <table class="table">
                       <thead>
                         <tr>
+                          <th style="font-size: medium;">Event Type</th>
+                          <th style="font-size: medium;">Date</th>
                           <th style="font-size: medium;">Course</th>
-                          <th style="font-size: medium;">Course Description</th>
                           <th style="font-size: medium;">Teacher</th>
-                          <th style="font-size: medium;">Exam Status</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -218,23 +213,11 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
                             foreach($calender as $row) {
                         ?>
                           <tr>
+                            <td> <?php echo $row['EventType'] ?> </td>
+                            <td> <?php echo $row['Date'] ?> </td>
                             <td> <?php echo $row['CrsName'] ?> </td>
-                            <td> <?php echo $row['Description'] ?> </td>
                             <td> <?php echo $row['Name'] ?> </td>
-                            <?php 
-                              if ($row['Grade'] === NULL){
-
-                                ?>
-                                <td><label class="badge badge-danger">Exam Not Taken</label></td>
-                                </tr>
-                            <?php 
-                                }else{
-                                  ?>
-                                    <td><label class="badge badge-success">Exam Taken</label></td>
-                                    </tr>
-                                  <?php
-                                }
-                              ?>
+                            </tr>
                             <?php
                             }
                         } else {

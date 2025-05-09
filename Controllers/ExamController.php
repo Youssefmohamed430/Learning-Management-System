@@ -68,38 +68,27 @@ class ExamController {
     }
 }
 
-    public function EditExam($Exam)
+    public function getCourseExam($courseId)
+    {
+        $this->db = new DbController;
+    if($this->db->openConnection()) 
+    {
+        $query = "SELECT ExamId, Title, Type, Date, CrsId 
+        FROM exam 
+        WHERE CrsId = '$courseId'";
+
+        $result = $this->db->select($query);
+        if($result === false)
         {
-            $this->db = new DBController;
-            if($this->db->openConnection())
-            {
-
-                $Title = $Exam->getTitle();
-                $Type = $Exam->getType();
-                $Date = $Exam->getDate();
-                $CrsId = $Exam->getCrsId();
-                
-                $tmpExamId = $Exam->getExamId();
-
-                $Updatequery = "UPDATE exam SET 
-                    Title = '$Title',
-                    Type = '$Type',
-                    Date = '$Date'
-                    WHERE ExamId = '$tmpExamId' ";
-
-                $result = $this->db->Update($Updatequery);
-
-                if($result === false)
-                {
-                    echo "Error in Query";
-                    return false;
-                }
-                else
-                {
-                    return "";
-                }
-            }
+            return false;
         }
+        else
+        {
+            return $result;
+        }
+    }
+
+    }
 
     public function DeleteExam($ExamId) 
     {
