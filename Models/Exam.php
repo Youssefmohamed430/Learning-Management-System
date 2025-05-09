@@ -2,7 +2,7 @@
     class Exam {
         private $ExamId;
         private $Title;
-        private $Type; // pre or post exam
+        private $Type; //  pre or post exam
         private $Date;
         private $CrsId;
     

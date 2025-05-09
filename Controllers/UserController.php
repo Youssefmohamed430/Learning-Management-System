@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../Models/User.php';
+// require_once '../Models/User.php';
+    require_once __DIR__ . '/../Models/User.php';
     abstract class UserController
     {
         private $db;
@@ -46,6 +47,21 @@ require_once __DIR__ . '/../Models/User.php';
                 }
             }
         }
-        
+        public function getAllUser() {
+            $this->db = new DbController;
+
+            if ($this->db->openConnection()) {
+            $query = "SELECT * FROM `users` WHERE RoleName = 'Faculty';";
+
+            $result = $this->db->select($query);
+
+            if ($result === false) {
+                return false;
+            } else {
+                return $result;
+            }
+        }
+}
+
     }
 ?>

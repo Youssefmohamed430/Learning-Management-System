@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/DBController.php';
-require_once __DIR__ . '/UserController.php';
-require_once __DIR__ . '/ValidationController.php';
+require_once 'DBController.php';
+require_once 'UserController.php';
+require_once 'ValidationController.php';
 
 
     class MemberController extends UserController
