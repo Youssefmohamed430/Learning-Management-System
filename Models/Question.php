@@ -5,8 +5,8 @@
         private $CorrectAnswer;
         private $ExamId;
     
-        public function getQId() { return $this->QId; }
-        public function setQId($QId) { $this->QId = $QId; }
+        public function getQId() { return $this->QuestionId; }
+        public function setQId($QId) { $this->QuestionId = $QId; }
     
         public function getText() { return $this->Text; }
         public function setText($Text) { $this->Text = $Text; }

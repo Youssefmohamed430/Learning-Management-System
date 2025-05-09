@@ -17,7 +17,7 @@ class EvaluateController{
         $Evaluatee = $Evaluate->getEvaluateeId();
 
         $query = "INSERT INTO evaluation 
-        (Comment, Date, EvaluatorId, QuestionnaireId, EvaluateeId)
+        (Comment, Date, evaluator_id, QuestionnaireId, evaluatee_id)
         VALUES 
         ('$Comment', '$Date', '$EvaluatorId', '$QuestionnaireId', '$Evaluatee')";
 
@@ -28,8 +28,6 @@ class EvaluateController{
         } else {
             return "";
         }
-    } else {
-        echo "Connection Failed";
     }
 }
 
@@ -63,17 +61,17 @@ class EvaluateController{
                 $QuestionnaireId = $Evaluate->getQuestionnaireId();
                 $Evaluatee = $Evaluate->getEvaluateeId();
 
-                $Date = addslashes($Exam->getDate());
+                $Date = addslashes($Evaluate->getDate());
                 
                 $tmpEvaluate = $Evaluate->getEvaluationId();
 
                 $Updatequery = "UPDATE evaluation SET 
-                    Comment = '$Comment',
-                    Date = '$Date',
-                    evaluator_Id = '$EvaluatorId',
-                    QuestionnaireId = 'QuestionnaireId',
-                    evaluatee_Id = 'Evaluatee'
-                    WHERE ExamId = '$tmpExamId' ";
+                Comment = '$Comment',
+                Date = '$Date',
+                evaluator_Id = '$EvaluatorId',
+                QuestionnaireId = '$QuestionnaireId',
+                evaluatee_Id = '$Evaluatee'
+                WHERE EvaluationId = '$tmpEvaluate'";
 
                 $result = $this->db->Update($Updatequery);
 

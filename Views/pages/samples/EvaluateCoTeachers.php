@@ -31,7 +31,7 @@ if(isset($_POST["EditEvaluate"]))
   if(!empty($_POST["EditEvaluate"]))
   {
     session_start();
-    $_SESSION["ExamId"] = $_POST["EditEvaluate"];
+    $_SESSION["EvaluationId"] = $_POST["EditEvaluate"];
     header("Location: EditEvaluate.php");
   }
   else
@@ -158,8 +158,8 @@ if(isset($_POST["EditEvaluate"]))
                     <th>Date</th>
                     <th>evaluator_id</th>
                     <th>evaluatee_id</th>
-                    <th>Add Questions</th>
-                    <th>Delete Exam</th>
+                    <th>Edit Evaluation</th>
+                    <th>Delete Evaluation</th>
                     </tr>
               </thead>
           <tbody>
@@ -168,15 +168,15 @@ if(isset($_POST["EditEvaluate"]))
                 {
                   ?>
                   <tr>
-                  <td><?php echo $EvaluateEvaluate["EvaluationId"]?></td>
+                  <td><?php echo $Evaluate["EvaluationId"]?></td>
                   <td><?php echo $Evaluate["Comment"]?></td>
-                  <td><?php echo $EvaluateEvaluate["Date"]?></td>
+                  <td><?php echo $Evaluate["Date"]?></td>
                   <td><?php echo $Evaluate["evaluator_id"]?></td>
                   <td><?php echo $Evaluate["evaluatee_id"]?></td>
                   
                   <td>
                   <form action="" method="post">
-                  <input type="hidden" name="EditEvaluate" value="<?php echo $Exam["ExamId"]?>"/>
+                  <input type="hidden" name="EditEvaluate" value="<?php echo $Evaluate["EvaluationId"]?>"/>
                   <button type="submit" class="btn btn-gradient-primary btn-fw">
                   <i class="fa fa-edit"></i>
                   </button>
@@ -184,7 +184,7 @@ if(isset($_POST["EditEvaluate"]))
                   </td>
                   <td>
                   <form action="" method="post">
-                  <input type="hidden" name="DeleteEvaluate" value="<?php echo $Exam["ExamId"]?>"/>
+                  <input type="hidden" name="DeleteEvaluate" value="<?php echo $Evaluate["EvaluationId"]?>"/>
                   <button type="submit" class="btn btn-gradient-primary btn-fw">
                   <i class="fa fa-trash-o"></i>
                   </button>
@@ -198,7 +198,7 @@ if(isset($_POST["EditEvaluate"]))
                 </table>
                 <br>
                 <a href="CreateEvaluate.php" class="btn btn-gradient-primary btn-fw">
-                Create Exam
+                Create Evaluate
                 </a>
           </div>
           <!-- content-wrapper ends -->

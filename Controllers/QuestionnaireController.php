@@ -85,9 +85,7 @@ require_once 'DBController.php';
             $this->db = new DBController;
             if($this->db->openConnection()) 
             {
-                $query = "SELECT * 
-                FROM questionnaire 
-                LEFT JOIN evaluation ON questionnaire.QuestionnaireId = evaluation.QuestionnaireId";
+                $query = "SELECT * FROM `questionnaire`";
 
 
                 $result = $this->db->select($query);

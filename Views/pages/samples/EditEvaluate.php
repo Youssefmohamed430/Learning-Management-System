@@ -1,8 +1,9 @@
 <?php
-require_once '../../../Models/Exam.php';
-require_once '../../../Controllers/ExamController.php';
+require_once '../../../Models/Evaluation.php';
+require_once '../../../Controllers/EvaluateController.php';
 require_once '../../../Controllers/DBController.php';
-require_once '../../../Controllers/CoursesController.php';
+require_once '../../../Controllers/MemberController.php';
+require_once '../../../Controllers/QuestionnaireController.php';
 session_start();
 // if (!isset($_SESSION["role"])) {
 //     header("location: Login.php");
@@ -11,31 +12,31 @@ session_start();
 //         header("location: Login.php");
 //     }
 // }
-$coursecontroller = new CoursesController;
-$ExmController = new ExamController;
+$MemberController = new MemberController();
+$QrController = new QuestionnaireController;
+$EvController = new EvaluateController;
 $errmsg = "";
-$courses = $coursecontroller->GetAllCourses();
+$Questionnaires = $QrController->getAllQuestionnaires();
+$Members = $MemberController->getCoTeacher();
+$FacultyMembers = $MemberController->getFaciltyMmebers();
+$EvaluationId = $_SESSION["EvaluationId"];
+$Evaluate = null;
+if (isset($_POST["Comment"]) && isset($_POST["QR"]) && isset($_POST["Date"]) && isset($_POST["EVE"]) && isset($_POST["EVR"])) {
+    if (!empty($_POST["Comment"]) && !empty($_POST["QR"]) && !empty($_POST["Date"]) && !empty($_POST["EVR"]) && !empty($_POST["EVE"])) {
 
+        $Evaluate = new Evaluation($EvaluationId, $_POST["Comment"] , $_POST["Date"] ,
+                        $_POST["EVR"] , $_POST["EVE"] ,
+                        $_POST["QR"]);
 
-if(isset($_POST["ExamId"]) &&isset($_POST["Title"]) && isset($_POST["CrsId"]) && isset($_POST["Date"]) && isset($_POST["Type"]))
-{
-  if(!empty($_POST["ExamId"])  &&!empty($_POST["Title"])  && !empty($_POST["CrsId"]) && !empty($_POST["Date"]) && !empty($_POST["Type"]))
-  {
-    $Exam = new Exam;
-        $Exam->setExamId($_SESSION['ExamId']);
-        $Exam->setTitle($_POST["Title"]);
-        $Exam->setType($_POST["Type"]);
-        $Exam->setDate($_POST["Date"]);
-        $Exam->setCrsId($_POST["CrsId"]);
-
-        $errmsg = $ExmController->EditExam($Exam);
+        $errmsg = $EvController->EditEvaluate($Evaluate);
 
         if($errmsg === "")
         {
-            header("Location: Exams.php");
+            header("Location: EvaluateCoTeachers.php");
         }
+
     }
-  }
+}
 
 ?>
 
@@ -151,24 +152,20 @@ if(isset($_POST["ExamId"]) &&isset($_POST["Title"]) && isset($_POST["CrsId"]) &&
         <div class="main-panel">
           <div class="content-wrapper">
           <div class="card-body">
-                    <h4 class="card-title">Exams</h4>
+                    <h4 class="card-title">Evaluation</h4>
                     <br>
-                    <form class="forms-sample" method = "Post">
+                    <form class="forms-sample" method = "post">
                       <div class="form-group">
-                        <label for="exampleInputName1">Exam Title</label>
-                        <input type="text" class="form-control" id="exampleInputName1" placeholder="Exam Title" name = "Title" required >
+                        <label for="exampleInputName1">Comment</label>
+                        <input type="text" class="form-control" id="exampleInputName1" placeholder="Comment" name = "Comment" required >
                       </div>
                       <div class="form-group">
-                        <label for="exampleInputEmail3">Exam Id</label>
-                        <input type="number" class="form-control" id="exampleInputEmail3" placeholder="Exam ID" name = "ExamId" required value = 1>
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputUsername1" style="font-size : 20px">Courses</label>
-                        <select class="form-select " name="CrsId">
+                        <label for="exampleInputUsername1" style="font-size : 20px">Questionnaires</label>
+                        <select class="form-select " name="QR">
                           <?php
-                              foreach ($courses as $course) 
+                              foreach ($Questionnaires as $Questionnaire)
                               {?>
-                                <option value="<?php echo $course["CrsId"] ?>"><?php echo $course["CrsName"] ?></option>
+                                <option value="<?php echo $Questionnaire["QuestionnaireId"] ?>"><?php echo $Questionnaire["Type"] ?></option>
                               <?php
                               } ?>
                         </select>
@@ -178,8 +175,26 @@ if(isset($_POST["ExamId"]) &&isset($_POST["Title"]) && isset($_POST["CrsId"]) &&
                         <input type="Date" class="form-control" id="exampleInputCity1" placeholder="Date" name="Date" required >
                         </div>
                       <div class="form-group">
-                        <label for="exampleInputCity1">Exam Type</label>
-                        <input type="text" class="form-control" id="exampleInputCity1" value = "post" name="Type" required >
+                        <label for="exampleInputUsername1" style="font-size : 20px">Evaluatee ID</label>
+                        <select class="form-select " name="EVE">
+                          <?php
+                              foreach ($Members as $Member) 
+                              {?>
+                                <option value="<?php echo $Member["Id"] ?>"><?php echo $Member["Name"] ?></option>
+                              <?php
+                              } ?>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1" style="font-size : 20px">Evaluator Id</label>
+                        <select class="form-select " name="EVR">
+                          <?php
+                              foreach ($FacultyMembers as $Faculty) 
+                              {?>
+                                <option value="<?php echo $Faculty["Id"] ?>"><?php echo $Faculty["Name"] ?></option>
+                              <?php
+                              } ?>
+                        </select>
                       </div>
                       <button type="submit" class="btn btn-gradient-primary me-2" >Submit</button>
                       <a class="btn btn-light" href = "Exams.php">Cancel</a>
