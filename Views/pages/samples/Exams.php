@@ -28,13 +28,26 @@ if($Exames === false)
     }
   }
 
-  if(isset($_POST["addQ"]))
+  if(isset($_POST["EditExam"]))
   {
-    if(!empty($_POST["addQ"]))
+    if(!empty($_POST["EditExam"]))
     {
       session_start();
       $_SESSION["ExamId"] = $_POST["EditExam"];
       header("Location: EditExam.php");
+    }
+    else
+    {
+      $errmsg = "Error";
+    }
+  }
+  if(isset($_POST["EditE"]))
+  {
+    if(!empty($_POST["EditE"]))
+    {
+      session_start();
+      $_SESSION["ExamId"] = $_POST["EditE"];
+      header("Location: EditE.php");
     }
     else
     {
@@ -158,7 +171,9 @@ if($Exames === false)
                   <tr>
                     <th>Exam Id</th>
                     <th>Title</th>
+                    <th>Type</th>
                     <th>Course</th>
+                    <th>Add Questions</th>
                     <th>Edit Exam</th>
                     <th>Delete Exam</th>
                     </tr>
@@ -171,11 +186,20 @@ if($Exames === false)
                   <tr>
                   <td><?php echo $Exam["ExamId"]?></td>
                   <td><?php echo $Exam["Title"]?></td>
+                  <td><?php echo $Exam["Type"]?></td>
                   <td><?php echo $Exam["CrsName"]?></td>
                   
                   <td>
                   <form action="" method="post">
                   <input type="hidden" name="EditExam" value="<?php echo $Exam["ExamId"]?>"/>
+                  <button type="submit" class="btn btn-gradient-primary btn-fw">
+                  <i class="fa fa-edit"></i>
+                  </button>
+                  </form>
+                  </td>
+                  <td>
+                  <form action="" method="post">
+                  <input type="hidden" name="EditE" value="<?php echo $Exam["ExamId"]?>"/>
                   <button type="submit" class="btn btn-gradient-primary btn-fw">
                   <i class="fa fa-edit"></i>
                   </button>

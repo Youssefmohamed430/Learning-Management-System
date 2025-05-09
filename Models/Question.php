@@ -1,6 +1,6 @@
 <?php
     class Question {
-        private $QId;
+        private $QuestionId;
         private $Text;
         private $CorrectAnswer;
         private $ExamId;
