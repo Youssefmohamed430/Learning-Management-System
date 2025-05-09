@@ -4,36 +4,34 @@
   require_once '../../../Controllers/StudentController.php';
   require_once '../../../Controllers/ScheduleController.php';
 
+  session_start();
 
 if (!isset($_SESSION["role"])) {
 
-  header("location: Login.php ");
+  header("Location: \Learning-Management-System\Views\pages\samples\login.php");
 } else {
   if ($_SESSION["role"] != "Student") {
-    header("location: Login.php ");
+    header("Location: \Learning-Management-System\Views\pages\samples\login.php");
   }
-}
-
-if(isset($_POST["userid"]))
-{
-    if(!empty($_POST["userid"]))
-    {
-        session_start();
-        $_SESSION["studentId"] = $_POST["userid"];
-    }
-    else
-    {
-      $errmsg = "Error";
-    }
 }
 
 $studentInfo = new Student;
 $studentController = new StudentController;
 $calenderController = new ScheduleController;
 
-$studentInfo = $studentController -> ShowUserData($_SESSION["studentId"]);
-$transcript = $studentController -> getTranscript($_SESSION["studentId"]);
-$calender = $calenderController -> getCalender($_SESSION["studentId"]);
+if(isset($_SESSION["Id"]))
+{
+    if(!empty($_SESSION["Id"]))
+    {
+        $studentInfo = $studentController->ShowUserData($_SESSION["Id"]);
+        $transcript = $studentController->getTranscript($_SESSION["Id"]);
+        $calender = $calenderController->getCalender($_SESSION["Id"]);
+    }
+    else
+    {
+      $errmsg = "Error";
+    }
+}
 ?>
 
 
@@ -65,31 +63,7 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
   <body>
     <div class="container-scroller">
       <!-- partial:../../partials/_navbar.html -->
-      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-          <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../assets/images/logo.svg" alt="logo" /></a>
-          <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../assets/images/logo-mini.svg" alt="logo" /></a>
-        </div>
-        <div class="navbar-menu-wrapper d-flex align-items-stretch">
-          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-            <span class="mdi mdi-menu"></span>
-          </button>
-          <div class="search-field d-none d-md-block">
-            <form class="d-flex align-items-center h-100" action="#">
-            </form>
-          </div>
-          <ul class="navbar-nav navbar-nav-right">
-            <li class="nav-item nav-logout d-none d-lg-block">
-              <a class="nav-link" href="#">
-                <i class="mdi mdi-power"></i>
-              </a>
-            </li>
-          </ul>
-          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-            <span class="mdi mdi-menu"></span>
-          </button>
-        </div>
-      </nav>
+      <?php include_once '../samples/Components/nav.php'?>
       <!-- partial -->
       <div class="container-fluid page-body-wrapper">
         <!-- partial:../../partials/_sidebar.html -->
@@ -103,23 +77,19 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
                   <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-                  <span class="font-weight-bold mb-2">David Grey. H</span>
-                  <span class="text-secondary text-small">Project Manager</span>
+                <span class="font-weight-bold mb-2"><?php echo $_SESSION["Name"]; ?></span>
+                <span class="text-secondary text-small"><?php echo $_SESSION["role"]; ?></span>
                 </div>
                 <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../../index.html">
+              <a class="nav-link" href="../../index.php">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
           </ul>
         </nav>
-        
-        
-
-
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
@@ -128,7 +98,7 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
                 <div class="card-body text-center">
                   <div style="margin-bottom: 10px;" class="d-flex justify-content-center align-items-center">
                     <h4 class="card-title mb-0">Personal Information</h4>
-                     <i style="margin-left: 10px;" class="fa fa-id-card-o"></i>
+                      <i style="margin-left: 10px;" class="fa fa-id-card-o"></i>
                   </div>
                 <div class="row justify-content-center">
                       <div style="font-size: 15px;" class="col-md-6">
@@ -142,7 +112,6 @@ $calender = $calenderController -> getCalender($_SESSION["studentId"]);
             </div>
           </div>
             <div class="row">
-
               <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">

@@ -31,5 +31,10 @@ require_once 'DBController.php';
                 return true ;
             }
         }
+
+        public function Logout() {
+            $_SESSION = array(); 
+            session_destroy();
+        }
     }
 ?>
