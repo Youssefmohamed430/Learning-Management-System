@@ -1,6 +1,6 @@
 <?php
-    require_once 'C:\Xampp\htdocs\Learning-Management-System\Controllers\ValidationController.php';
-    require_once 'C:\Xampp\htdocs\Learning-Management-System\Controllers\UserController.php';
+    require_once 'ValidationController.php';
+    require_once 'UserController.php';
     require_once 'DBController.php';
 
     class StudentController extends UserController

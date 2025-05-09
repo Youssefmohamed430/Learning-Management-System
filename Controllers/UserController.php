@@ -1,5 +1,6 @@
 <?php
-require_once 'C:\Xampp\htdocs\Learning-Management-System\Models\User.php';
+// require_once '../Models/User.php';
+    require_once __DIR__ . '/../Models/User.php';
     abstract class UserController
     {
         private $db;
