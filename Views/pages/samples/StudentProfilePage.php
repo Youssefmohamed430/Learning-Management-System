@@ -1,11 +1,7 @@
 <?php
 
   require_once '../../../Models/Student.php';
-  require_once '../../../Models/User.php';
-  require_once '../../../Models/CourseRegisteration.php';
-  require_once '../../../Controllers/DBController.php';
   require_once '../../../Controllers/StudentController.php';
-  require_once '../../../Controllers/CoursesController.php';
   require_once '../../../Controllers/ScheduleController.php';
 
 
