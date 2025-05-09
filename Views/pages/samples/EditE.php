@@ -2,9 +2,7 @@
 require_once '../../../Models/Exam.php';
 require_once '../../../Controllers/ExamController.php';
 require_once '../../../Controllers/DBController.php';
-require_once '../../../Controllers/QuestionsController.php';
-require_once '../../../Models/Question.php';
-
+require_once '../../../Controllers/CoursesController.php';
 session_start();
 // if (!isset($_SESSION["role"])) {
 //     header("location: Login.php");
@@ -13,51 +11,34 @@ session_start();
 //         header("location: Login.php");
 //     }
 // }
-$errmsg = "";
-$ExamId = $_SESSION['ExamId'];
-$QsController = new QuestionsController;
+$coursecontroller = new CoursesController;
 $ExmController = new ExamController;
-$Questions = $QsController->getAllQuestion($ExamId);
+$errmsg = "";
+$courses = $coursecontroller->GetAllCourses();
 
-if (isset($_SESSION['ExamId'])) 
-  {
-      $result = $ExmController->GetExam($_SESSION['ExamId']);
-      if($result === false)
-      {
-          $errmsg = "Error";
-      }
-  }
-if(isset($_POST["Text"]) &&isset($_POST["CorrectAnswer"]))
+
+if(isset($_POST["ExamId"]) &&isset($_POST["Title"]) && isset($_POST["CrsId"]) && isset($_POST["Date"]) && isset($_POST["Type"]))
 {
-  if(!empty($_POST["Text"])  &&!empty($_POST["CorrectAnswer"]))
+  if(!empty($_POST["ExamId"])  &&!empty($_POST["Title"])  && !empty($_POST["CrsId"]) && !empty($_POST["Date"]) && !empty($_POST["Type"]))
   {
-    $Q = new Question;
-    
-        $Q->setText($_POST["Text"]);
-        $Q->setCorrectAnswer($_POST["CorrectAnswer"]);
+    $Exam = new Exam;
+        $Exam->setExamId($_SESSION['ExamId']);
+        $Exam->setTitle($_POST["Title"]);
+        $Exam->setType($_POST["Type"]);
+        $Exam->setDate($_POST["Date"]);
+        $Exam->setCrsId($_POST["CrsId"]);
 
-        $errmsg = $QsController->AddQuestion($Q , $ExamId);
+        $errmsg = $ExmController->EditExam($Exam);
 
         if($errmsg === "")
         {
-            header("Location: EditExam.php");
+            header("Location: Exams.php");
         }
     }
   }
 
-if($Questions === false)
-  {
-    $errmsg = "Error";
-  }
-  if(isset($_POST["DeleteQ"]))
-  {
-    if(!empty($_POST["DeleteQ"]))
-    {
-        $errmsg = $QsController->DeleteQuestion($_POST["DeleteQ"]);
-    }
-  }
-
 ?>
+
 
 
 <!DOCTYPE html>
@@ -169,60 +150,41 @@ if($Questions === false)
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-            <form action="" method="post">
-  <div class="d-flex align-items-center">
-
-    <div class="form-group me-2">
-      <label for="exampleInputCity2">The Question</label>
-      <input type="text" class="form-control" id="exampleInputCity2" name="Text" required>
-    </div>
-
-    <div class="form-group me-2">
-      <label for="exampleInputCity3">Correct Answer</label>
-      <input type="text" class="form-control" id="exampleInputCity3" name="CorrectAnswer" required>
-    </div>
-
-    <div class="d-flex align-items-end">
-      <button type="submit" class="btn btn-gradient-primary">Submit</button>
-    </div>
-
-  </div>
-</form>
-
-
-            <table class="table">
-              <thead>
-                  <tr>
-                    <th>Question number</th>
-                    <th>The Question</th>
-                    <th>Correct Answer</th>
-                    <th>Delete Question</th>
-                    </tr>
-              </thead>
-          <tbody>
-              <?php 
-                foreach($Questions as $Q)
-                {
-                  ?>
-                  <tr>
-                  <td><?php echo $Q["QuestionId"]?></td>
-                  <td><?php echo $Q["Text"]?></td>
-                  <td><?php echo $Q["CorrectAnswer"]?></td>
-                  
-                  <td>
-                  <form action="" method="post">
-                  <input type="hidden" name="DeleteQ" value="<?php echo $Q["QuestionId"]?>"/>
-                  <button type="submit" class="btn btn-gradient-primary btn-fw">
-                  <i class="fa fa-trash-o"></i>
-                  </button>
-                  </form>
-                  </td>
-                  <?php
-                  }
-                  ?>
-                  </tr>
-                  </tbody>
-                </table>
+          <div class="card-body">
+                    <h4 class="card-title">Exams</h4>
+                    <br>
+                    <form class="forms-sample" method = "Post">
+                      <div class="form-group">
+                        <label for="exampleInputName1">Exam Title</label>
+                        <input type="text" class="form-control" id="exampleInputName1" placeholder="Exam Title" name = "Title" required >
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputEmail3">Exam Id</label>
+                        <input type="number" class="form-control" id="exampleInputEmail3" placeholder="Exam ID" name = "ExamId" required value = 1>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1" style="font-size : 20px">Courses</label>
+                        <select class="form-select " name="CrsId">
+                          <?php
+                              foreach ($courses as $course) 
+                              {?>
+                                <option value="<?php echo $course["CrsId"] ?>"><?php echo $course["CrsName"] ?></option>
+                              <?php
+                              } ?>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputCity1">Date</label>
+                        <input type="Date" class="form-control" id="exampleInputCity1" placeholder="Date" name="Date" required >
+                        </div>
+                      <div class="form-group">
+                        <label for="exampleInputCity1">Exam Type</label>
+                        <input type="text" class="form-control" id="exampleInputCity1" value = "post" name="Type" required >
+                      </div>
+                      <button type="submit" class="btn btn-gradient-primary me-2" >Submit</button>
+                      <a class="btn btn-light" href = "Exams.php">Cancel</a>
+                    </form>
+                  </div>
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->

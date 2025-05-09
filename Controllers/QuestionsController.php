@@ -5,7 +5,7 @@ class QuestionsController{
 
     protected $db;
 
-    public function AddQuestion($Question){
+    public function AddQuestion($Question , $EXId){
         $this->db = new DBController;
 
     if ($this->db->openConnection()) {
@@ -13,9 +13,9 @@ class QuestionsController{
         $QId = $Question->getQId();
         $Text = $Question->getText();
         $CorrectAnswer = $Question->getCorrectAnswer();
-        $ExamId = $Question->getExamId();
+        $ExamId = $EXId;
 
-        $query = "INSERT INTO exam VALUES 
+        $query = "INSERT INTO questions VALUES 
                 ('', '$Text' ,'$CorrectAnswer' , '$ExamId')";
         $result = $this->db->insert($query);
 
@@ -34,8 +34,8 @@ class QuestionsController{
             if($this->db->openConnection()) 
             {
                 $query = "SELECT questions.QuestionId , questions.Text, questions.CorrectAnswer 
-                FROM exam 
-                JOIN questions ON exam.ExamId = questions.ExamId 
+                FROM questions 
+                JOIN exam ON exam.ExamId = questions.ExamId 
                 WHERE questions.ExamId = $ExamId";
 
                 $result = $this->db->select($query);
@@ -49,12 +49,13 @@ class QuestionsController{
                 }   
             }
     }
-    public function DeleteExam($QId) 
+    public function DeleteQuestion($QId) 
     {
         $this->db = new DBController;
         if($this->db->openConnection())
         {
-            $queryDeletecourse = "DELETE FROM questions WHERE questions = '$QId'";
+            $queryDeletecourse = "DELETE FROM questions WHERE questions.QuestionId = '$QId'";
+
             $result = $this->db->delete($queryDeletecourse);
             if($result === false)
             {
