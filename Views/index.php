@@ -160,9 +160,15 @@ if (!isset($_SESSION["role"])) {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="../Views/pages/samples/Course/"><!-- Ezzat -->
+                <a class="nav-link" href="../Views/pages/samples/studentEnrolCourses.php"><!-- Ezzat -->
                   <span class="menu-title">Register Course</span>
                   <i class="fa fa-check-square menu-icon"></i>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="../Views/pages/samples/studentFeedback.php">
+                  <span class="menu-title">Set Feedbacks</span>
+                  <i class="fa fa-comments menu-icon"></i> 
                 </a>
               </li>
               <?php
@@ -191,6 +197,12 @@ if (!isset($_SESSION["role"])) {
                 <a class="nav-link" href="../Views/pages/samples/Exams.php">
                   <span class="menu-title">Exams</span>
                   <i class="fa fa-file-text menu-icon"></i> 
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="../Views/pages/samples/SetSchedule.php">
+                  <span class="menu-title">Set Schedule</span>
+                  <i class="fa fa-calendar menu-icon"></i>
                 </a>
               </li>
               <?php

@@ -6,7 +6,31 @@ require_once 'DBController.php';
         protected $db;
 
 
+        public function SetSchedule($schedulemodel)
+        {
+            $this->db = new DBController;
+            $date = $schedulemodel->getdate();
+            $crsid = $schedulemodel->getCrsId();
+            $evnttype = $schedulemodel->getEventType();
+            $memberid = $schedulemodel->getTeacherId();
 
+            if($this->db->openConnection())
+            {
+                $query = "INSERT INTO schedule VALUES ('','$evnttype','$date','$crsid','$memberid')";
+
+                $result = $this->db->insert($query); 
+
+                if($result === false)
+                {
+                    echo "Error in Query";
+                    return false;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
         public function getCalender($studentid)
         {
             $this->db = new DBController;

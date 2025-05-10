@@ -2,19 +2,22 @@
     class Evaluation {
         private $EvaluationId;
         private $Comment;
+        private $Rating;
         private $Date;
         private $evaluator_id; // اللي بيقيم
         private $evaluatee_id; // اللي بيتقيم
         private $QuestionnaireId;
 
-        function __construct($evalid,$comment,$date,$evaluator_id,$evaluatee_id,$QuestionnaireId) {
-            $this->EvaluationId = $evalid;
+        function __construct($comment,$date,$evaluator_id,$evaluatee_id,$QuestionnaireId,$Rating) {
             $this->Comment = $comment;
             $this->Date = $date;
             $this->evaluator_id = $evaluator_id;
             $this->evaluatee_id = $evaluatee_id;
             $this->QuestionnaireId = $QuestionnaireId;
+            $this->Rating = $Rating;
         }
+
+        public function getRating() { return $this->Rating; }
 
         public function getEvaluationId() { return $this->EvaluationId; }
 

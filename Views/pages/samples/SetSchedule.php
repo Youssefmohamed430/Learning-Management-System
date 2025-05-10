@@ -1,35 +1,49 @@
 <?php
-require_once '../../../Models/User.php';
-require_once '../../../Models/Course.php';
-require_once '../../../Models/FacultyMember.php';
-require_once '../../../Controllers/CoursesController.php';
-$coursesController = new CoursesController();
-$errmsg = "";
+    require_once '../../../Controllers/AdminController.php';
+    require_once '../../../Controllers/CoursesController.php';
+    require_once '../../../Controllers/UserController.php';
+    require_once '../../../Controllers/ScheduleController.php';
+    require_once '../../../Models/Course.php';
+    require_once '../../../Models/Schedule.php';
 
-session_start();
-  if (!isset($_SESSION["role"])) {
-  
-    header("location: login.php ");
-  } else {
-    if ($_SESSION["role"] != "Student") {
-      header("location: login.php ");
+    session_start();
+    if (!isset($_SESSION["role"])) {
+
+      header("location: Login.php ");
+    } else {
+      if ($_SESSION["role"] != "Faculty") {
+        header("location: Login.php ");
+      }
     }
+  $coursecontroller = new CoursesController;
+  $schedulecontroller = new ScheduleController;
+  $admin = new AdminController;
+  $eventtypes = ["Exam","Course"];
+  $courses = $coursecontroller->GetAllCourses();
+  $errmsg = "";
+  if($courses === false)
+  {
+      $errmsg = "Error";
   }
-if(isset($_POST['course_id']))
-{
-    if(!empty($_POST['course_id'])){
-        $errmsg = $coursesController->RegisterCourse($_POST['course_id'], $_SESSION["Id"]);
-    }
-    else{
-        $errmsg = "Error";
-    }
-}
-if(isset($_POST["Dropcourse_id"]))
-{
-    if(!empty($_POST["Dropcourse_id"])){
-        $errmsg = $coursesController->DropCourse($_SESSION["Id"],$_POST["Dropcourse_id"]);
-    }
-}
+
+  if(isset($_POST["Type"]) && isset($_POST["courses"]) && isset($_POST["Date"]))
+  {
+      if(!empty($_POST["Type"]) && !empty($_POST["courses"]) && !empty($_POST["Date"]))
+      {
+          $schedule = new Schedule;
+          $schedule->setCrsId($_POST["courses"]);
+          $schedule->setTeacherId($_SESSION["Id"]);
+          $schedule->setEventType($_POST["Type"]);
+          $schedule->setDate($_POST["Date"]);
+
+          $errmsg = $schedulecontroller->SetSchedule($schedule);
+
+          if($errmsg === "")
+          {
+              header("Location: \Learning-Management-System\Views\index.php");
+          }
+      }
+  }
 ?>
 
 
@@ -58,7 +72,7 @@ if(isset($_POST["Dropcourse_id"]))
   <body>
     <div class="container-scroller">
       <!-- partial:../../partials/_navbar.html -->
-      <?php include_once '../samples/Components/nav.php'?>
+      <?php include_once '.../../Components/nav.php';?>
       <!-- partial -->
       <div class="container-fluid page-body-wrapper">
         <!-- partial:../../partials/_sidebar.html -->
@@ -89,57 +103,46 @@ if(isset($_POST["Dropcourse_id"]))
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-            <?php if($errmsg != ""): ?>
-              <div class="alert <?php echo strpos($errmsg, 'Successfully') !== false ? 'alert-success' : 'alert-warning'; ?> alert-dismissible fade show" role="alert">
-                  <?php echo $errmsg; ?>
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-            <?php endif; ?>
             <div class="row">
-              <?php
-              $courses = $coursesController->GetAllCourses();
-              if ($courses!='') {
-                foreach ($courses as $i) {
-                  if($coursesController->IsStudentRegistered($_SESSION["Id"], $i['CrsId'])){
-                    ?>
-                    <div class="col-md-4 mb-4">
-                      <div class="card">
-                        <div class="card-body">
-                          <h5 class="card-title"><?php echo $i['CrsName']; ?></h5>
-                          <p class="card-text"><?php echo $i['Description']; ?></p>
-                          <p class="card-text"><small class="text-muted">Faculty: <?php echo $i['Name'] ?? 'Not Assigned'; ?></small></p>
-                          <div class="alert alert-info">You are already registered for this course</div>
-                          <form action="" method="post">
-                            <input type="hidden" name="Dropcourse_id" value="<?php echo $i['CrsId']; ?>">
-                            <button type="submit" name="DropCourse" class="btn btn-primary">Drop</button>
-                          </form> 
-                        </div>
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Set Schedule</h4>
+                    <br>
+                    <form class="forms-sample" method="Post">
+                        <?php 
+                          if($errmsg != "")
+                          {
+                              ?>
+                                  <div class="alert alert-danger" role="alert"><?php echo $errmsg ?></div>
+                              <?php
+                          }
+                        ?>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1" style="font-size : 20px">Event Type</label>
+                        <input type="text" class="form-control" id="InputName" placeholder="Member" name = "Type">
                       </div>
-                    </div>
-                    <?php
-                  } else {
-                    ?>
-                    <div class="col-md-4 mb-4">
-                      <div class="card">
-                        <div class="card-body">
-                          <h5 class="card-title"><?php echo $i['CrsName']; ?></h5>
-                          <p class="card-text"><?php echo $i['Description']; ?></p>
-                          <p class="card-text"><small class="text-muted">Faculty: <?php echo $i['Name'] ?? 'Not Assigned'; ?></small></p>
-                          <form action="" method="post">
-                            <input type="hidden" name="course_id" value="<?php echo $i['CrsId']; ?>">
-                            <button type="submit" name="register_course" class="btn btn-primary">Register</button>
-                          </form>
-                        </div>
+                      <div class="form-group">
+                        <label for="exampleInputCity1">Date</label>
+                        <input type="Date" class="form-control" id="exampleInputCity1" placeholder="Date" name="Date" required >
                       </div>
-                    </div>
-                    <?php
-                  }
-                }
-              } else {
-                echo '<div class="col-12"><div class="alert alert-info">No courses found.</div></div>';
-              }
-              ?>
-            </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1" style="font-size : 20px">Courses</label>
+                        <select class="form-select " name="courses">
+                          <?php
+                              foreach ($courses as $course) 
+                              {?>
+                                <option value="<?php echo $course["CrsId"] ?>"><?php echo $course["CrsName"] ?></option>
+                              <?php
+                              } ?>
+                        </select>
+                      </div>
+                      <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+          </div>
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->

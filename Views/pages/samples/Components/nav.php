@@ -1,11 +1,16 @@
 <?php
   require_once __DIR__ . '../../../../../Controllers/AuthController.php';
+  require_once __DIR__ . '../../../../../Controllers/NotificationController.php';
 if (isset($_POST["logout"]) && !empty($_POST["logout"])) {
   $authcontroller = new AuthController;
   $authcontroller->Logout();
   header("Location: \Learning-Management-System\Views\pages\samples\login.php"); 
   exit();
 }
+
+$notificationscontroller = new NotificationController;
+
+$notifications = $notificationscontroller->SendNotification($_SESSION["Id"]);
 ?>
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
@@ -59,7 +64,23 @@ if (isset($_POST["logout"]) && !empty($_POST["logout"])) {
                 <i class="mdi mdi-bell-outline"></i>
                 <span class="count-symbol bg-danger"></span>
               </a>
-            </li>
+              <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                <h6 class="p-3 mb-0">Notifications</h6>
+                <?php
+                  foreach($notifications as $notif)
+                  {
+                ?>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                    <p class="text-gray ellipsis mb-0"> <?php echo $notif->getMessage(); ?> </p>
+                    <p class="text-gray ellipsis mb-0"> <?php echo $notif->getDateSent(); ?> </p>
+                  </div>
+                </a>
+                <?php
+                  }
+                  ?>
+              </li>
           </ul>
           <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
             <span class="mdi mdi-menu"></span>
