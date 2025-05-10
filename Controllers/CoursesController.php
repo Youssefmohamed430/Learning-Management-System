@@ -208,9 +208,6 @@ require_once 'DBController.php';
             }
             return false;
         }
-    }
-    
-?>
         // zenhoum
     public function GetMYCourses($studentid) 
     {
@@ -230,7 +227,7 @@ require_once 'DBController.php';
             }
         }
     }
-    
+
     public function GetCourseVideos($couseid){
         $this->db = new DbController;
         if($this->db->openConnection()) 
@@ -249,7 +246,7 @@ require_once 'DBController.php';
         }
 
     } 
-    
+
     public function UploadCourseVideo($videoModel)
         {
             $this->db = new DBController;
@@ -293,6 +290,26 @@ require_once 'DBController.php';
             }
             return false;
         }
-    }
 
+        public function DropCourse($stuid,$crsid)
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $query = "DELETE FROM courseregisteration WHERE courseregisteration.CrsId = '$crsid' AND courseregisteration.StuId = '$stuid'";
+                $result = $this->db->Delete($query);
+                
+                if($result === false)
+                {
+                    return false;
+                }
+                else
+                {
+                    return $result;
+                }
+            }
+            return false;
+        }
+    }
 ?>
+
