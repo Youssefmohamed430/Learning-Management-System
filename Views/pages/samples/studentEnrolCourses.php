@@ -1,27 +1,32 @@
 <?php
-require_once '../../../Controllers/CoursesController.php';
-require_once '../../../Controllers/DBController.php';
+require_once '../../../Models/User.php';
 require_once '../../../Models/Course.php';
-session_start();
-$coursescontroller = new CoursesController;
-$currentvideo = "";
-if (isset($_SESSION['courseid'])) {
-    $coursevideos = $coursescontroller->GetCourseVideos($_SESSION['courseid']);
+require_once '../../../Models/FacultyMember.php';
+require_once '../../../Controllers/CoursesController.php';
+$coursesController = new CoursesController();
+$errmsg = "";
 
-
-    $videoIndex = isset($_POST['videoIndex']) ? (int)$_POST['videoIndex'] : 0;
-
-    if (isset($coursevideos[$videoIndex])) {
-        $currentvideo = $coursevideos[$videoIndex]["VideoPath"];
-    } else {
-        $currentvideo = $coursevideos[0]["VideoPath"];
+// session_start();
+//   if (!isset($_SESSION["role"])) {
+  
+//     header("location: Login.php ");
+//   } else {
+//     if ($_SESSION["role"] != "Student") {
+//       header("location: Login.php ");
+//     }
+//   }
+if(isset($_POST['course_id']))
+{
+    if(!empty($_POST['course_id'])){
+        $errmsg = $coursesController->RegisterCourse($_POST['course_id'], 3);
     }
-} 
-else {
-    $errmsg = "Error";
+    else{
+        $errmsg = "Error";
+    }
 }
-
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -214,42 +219,9 @@ else {
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-                <span class="menu-title">my course</span>
-                <i class="menu-arrow"></i>
-                <i class="fa fa-mortar-board"></i>
-              </a>
-              <div class="collapse" id="auth">
-                <ul class="nav flex-column sub-menu">
-                  <?php
-                if (count($coursevideos )==0){
-                ?>
-                    <div class="alert alert-danger" role="alert" style="font-size : 50px; ">
-                          Not video Course
-                    </div>
-                <?php
-              }
-                else  {
-                    foreach ($coursevideos as $index=> $coursevideo ){
-                        ?>
-                       <li class="nav-item">
-                  <form method="post" style="display:inline;">
-                    <input type="hidden" name="videoIndex" value="<?php echo $index; ?>">
-                    <button type="submit" class="nav-link"><?php echo $coursevideo["VideoId"];?></button>
-                  </form>
-                  </li>
-                      <?php
-                    }
-                }
-              ?>
-                  
-                </ul>
-              </div>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="../../index.html">
-              <i class=" fa fa-mortar-board"></i>
-                <span class="menu-title">exam</span>
+                <span class="menu-title">Dashboard</span>
+                <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
           </ul>
@@ -257,10 +229,57 @@ else {
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-          <video controls class="w-100">
-               <source src="<?php echo $currentvideo; ?>" type="video/mp4">   
-          </video>
-        <footer class="footer">
+            <?php if($errmsg != ""): ?>
+              <div class="alert <?php echo strpos($errmsg, 'Successfully') !== false ? 'alert-success' : 'alert-warning'; ?> alert-dismissible fade show" role="alert">
+                  <?php echo $errmsg; ?>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            <?php endif; ?>
+            <div class="row">
+              <?php
+              $courses = $coursesController->GetAllCourses();
+              if ($courses!='') {
+                foreach ($courses as $i) {
+                  if($coursesController->IsStudentRegistered(3, $i['CrsId'])){
+                    ?>
+                    <div class="col-md-4 mb-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title"><?php echo $i['CrsName']; ?></h5>
+                          <p class="card-text"><?php echo $i['Description']; ?></p>
+                          <p class="card-text"><small class="text-muted">Faculty: <?php echo $i['Name'] ?? 'Not Assigned'; ?></small></p>
+                          <div class="alert alert-info">You are already registered for this course</div>
+                        </div>
+                      </div>
+                    </div>
+                    <?php
+                  } else {
+                    ?>
+                    <div class="col-md-4 mb-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title"><?php echo $i['CrsName']; ?></h5>
+                          <p class="card-text"><?php echo $i['Description']; ?></p>
+                          <p class="card-text"><small class="text-muted">Faculty: <?php echo $i['Name'] ?? 'Not Assigned'; ?></small></p>
+                          <form action="" method="post">
+                            <input type="hidden" name="course_id" value="<?php echo $i['CrsId']; ?>">
+                            <button type="submit" name="register_course" class="btn btn-primary">Register</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <?php
+                  }
+                }
+              } else {
+                echo '<div class="col-12"><div class="alert alert-info">No courses found.</div></div>';
+              }
+              ?>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
               <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>

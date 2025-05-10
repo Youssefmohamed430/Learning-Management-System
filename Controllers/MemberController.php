@@ -128,6 +128,7 @@ require_once 'ValidationController.php';
                 }
             }
         }
+<<<<<<< HEAD
 
         public function getCoTeacher(){
             $this->db = new DBController;
@@ -157,6 +158,25 @@ require_once 'ValidationController.php';
                     return $result;
                 }
             }
+=======
+        public function GetAllFaculty()
+        {
+            $this->db = new DBController;
+            if($this->db->openConnection())
+            {
+                $query = "SELECT Id, Name FROM users WHERE RoleName = 'Faculty'";
+                $result = $this->db->select($query);
+                if($result === false)
+                {
+                    return false;
+                }
+                else
+                {   
+                    return $result;
+                }
+            }
+            return false;
+>>>>>>> 6a6c24dce9e9b44155bb7328189af51fdcfc5ac4
         }
     }
 ?>

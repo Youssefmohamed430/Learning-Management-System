@@ -1,27 +1,22 @@
 <?php
-require_once '../../../Controllers/CoursesController.php';
-require_once '../../../Controllers/DBController.php';
-require_once '../../../Models/Course.php';
-session_start();
-$coursescontroller = new CoursesController;
-$currentvideo = "";
-if (isset($_SESSION['courseid'])) {
-    $coursevideos = $coursescontroller->GetCourseVideos($_SESSION['courseid']);
+require_once '../../../Controllers/MemberController.php';
+require_once '../../../Controllers/QuestionnaireController.php';
+$memberController = new MemberController();
+$questionnaireController = new QuestionnaireController();
+$faculty = $memberController->GetAllFaculty();
+$questions = $questionnaireController->GetQuestions();
 
 
-    $videoIndex = isset($_POST['videoIndex']) ? (int)$_POST['videoIndex'] : 0;
 
-    if (isset($coursevideos[$videoIndex])) {
-        $currentvideo = $coursevideos[$videoIndex]["VideoPath"];
-    } else {
-        $currentvideo = $coursevideos[0]["VideoPath"];
-    }
-} 
-else {
-    $errmsg = "Error";
-}
-
+// if(isset($_POST['submit'])){
+//   foreach($questions as $question){
+//     $response = $_POST['response_'.$question['QuestionId']]; 
+//   }
+//     $rating = $_POST['overall_rating'];
+//     $questionnaireController->AddFeedback($response, $rating);
+// }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -214,42 +209,9 @@ else {
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-                <span class="menu-title">my course</span>
-                <i class="menu-arrow"></i>
-                <i class="fa fa-mortar-board"></i>
-              </a>
-              <div class="collapse" id="auth">
-                <ul class="nav flex-column sub-menu">
-                  <?php
-                if (count($coursevideos )==0){
-                ?>
-                    <div class="alert alert-danger" role="alert" style="font-size : 50px; ">
-                          Not video Course
-                    </div>
-                <?php
-              }
-                else  {
-                    foreach ($coursevideos as $index=> $coursevideo ){
-                        ?>
-                       <li class="nav-item">
-                  <form method="post" style="display:inline;">
-                    <input type="hidden" name="videoIndex" value="<?php echo $index; ?>">
-                    <button type="submit" class="nav-link"><?php echo $coursevideo["VideoId"];?></button>
-                  </form>
-                  </li>
-                      <?php
-                    }
-                }
-              ?>
-                  
-                </ul>
-              </div>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="../../index.html">
-              <i class=" fa fa-mortar-board"></i>
-                <span class="menu-title">exam</span>
+                <span class="menu-title">Dashboard</span>
+                <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
           </ul>
@@ -257,10 +219,64 @@ else {
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-          <video controls class="w-100">
-               <source src="<?php echo $currentvideo; ?>" type="video/mp4">   
-          </video>
-        <footer class="footer">
+            <h1>Student Feedback</h1>
+          <form method="post" action="">
+           <div class="form-group">
+                <label for="facultySelect">Choose the faculty member</label>
+                <select class="form-control" id="facultySelect" name="faculty_id" required>
+                    <option value="">Select Faculty Member</option>
+                      <?php
+                      if($faculty !== false && !empty($faculty)) {
+                          foreach($faculty as $member) {
+                              echo '<option value="' .$member['id'].'">'.$member['Name'].'</option>';
+                          }
+                      }
+                      ?>
+                </select>
+            </div>
+
+            <?php
+            if($questions !== false && !empty($questions)) {
+                foreach($questions as $question) {
+                    ?>
+                    <div class="form-group">
+                        <label><?php echo $question['Text']; ?></label>
+                        <select class="form-control" name="response_<?php echo $question['QuestionId'];?>" required>
+                            <option value="">Select Rating</option>
+                            <option value="1" name="response_<?php echo $question['QuestionId'];?>">1 - Poor</option>
+                            <option value="2" name="response_<?php echo $question['QuestionId'];?>">2 - Fair</option>
+                            <option value="3" name="response_<?php echo $question['QuestionId'];?>">3 - Good</option>
+                            <option value="4" name="response_<?php echo $question['QuestionId'];?>">4 - Very Good</option>
+                            <option value="5" name="response_<?php echo $question['QuestionId'];?>">5 - Excellent</option>
+                        </select>
+                    </div>
+                    <?php
+                }
+            }
+            ?>
+                      <div class="form-group">
+                         <label>Overall Rating</label>
+                         <select class="form-control" name="overall_rating" required>
+                            <option value="">Select Rating</option>
+                            <option value="1" >1 - Poor</option>
+                            <option value="2" >2 - Fair</option>
+                            <option value="3" >3 - Good</option>
+                            <option value="4" >4 - Very Good</option>
+                            <option value="5" >5 - Excellent</option>
+                        </select>
+                    </div>
+
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">Additional Comments</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" name="comment" rows="3"></textarea>
+            </div>
+            <button type="submit" name="submit" class="btn btn-primary">Submit Feedback</button>
+        </form>
+
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
               <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
