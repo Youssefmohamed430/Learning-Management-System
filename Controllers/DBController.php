@@ -57,8 +57,7 @@
             }
             else
             {
-                // return true;
-                return $this->connection->insert_id;
+                return mysqli_insert_id($this->connection);
             }
         }
         

@@ -143,10 +143,10 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'ratings';
                     <div class="tab-content mt-4" id="feedbackTabsContent">
                       <!-- Ratings Tab -->
                       <div class="tab-pane fade <?php echo $activeTab === 'ratings' ? 'show active' : '' ?>" 
-                           id="ratings" 
-                           role="tabpanel" 
-                           aria-labelledby="ratings-tab">
-                           
+                          id="ratings" 
+                          role="tabpanel" 
+                          aria-labelledby="ratings-tab">
+                          
                         <?php if (empty($ratings)): ?>
                           <div class="alert alert-info">
                             No ratings available yet.

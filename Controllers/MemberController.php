@@ -128,12 +128,11 @@ require_once 'ValidationController.php';
                 }
             }
         }
-<<<<<<< HEAD
 
         public function getCoTeacher(){
             $this->db = new DBController;
             if($this->db->openConnection()){
-                $query = "SELECT Id , Name FROM users where RoleName = 'Co Teacher'";
+                $query = "SELECT Id , Name FROM users where RoleName = 'Co-Teacher'";
                 $result = $this->db->select($query);
                 if($result === false){
                     echo "Error in Query";
@@ -145,22 +144,7 @@ require_once 'ValidationController.php';
             }
         }
 
-        public function getFaciltyMmebers(){
-            $this->db = new DBController;
-            if($this->db->openConnection()){
-                $query = "SELECT Id , Name FROM users WHERE RoleName = 'Faculty'";
-                $result = $this->db->select($query);
-                if($result === false){
-                    echo "Error in Query";
-                    return false;
-                }
-                else{
-                    return $result;
-                }
-            }
-=======
-        public function GetAllFaculty()
-        {
+    public function GetAllFaculty() {
             $this->db = new DBController;
             if($this->db->openConnection())
             {
@@ -176,7 +160,6 @@ require_once 'ValidationController.php';
                 }
             }
             return false;
->>>>>>> 6a6c24dce9e9b44155bb7328189af51fdcfc5ac4
         }
     }
 ?>

@@ -12,9 +12,9 @@ class EvaluateController{
 
         $Comment = $Evaluate->getComment();
         $Date = addslashes($Evaluate->getDate());
-        $EvaluatorId = $Evaluate->getEvaluatorId();
+        $EvaluatorId = (int)$Evaluate->getEvaluatorId();
         $QuestionnaireId = $Evaluate->getQuestionnaireId();
-        $Evaluatee = $Evaluate->getEvaluateeId();
+        $Evaluatee = (int)$Evaluate->getEvaluateeId();
 
         $query = "INSERT INTO evaluation 
         (Comment, Date, evaluator_id, QuestionnaireId, evaluatee_id)
@@ -31,12 +31,13 @@ class EvaluateController{
     }
 }
 
-    public function getAllEvaluations(){
+    public function getAllEvaluations($id){
         $this->db = new DbController;
             if($this->db->openConnection()) 
             {
-                $query = "SELECT evaluation.EvaluationId, evaluation.Comment, evaluation.Date , evaluation.evaluator_id , evaluation.evaluatee_id 
-                FROM evaluation JOIN questionnaire ON evaluation.QuestionnaireId = questionnaire.QuestionnaireId";;
+                $query = "SELECT * 
+                FROM evaluation JOIN questionnaire ON evaluation.QuestionnaireId = questionnaire.QuestionnaireId
+                WHERE Type = 'Co-Teacher-Eval' AND evaluation.evaluator_id = '$id' ";
 
                 $result = $this->db->select($query);
                 if($result === false)
@@ -57,9 +58,9 @@ class EvaluateController{
 
                 $Comment = $Evaluate->getComment();
                 $Date = $Evaluate->getDate();
-                $EvaluatorId = $Evaluate->getEvaluatorId();
+                $EvaluatorId = (int)$Evaluate->getEvaluatorId();
                 $QuestionnaireId = $Evaluate->getQuestionnaireId();
-                $Evaluatee = $Evaluate->getEvaluateeId();
+                $Evaluatee = (int)$Evaluate->getEvaluateeId();
 
                 $Date = addslashes($Evaluate->getDate());
                 

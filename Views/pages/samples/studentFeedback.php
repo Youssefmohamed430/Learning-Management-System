@@ -23,11 +23,12 @@ if(isset($_POST["faculty_id"]) && isset($_POST["comment"]) && isset($_POST["over
                 {
                     $response->setResponseText($_POST["answer$QId"]);
                     $response->setQuestionId($QId);
+                    $response->setRating($_POST["overall_rating"]);
                     $answers[$i] = $response;
                 }
             }
         }
-        $eval = new Evaluation($_POST["comment"],date("Y-m-d"),$_SESSION["Id"],$_POST["faculty_id"],$questions[0]["QuestionnaireId"],$_POST["overall_rating"]);
+        $eval = new Evaluation($_POST["comment"],date("Y-m-d"),$_SESSION["Id"],$_POST["faculty_id"],$questions[0]["QuestionnaireId"]);
         $result = $questionnaireController->AddFeedback($answers,$eval);
 
         if($result === false)

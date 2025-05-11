@@ -5,27 +5,27 @@ require_once '../../../Controllers/DBController.php';
 require_once '../../../Controllers/MemberController.php';
 require_once '../../../Controllers/QuestionnaireController.php';
 session_start();
-// if (!isset($_SESSION["role"])) {
-//     header("location: Login.php");
-// } else {
-//     if ($_SESSION["role"] != "Faculty") {
-//         header("location: Login.php");
-//     }
-// }
+if (!isset($_SESSION["role"])) {
+    header("location: Login.php");
+} else {
+    if ($_SESSION["role"] != "Faculty") {
+        header("location: Login.php");
+    }
+}
 $MemberController = new MemberController();
 $QrController = new QuestionnaireController;
 $EvController = new EvaluateController;
 $errmsg = "";
-$Questionnaires = $QrController->getAllQuestionnaires();
+$Questionnaires = $QrController->getAllQuestionnairesCoteacher();
 $Members = $MemberController->getCoTeacher();
-$FacultyMembers = $MemberController->getFaciltyMmebers();
+$FacultyMembers = $MemberController->GetAllFaculty();
 $EvaluationId = $_SESSION["EvaluationId"];
 $Evaluate = null;
-if (isset($_POST["Comment"]) && isset($_POST["QR"]) && isset($_POST["Date"]) && isset($_POST["EVE"]) && isset($_POST["EVR"])) {
-    if (!empty($_POST["Comment"]) && !empty($_POST["QR"]) && !empty($_POST["Date"]) && !empty($_POST["EVR"]) && !empty($_POST["EVE"])) {
+if (isset($_POST["Comment"]) && isset($_POST["QR"]) && isset($_POST["Date"]) && isset($_POST["EVE"]) ) {
+    if (!empty($_POST["Comment"]) && !empty($_POST["QR"]) && !empty($_POST["Date"])&& !empty($_POST["EVE"])) {
 
         $Evaluate = new Evaluation($EvaluationId, $_POST["Comment"] , $_POST["Date"] ,
-                        $_POST["EVR"] , $_POST["EVE"] ,
+                        $_SESSION["Id"] , $_POST["EVE"] ,
                         $_POST["QR"]);
 
         $errmsg = $EvController->EditEvaluate($Evaluate);
@@ -181,17 +181,6 @@ if (isset($_POST["Comment"]) && isset($_POST["QR"]) && isset($_POST["Date"]) && 
                               foreach ($Members as $Member) 
                               {?>
                                 <option value="<?php echo $Member["Id"] ?>"><?php echo $Member["Name"] ?></option>
-                              <?php
-                              } ?>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputUsername1" style="font-size : 20px">Evaluator Id</label>
-                        <select class="form-select " name="EVR">
-                          <?php
-                              foreach ($FacultyMembers as $Faculty) 
-                              {?>
-                                <option value="<?php echo $Faculty["Id"] ?>"><?php echo $Faculty["Name"] ?></option>
                               <?php
                               } ?>
                         </select>

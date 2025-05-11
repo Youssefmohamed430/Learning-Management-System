@@ -41,6 +41,27 @@ require_once 'DBController.php';
             }
         }
 
+
+
+        public function GetCoursesAssignedToMember($id) 
+        {
+            $this->db = new DbController;
+            if($this->db->openConnection()) 
+            {
+                $query = "SELECT CrsId,CrsName,Description,Name FROM course Left JOIN users ON FacultyId = Id WHERE FacultyId = '$id' ";
+
+                $result = $this->db->select($query);
+                if($result === false)
+                {
+                    return false;
+                }
+                else
+                {
+                    return $result;
+                }
+            }
+        }
+
         public function GetCourse($CrsId) 
         {
             $this->db = new DbController;

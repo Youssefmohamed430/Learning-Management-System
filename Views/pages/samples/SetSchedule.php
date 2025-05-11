@@ -19,7 +19,7 @@
   $schedulecontroller = new ScheduleController;
   $admin = new AdminController;
   $eventtypes = ["Exam","Course"];
-  $courses = $coursecontroller->GetAllCourses();
+  $courses = $coursecontroller->GetCoursesAssignedToMember($_SESSION["Id"]);
   $errmsg = "";
   if($courses === false)
   {

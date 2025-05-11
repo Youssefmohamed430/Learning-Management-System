@@ -4,6 +4,7 @@
         private $evaluationId;
         private $questionId;
         private $ResponseText;
+        private $Rating;
 
         public function getResponseId() { return $this->ResponseId; }
         public function setResponseId($ResponseId) { $this->ResponseId = $ResponseId; }
@@ -16,5 +17,8 @@
 
         public function getResponseText() { return $this->ResponseText; }
         public function setResponseText($ResponseText) { $this->ResponseText = $ResponseText; }
+
+        public function getRating() { return $this->Rating; }
+        public function setRating($Rating) { $this->Rating = $Rating; }
     }
 ?>

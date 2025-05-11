@@ -81,13 +81,11 @@ require_once 'DBController.php';
             }
             return [];
         }
-        public function getAllQuestionnaires(){
+        public function getAllQuestionnairesCoteacher(){
             $this->db = new DBController;
             if($this->db->openConnection()) 
             {
-                $query = "SELECT * FROM `questionnaire`";
-
-
+                $query = "SELECT * FROM `questionnaire` WHERE Type = 'Co-Teacher-Eval'";
                 $result = $this->db->select($query);
                 if($result === false)
                 {
@@ -98,8 +96,8 @@ require_once 'DBController.php';
                     return $result;
                 }   
             }
-
         }
+
     public function GetQuestions()
         {
             $this->db = new DbController;
@@ -108,7 +106,8 @@ require_once 'DBController.php';
             {
                 $qry = "SELECT * 
                         FROM evalquestion eq 
-                        JOIN questionnaire q ON eq.questionnaireId = q.QuestionnaireId ";
+                        JOIN questionnaire q ON eq.questionnaireId = q.QuestionnaireId 
+                        WHERE q.Type = 'Teacher-Eval'";
                 
                 $result = $this->db->select($qry);
                 
@@ -126,25 +125,27 @@ require_once 'DBController.php';
             
             if($this->db->openConnection())
             {
-                $qry = "INSERT INTO evaluation VALUES ('','".$evalmodel->getComment()."','".$evalmodel->getRating()."',
+                $qry = "INSERT INTO evaluation VALUES ('','".$evalmodel->getComment()."',
                 '".$evalmodel->getDate()."','".$evalmodel->getEvaluatorId()."',
                 '".$evalmodel->getQuestionnaireId()."','".$evalmodel->getEvaluateeId()."')";
                 $result = $this->db->insert($qry);
 
                 foreach($responsesarray as $response)
                 {
-                    $query = "INSERT INTO questionresponse VALUES ('','".$response->getgetResponseText()."','".$evalmodel->getEvaluateeId()."'
-                    ,'$result','".$response->getQuestionId()."')";
+                    $query = "INSERT INTO questionresponse VALUES ('','".$response->getResponseText()."','$result'
+                    ,'".$response->getQuestionId()."', '".$response->getRating()."')";
+
                     $responseresult = $this->db->insert($query);
+
                     if($responseresult === false)
                         return false;
                 }
             }
-            $query = "SELECT Name From users Where Id = '".$evalmodel->getEvaluatorId()."'";
-            $selectresult = $this->db->select($query);
+            $querynotif = "SELECT Name From users Where Id = '".$evalmodel->getEvaluatorId()."'";
+            $selectresult = $this->db->select($querynotif);
 
             $notification = new Notifications;
-            $notification->setMessage("You have been rated by "+$selectresult[0]["Name"]);
+            $notification->setMessage("You have been rated by ".$selectresult[0]["Name"]);
             $notification->setDateSent(date("Y-m-d"));
             $notification->setReceiverId($evalmodel->getEvaluateeId());
 

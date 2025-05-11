@@ -16,7 +16,7 @@
   $AdminController = new AdminController;
   $student = new Student;
   $errmsg = "";
-  $Types = ["Teacher-Eval","Course-Eval","Student-Eval","Admin-Eval"];
+  $Types = ["Teacher-Eval","Course-Eval","Co-Teacher-Eval"];
   $NumberOfQuestions = 0 ;
 
   if(isset($_POST["Types"]) && isset($_POST["number"]))
