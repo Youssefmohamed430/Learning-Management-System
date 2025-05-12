@@ -102,7 +102,9 @@ if(isset($_POST["faculty_id"]) && isset($_POST["comment"]) && isset($_POST["over
                       <?php
                       if($faculty !== false && !empty($faculty)) {
                           foreach($faculty as $member) {
-                              echo '<option value="' .$member['id'].'">'.$member['Name'].'</option>';
+                            ?>
+                              <option value="<?php echo $member["Id"];?>" ><?php echo $member["Name"];?></option>
+                              <?php
                           }
                       }
                       ?>
