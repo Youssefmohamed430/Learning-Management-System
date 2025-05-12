@@ -2,6 +2,7 @@
 require_once '../../../Controllers/MemberController.php';
 require_once '../../../Controllers/QuestionnaireController.php';
 require_once '../../../Models/QuestionResponse.php';
+require_once '../../../Models/Evaluation.php';
 session_start();
 $memberController = new MemberController();
 $questionnaireController = new QuestionnaireController();
@@ -10,20 +11,20 @@ $questions = $questionnaireController->GetQuestions();
 $response = new QuestionResponse;
 $answers = [];
 $errmsg;
-if(isset($_POST["faculty_id"]) && isset($_POST["comment"]) && isset($_POST["overall_rating"]))
+if(isset($_POST["faculty_id"]) && isset($_POST["comment"]))
 {
-    if(!empty($_POST["faculty_id"]) && !empty($_POST["comment"]) && !empty($_POST["overall_rating"]))
+    if(!empty($_POST["faculty_id"]) && !empty($_POST["comment"]))
     {
         for($i = 0 ; $i < Count($questions);$i++)
         {
             $QId = $questions[$i]["QuestionId"];
-            if(isset($_POST["answer$QId"]))
+            if(isset($_POST["answer".$QId]) && isset($_POST["rating".$QId]))
             {
-                if(!empty($_POST["answer$QId"]))
+                if(!empty($_POST["answer".$QId]) && !empty($_POST["rating".$QId]))
                 {
-                    $response->setResponseText($_POST["answer$QId"]);
+                    $response->setResponseText($_POST["answer".$QId]);
                     $response->setQuestionId($QId);
-                    $response->setRating($_POST["overall_rating"]);
+                    $response->setRating($_POST["rating".$QId]);
                     $answers[$i] = $response;
                 }
             }
@@ -33,6 +34,8 @@ if(isset($_POST["faculty_id"]) && isset($_POST["comment"]) && isset($_POST["over
 
         if($result === false)
             $errmsg = "Error";
+          else
+              header("Location: \Learning-Management-System\Views\index.php");
     }
 }
 ?>
@@ -110,7 +113,6 @@ if(isset($_POST["faculty_id"]) && isset($_POST["comment"]) && isset($_POST["over
                       ?>
                 </select>
             </div>
-
             <?php
             if($questions !== false && !empty($questions)) {
                 for($i = 0 ; $i < Count($questions) ; $i++) {
@@ -119,13 +121,9 @@ if(isset($_POST["faculty_id"]) && isset($_POST["comment"]) && isset($_POST["over
                         <label><?php echo $questions[$i]['Text']; ?></label>
                         <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Answer" name="answer<?php echo $questions[$i]["QuestionId"]?>">
                     </div>
-                    <?php
-                }
-            }
-            ?>
-                      <div class="form-group">
-                        <label>Overall Rating</label>
-                        <select class="form-control" name="overall_rating" required>
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <select class="form-control" name="rating<?php echo $questions[$i]["QuestionId"]?>" required>
                             <option value="">Select Rating</option>
                             <option value="1" >1 - Poor</option>
                             <option value="2" >2 - Fair</option>
@@ -134,7 +132,10 @@ if(isset($_POST["faculty_id"]) && isset($_POST["comment"]) && isset($_POST["over
                             <option value="5" >5 - Excellent</option>
                         </select>
                     </div>
-
+                    <?php
+                }
+            }
+            ?>
             <div class="form-group">
                 <label for="exampleFormControlTextarea1">Additional Comments</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" name="comment" rows="3"></textarea>

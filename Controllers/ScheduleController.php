@@ -4,7 +4,12 @@ require_once 'DBController.php';
     class ScheduleController
     {
         protected $db;
+        public $validationController;
+        
 
+        function __construct() {
+            $this->validationController = new ValidationController;
+        }
 
         public function SetSchedule($schedulemodel)
         {
@@ -33,6 +38,12 @@ require_once 'DBController.php';
         }
         public function getCalender($studentid)
         {
+            if(!$this->validationController->NumberOfCourses($studentid))
+            {
+                session_start();
+                $_SESSION["errmsg"] = "Must Number of Courses More than 0";
+                return false;
+            }
             $this->db = new DBController;
             if($this->db->openConnection())
             {

@@ -1,6 +1,8 @@
 <?php
 
 require_once 'DBController.php';
+require_once __DIR__ .'/../Models/Notifications.php';
+require_once 'NotificationController.php';
 
     class QuestionnaireController
     {
@@ -81,11 +83,15 @@ require_once 'DBController.php';
             }
             return [];
         }
+
         public function getAllQuestionnairesCoteacher(){
             $this->db = new DBController;
             if($this->db->openConnection()) 
             {
-                $query = "SELECT * FROM `questionnaire` WHERE Type = 'Co-Teacher-Eval'";
+                $query = "SELECT * FROM `evalquestion` JOIN questionnaire
+                ON evalquestion.questionnaireId = questionnaire.QuestionnaireId
+                WHERE questionnaire.Type = 'Co-Teacher-Eval'";
+
                 $result = $this->db->select($query);
                 if($result === false)
                 {

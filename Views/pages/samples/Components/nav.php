@@ -11,7 +11,16 @@ if (isset($_POST["logout"]) && !empty($_POST["logout"])) {
 $notificationscontroller = new NotificationController;
 
 $notifications = $notificationscontroller->SendNotification($_SESSION["Id"]);
+
+if(isset($_POST["markasread"]))
+{
+  if(!empty("markasread"))
+  {
+      $notificationscontroller->MarkAsRead($_POST["markasread"]);
+  }
+}
 ?>
+
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
           <a class="navbar-brand brand-logo" href="../../../index.php">
@@ -54,32 +63,50 @@ $notifications = $notificationscontroller->SendNotification($_SESSION["Id"]);
               </div>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="mdi mdi-email-outline"></i>
-                <span class="count-symbol bg-warning"></span>
-              </a>
-            </li>
-            <li class="nav-item dropdown">
               <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
                 <i class="mdi mdi-bell-outline"></i>
                 <span class="count-symbol bg-danger"></span>
               </a>
               <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                <h6 class="p-3 mb-0">Notifications</h6>
-                <?php
-                  foreach($notifications as $notif)
-                  {
-                ?>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                    <p class="text-gray ellipsis mb-0"> <?php echo $notif->getMessage(); ?> </p>
-                    <p class="text-gray ellipsis mb-0"> <?php echo $notif->getDateSent(); ?> </p>
-                  </div>
-                </a>
-                <?php
+                  <h6 class="p-3 mb-0">Notifications</h6>
+                  <?php
+                  if (empty($notifications)) {
+                      echo '<div class="dropdown-divider"></div>';
+                      echo '<p class="p-3 mb-0 text-gray">No notifications available.</p>';
+                  } else {
+                      foreach($notifications as $notif) {
+                  ?>
+                      <div class="dropdown-divider"></div>
+                        <div class="dropdown-item preview-item">
+                          <div class="preview-item-content d-flex align-items-start flex-column justify-content-center"> 
+                              <p class="text-gray ellipsis mb-0"><?php echo $notif["Message"]; ?></p>
+                              <p class="text-gray ellipsis mb-0"><?php echo $notif["DateSent"]; ?></p>
+                          </div>
+                          <form action="" method="post">
+                                <input type="hidden" name="markasread" value="<?php echo $notif["NotifId"]?>"/>
+                                <button type="submit" class="btn btn-gradient-primary btn-fw" style="background: none; border: none; 
+                                  padding: 0; width: auto; cursor: pointer; color: #007bff; font-size: 16px;">
+                                  <?php
+                                  if($notif["IsRead"] == 0)
+                                  {
+                                    ?>
+                                    <i class="fa fa-bookmark-o"></i>
+                                    <?php
+                                  }
+                                  else {
+                                    ?>
+                                        <i class="fa fa-bookmark"></i>
+                                    <?php
+                                    }
+                                    ?>
+                                </button>
+                          </form>
+                      </div>
+                  <?php
+                      }
                   }
                   ?>
+              </div>
               </li>
           </ul>
           <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">

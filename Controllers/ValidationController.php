@@ -31,5 +31,15 @@
 
         public function IsPasswordValid($Password)
         { return strlen($Password) > 3 && ctype_upper($Password[0]) && strpbrk($Password, '0123456789'); }
+        
+        public function NumberOfCourses($StuId){
+            $this->db = new DBController;
+            if($this->db->openConnection()) 
+            {
+                $query = "SELECT * FROM courseregisteration WHERE StuId = '$StuId'";
+                $result=$this->db->select($query);
+                return Count($result) > 0;
+            }
+        }
     }
 ?>

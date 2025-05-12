@@ -10,7 +10,7 @@
             if($this->db->openConnection())
             {
                 $qry = "INSERT INTO notifications VALUES ('','".$NotificationModel->getMessage()."'
-                ,'','".$NotificationModel->getdate()."','".$NotificationModel->getReceiverId()."')";
+                ,'','".$NotificationModel->getDateSent()."','".$NotificationModel->getReceiverId()."')";
                 $result = $this->db->insert($qry);
                 if($result === false)
                     return "Error At query";
@@ -26,6 +26,20 @@
             {
                 $qry = "SELECT * FROM notifications WHERE ReceiverId = '$Id'";
                 $result = $this->db->select($qry);
+                if($result === false)
+                    return "Error At query";
+                else
+                    return $result;
+            }
+        }
+        public function MarkAsRead($notifId)
+        {
+            $this->db = new DbController;
+            
+            if($this->db->openConnection())
+            {
+                $qry = "UPDATE notifications SET IsRead = 1 WHERE NotifId = '$notifId'";
+                $result = $this->db->Update($qry);
                 if($result === false)
                     return "Error At query";
                 else

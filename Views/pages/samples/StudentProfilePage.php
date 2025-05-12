@@ -130,7 +130,7 @@ if(isset($_SESSION["Id"]))
                       <tbody>
 
                       <?php
-                        if(count($transcript) > 0) {
+                        if(Count($transcript) > 0) {
                             foreach($transcript as $course) {
                         ?>
                             <tr>
@@ -178,7 +178,7 @@ if(isset($_SESSION["Id"]))
                       <tbody>
                         
                       <?php
-                        if(count($calender) > 0) {
+                        if($calender !== false) {
                             foreach($calender as $row) {
                         ?>
                           <tr>
@@ -194,7 +194,7 @@ if(isset($_SESSION["Id"]))
                           <tr>
                               <td colspan="4" class="p-0">
                                   <div class="alert alert-danger text-center m-0 w-100" role="alert">
-                                      The Course Calendar is not available at this time
+                                      <?php echo $_SESSION["errmsg"];   ?>
                                   </div>
                               </td>
                           </tr>

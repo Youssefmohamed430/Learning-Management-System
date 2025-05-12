@@ -4,32 +4,32 @@ require_once 'DBController.php';
 class EvaluateController{
     protected $db;
 
-    public function AddEvaluate($Evaluate) 
-{
-    $this->db = new DBController;
+//     public function AddEvaluate($Evaluate,$responsesarray) 
+// {
+//     $this->db = new DBController;
 
-    if ($this->db->openConnection()) {
+//     if ($this->db->openConnection()) {
 
-        $Comment = $Evaluate->getComment();
-        $Date = addslashes($Evaluate->getDate());
-        $EvaluatorId = (int)$Evaluate->getEvaluatorId();
-        $QuestionnaireId = $Evaluate->getQuestionnaireId();
-        $Evaluatee = (int)$Evaluate->getEvaluateeId();
+//         $Comment = $Evaluate->getComment();
+//         $Date = addslashes($Evaluate->getDate());
+//         $EvaluatorId = (int)$Evaluate->getEvaluatorId();
+//         $QuestionnaireId = $Evaluate->getQuestionnaireId();
+//         $Evaluatee = (int)$Evaluate->getEvaluateeId();
 
-        $query = "INSERT INTO evaluation 
-        (Comment, Date, evaluator_id, QuestionnaireId, evaluatee_id)
-        VALUES 
-        ('$Comment', '$Date', '$EvaluatorId', '$QuestionnaireId', '$Evaluatee')";
+//         $query = "INSERT INTO evaluation 
+//         (Comment, Date, evaluator_id, QuestionnaireId, evaluatee_id)
+//         VALUES 
+//         ('$Comment', '$Date', '$EvaluatorId', '$QuestionnaireId', '$Evaluatee')";
 
-        $result = $this->db->insert($query);
+//         $result = $this->db->insert($query);
 
-        if ($result === false) {
-            echo "Error in Query";
-        } else {
-            return "";
-        }
-    }
-}
+//         if ($result === false) {
+//             echo "Error in Query";
+//         } else {
+//             return "";
+//         }
+//     }
+// }
 
     public function getAllEvaluations($id){
         $this->db = new DbController;
@@ -50,7 +50,7 @@ class EvaluateController{
                 }   
             }
     }
-    public function EditEvaluate($Evaluate)
+    public function EditEvaluate($responsesarray,$Evaluate,$EvlId)
         {
             $this->db = new DBController;
             if($this->db->openConnection())
@@ -61,10 +61,7 @@ class EvaluateController{
                 $EvaluatorId = (int)$Evaluate->getEvaluatorId();
                 $QuestionnaireId = $Evaluate->getQuestionnaireId();
                 $Evaluatee = (int)$Evaluate->getEvaluateeId();
-
                 $Date = addslashes($Evaluate->getDate());
-                
-                $tmpEvaluate = $Evaluate->getEvaluationId();
 
                 $Updatequery = "UPDATE evaluation SET 
                 Comment = '$Comment',
@@ -72,9 +69,22 @@ class EvaluateController{
                 evaluator_Id = '$EvaluatorId',
                 QuestionnaireId = '$QuestionnaireId',
                 evaluatee_Id = '$Evaluatee'
-                WHERE EvaluationId = '$tmpEvaluate'";
+                WHERE EvaluationId = '$EvlId'";
 
                 $result = $this->db->Update($Updatequery);
+
+                foreach($responsesarray as $response)
+                {
+                    $query = "UPDATE questionresponse SET 
+                    ResponseText = '".$response->getResponseText()."',
+                    questionId = '".$response->getQuestionId()."',
+                    Rating = '".$response->getRating()."'";
+
+                    $responseresult = $this->db->Update($query);
+
+                    if($responseresult === false)
+                        return false;
+                }
 
                 if($result === false)
                 {
