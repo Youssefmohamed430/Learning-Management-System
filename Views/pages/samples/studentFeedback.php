@@ -22,6 +22,7 @@ if(isset($_POST["faculty_id"]) && isset($_POST["comment"]))
             {
                 if(!empty($_POST["answer".$QId]) && !empty($_POST["rating".$QId]))
                 {
+                    $response = new QuestionResponse;
                     $response->setResponseText($_POST["answer".$QId]);
                     $response->setQuestionId($QId);
                     $response->setRating($_POST["rating".$QId]);

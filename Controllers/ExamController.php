@@ -73,12 +73,11 @@ class ExamController {
 
     public function getCourseExam($courseId)
     {
-            $this->db = DBController::getInstance();
+        $this->db = DBController::getInstance();
 
     if($this->db->openConnection()) 
     {
-        $query = "SELECT ExamId, Title, Type, Date, CrsId 
-        FROM exam 
+        $query = "SELECT * FROM exam 
         WHERE CrsId = '$courseId'";
 
         $result = $this->db->select($query);

@@ -60,13 +60,13 @@ $coursevideos = $coursescontroller->GetCourseVideos($_SESSION['courseid']);
           <li class="nav-item">
             <a class="nav-link" href="#">
               <span class="menu-title">My Course</span>
-              <i class="fa fa-mortar-board"></i>
+              <i class="fa fa-mortar-board menu-icon"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../../index.html">
+            <a class="nav-link" href="../samples/StudentExamPage.php">
               <span class="menu-title">Exam</span>
-              <i class="fa fa-pencil"></i>
+              <i class="fa fa-pencil menu-icon"></i>
             </a>
           </li>
         </ul>

@@ -47,11 +47,11 @@ require_once 'DBController.php';
             $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
-                $query = "SELECT schedule.EventType, schedule.Date,course.CrsName ,users.Name 
-                FROM student JOIN courseregisteration ON student.UserId = courseregisteration.StuId 
-                JOIN course on courseregisteration.CrsId = course.CrsId 
-                JOIN schedule on course.CrsId = schedule.CrsId 
-                JOIN users on users.Id = schedule.FactulyId 
+                $query = "SELECT schedule.EventType, schedule.Date,course.CrsName ,users.Name FROM student 
+                JOIN courseregisteration ON student.UserId = courseregisteration.StuId 
+                JOIN course ON courseregisteration.CrsId = course.CrsId 
+                JOIN schedule ON course.CrsId = schedule.CrsId 
+                JOIN users ON users.Id = schedule.FactulyId 
                 WHERE student.UserId = '$studentid'";
 
                 $result = $this->db->select($query); 

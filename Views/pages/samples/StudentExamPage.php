@@ -7,58 +7,47 @@ require_once '../../../Controllers/QuestionsController.php';
 require_once '../../../Controllers/ExamController.php';
 require_once '../../../Controllers/StudentAnswerController.php';
 
-// session_start();
-// if (!isset($_SESSION["role"])) {
+session_start();
+if (!isset($_SESSION["role"])) {
 
-//   header("location: Login.php ");
-// } else {
-//   if ($_SESSION["role"] != "Student") {
-//     header("location: Login.php ");
-//   }
-// }
+  header("location: login.php ");
+} else {
+  if ($_SESSION["role"] != "Student") {
+    header("location: login.php ");
+  }
+}
 
 $errmsg = "";
 $successMsg = "";
-
-session_start();
-$_SESSION["courseId"] = 15;
-
-// if(isset($_POST["courseId"]))
-// {
-//     if(!empty($_POST["courseId"]))
-//     {
-//         session_start();
-//         $_SESSION["courseId"] = $_POST["courseId"];
-//     }
-//     else
-//     {
-//       $errmsg = "Error";
-//     }
-// }
 
 $examController = new ExamController;
 $questionsController = new QuestionsController;
 $studentAnswercontroller = new StudentAnswerController;
 
-$exam = $examController -> getCourseExam($_SESSION["courseId"]);
-$questions = $questionsController -> getAllQuestion($exam[0]['ExamId']);
-
-if(isset($_POST["answer"]))
-{
-    if(!empty($_POST["answer"]))
+$exam = $examController -> getCourseExam($_SESSION["courseid"]);
+$questions = $questionsController -> getAllQuestion($exam[0]["ExamId"]);
+$answers = [];
+    for($i = 0 ; $i < Count($questions);$i++)
     {
-        session_start();
-        $_SESSION["answer"] = $_POST["answer"];
-        $studentAnswer = new StudentAnswer;
-        $studentAnswer -> setAnswer($_POST["answer"]);
-        $tempIsCorrect = $studentAnswercontroller -> isCorrect($_POST["answer"]); 
-        
+          $QId = $questions[$i]["QuestionId"];
+        if(isset($_POST["answer".$QId]) )
+        {
+            if(!empty($_POST["answer".$QId]))
+            {
+                $studentanswer = new StudentAnswer;
+                $studentanswer->setAnswer($_POST["answer".$QId]);
+                $studentanswer->setQuestionId($QId);
+                $studentanswer->setExamId($exam[0]["ExamId"]);
+                $answers[$i] = $studentanswer;
+            }
+        }
     }
-    else
-    {
-      $errmsg = "Error";
-    }
-}
+    $result = $studentAnswercontroller->setAnswersToQuestions($answers);
+    
+        if($result === false)
+            $errmsg = "Error";
+        //   else
+        //     header("Location: \Learning-Management-System\Views\index.php");
 
 ?>
 
@@ -112,46 +101,29 @@ if(isset($_POST["answer"]))
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../../index.html">
+              <a class="nav-link" href="../../index.php">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
-            </li>
-            <li class="nav-item">
-              <div class="collapse" id="ui-basic">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" href="../../pages/ui-features/buttons.html">Buttons</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="../../pages/ui-features/dropdowns.html">Dropdowns</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="../../pages/ui-features/typography.html">Typography</a>
-                  </li>
-                </ul>
-              </div>
             </li>
           </ul>
         </nav>
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-
             <div class="row">
               <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title"> <?php echo $exam[0]['Title'] ?></h4>
                     <p class="card-description"> A <?php echo $exam[0]['Type'] ?> Course Exam</p>
-
                     <form method="post" class="forms-sample">
                       <div class="form-group">
                         <?php
                               foreach($questions as $question) {
                             ?>
                               <label for="exampleInputName1"><?php echo $question['Text'] ?></label>
-                              <input required name="answer" type="text" class="form-control" id="exampleInputName1" placeholder="Enter the answer">
+                              <input required name="answer<?php echo $question['QuestionId'] ?>" type="text" class="form-control" id="exampleInputName1" placeholder="Enter the answer">
                               <br>
                             <?php
                                 }
@@ -159,7 +131,6 @@ if(isset($_POST["answer"]))
                         </div>
                       <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                     </form>
-
                   </div>
                 </div>
               </div>
