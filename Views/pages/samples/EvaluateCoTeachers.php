@@ -39,6 +39,19 @@ if(isset($_POST["EditEvaluate"]))
     $errmsg = "Error";
   }
 }
+if(isset($_POST["EvaluationQuestionnaire"]))
+{
+  if(!empty($_POST["EvaluationQuestionnaire"]))
+  {
+    session_start();
+    $_SESSION["EvaluationId"] = $_POST["EvaluationQuestionnaire"];
+    header("Location: EvaluationQuestionnaire.php");
+  }
+  else
+  {
+    $errmsg = "Error";
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -121,9 +134,9 @@ if(isset($_POST["EditEvaluate"]))
                     <th>Evaluation Id</th>
                     <th>Comment</th>
                     <th>Date</th>
-                    <th>evaluator_id</th>
                     <th>evaluatee_id</th>
                     <th>Edit Evaluation</th>
+                    <th>Evaluation Questionnaire</th>
                     <th>Delete Evaluation</th>
                     </tr>
               </thead>
@@ -136,12 +149,19 @@ if(isset($_POST["EditEvaluate"]))
                   <td><?php echo $Evaluate["EvaluationId"]?></td>
                   <td><?php echo $Evaluate["Comment"]?></td>
                   <td><?php echo $Evaluate["Date"]?></td>
-                  <td><?php echo $Evaluate["evaluator_id"]?></td>
                   <td><?php echo $Evaluate["evaluatee_id"]?></td>
                   
                   <td>
                   <form action="" method="post">
                   <input type="hidden" name="EditEvaluate" value="<?php echo $Evaluate["EvaluationId"]?>"/>
+                  <button type="submit" class="btn btn-gradient-primary btn-fw">
+                  <i class="fa fa-edit"></i>
+                  </button>
+                  </form>
+                  </td>
+                  <td>
+                  <form action="" method="post">
+                  <input type="hidden" name="EvaluationQuestionnaire" value="<?php echo $Evaluate["EvaluationId"]?>"/>
                   <button type="submit" class="btn btn-gradient-primary btn-fw">
                   <i class="fa fa-edit"></i>
                   </button>
