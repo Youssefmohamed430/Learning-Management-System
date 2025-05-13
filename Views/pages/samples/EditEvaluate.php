@@ -15,39 +15,20 @@ if (!isset($_SESSION["role"])) {
     }
 }
 $MemberController = new MemberController();
-$QrController = new QuestionnaireController;
 $EvController = new EvaluateController;
+
 $errmsg = "";
-$questions = $QrController->getAllQuestionnairesCoteacher();
+
 $Members = $MemberController->getCoTeacher();
-$EvaluationId = $_SESSION["EvaluationId"];
+
+
 $Evaluate = null;
-$answers = [];
-$response = new QuestionResponse;
-if (isset($_POST["Comment"]) && isset($_POST["Date"])) {
-    if (!empty($_POST["Comment"])  && !empty($_POST["Date"])) {
-
-      for($i = 0 ; $i < Count($questions);$i++)
-        {
-            $QId = $questions[$i]["QuestionId"];
-            if(isset($_POST["answer".$QId]) && isset($_POST["rating".$QId]))
-            {
-                if(!empty($_POST["answer".$QId]) && !empty($_POST["rating".$QId]))
-                {
-                    $response->setResponseText($_POST["answer".$QId]);
-                    $response->setQuestionId($QId);
-                    $response->setRating($_POST["rating".$QId]);
-                    $answers[$i] = $response;
-                }
-            }
-        }
-
-        $Evaluate = new Evaluation( $_POST["Comment"] , $_POST["Date"] ,
+if (isset($_POST["Comment"]) && isset($_POST["Date"]) && isset($_POST["EVE"]) ) {
+    if (!empty($_POST["Comment"]) && !empty($_POST["Date"]) && !empty($_POST["EVE"])) {
+        $Evaluate = new Evaluation($_POST["Comment"] , $_POST["Date"] ,
                         $_SESSION["Id"] , $_POST["EVE"] ,
-                        $questions[0]["QuestionnaireId"]);
-
-        $errmsg = $EvController->EditEvaluate($answers,$Evaluate,$EvaluationId);
-
+                        18);
+        $EvController->EditEvaluate($Evaluate , $_SESSION["EvaluationId"]);
         if($errmsg === "")
         {
             header("Location: EvaluateCoTeachers.php");
@@ -55,7 +36,6 @@ if (isset($_POST["Comment"]) && isset($_POST["Date"])) {
 
     }
 }
-
 ?>
 
 
@@ -147,36 +127,12 @@ if (isset($_POST["Comment"]) && isset($_POST["Date"])) {
                       <div class="form-group">
                         <label for="exampleInputName1">Comment</label>
                         <input type="text" class="form-control" id="exampleInputName1" placeholder="Comment" name = "Comment" required >
-                      </div>
-                      <?php
-                  if($questions !== false && !empty($questions)) {
-                      for($i = 0 ; $i < Count($questions) ; $i++) {
-                          ?>
-                          <div class="form-group">
-                              <label><?php echo $questions[$i]['Text']; ?></label>
-                              <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Answer" name="answer<?php echo $questions[$i]["QuestionId"]?>">
-                          </div>
-                    <div class="form-group">
-                        <label>Rating</label>
-                        <select class="form-control" name="rating<?php echo $questions[$i]["QuestionId"]?>" required>
-                            <option value="">Select Rating</option>
-                            <option value="1" >1 - Poor</option>
-                            <option value="2" >2 - Fair</option>
-                            <option value="3" >3 - Good</option>
-                            <option value="4" >4 - Very Good</option>
-                            <option value="5" >5 - Excellent</option>
-                        </select>
-                    </div>
-                          <?php
-                      }
-                  }
-                  ?>
                       <div class="form-group">
                         <label for="exampleInputCity1">Date</label>
                         <input type="Date" class="form-control" id="exampleInputCity1" placeholder="Date" name="Date" required >
                         </div>
                       <div class="form-group">
-                        <label for="exampleInputUsername1" style="font-size : 20px">Evaluatee ID</label>
+                        <label for="exampleInputUsername1" style="font-size : 20px">Evaluatee</label>
                         <select class="form-select " name="EVE">
                           <?php
                               foreach ($Members as $Member) 
@@ -187,7 +143,7 @@ if (isset($_POST["Comment"]) && isset($_POST["Date"])) {
                         </select>
                       </div>
                       <button type="submit" class="btn btn-gradient-primary me-2" >Submit</button>
-                      <a class="btn btn-light" href = "Exams.php">Cancel</a>
+                      <a class="btn btn-light" href = "EvaluateCoTeachers.php">Cancel</a>
                     </form>
                   </div>
           </div>

@@ -2,8 +2,9 @@
 require_once '../../../Models/Evaluation.php';
 require_once '../../../Models/QuestionResponse.php';
 require_once '../../../Controllers/DBController.php';
+require_once '../../../Controllers/QuestionnaireController.php';
 require_once '../../../Controllers/EvaluateController.php';
-require_once '../../../Controllers/MemberController.php';
+
 session_start();
 if (!isset($_SESSION["role"])) {
     header("location: Login.php");
@@ -12,31 +13,36 @@ if (!isset($_SESSION["role"])) {
         header("location: Login.php");
     }
 }
-$MemberController = new MemberController();
-$EvController = new EvaluateController;
 
+$EvaluationId = $_SESSION["EvaluationId"];
+$QrController = new QuestionnaireController;
+$questions = $QrController->getAllQuestionnairesCoteacher();
+$answers = [];
 $errmsg = "";
 
-$Members = $MemberController->getCoTeacher();
+for ($i = 0; $i < count($questions); $i++) {
+    $QId = $questions[$i]["QuestionId"];
+    
+    if (isset($_POST["answer" . $QId]) && isset($_POST["rating" . $QId])) {
+        if (!empty($_POST["answer" . $QId]) && !empty($_POST["rating" . $QId])) {
 
+            $response = new QuestionResponse();
+            $response->setResponseText($_POST["answer" . $QId]);
+            $response->setQuestionId($QId);
+            $response->setRating($_POST["rating" . $QId]);
 
-$Evaluate = null;
-if (isset($_POST["Comment"]) && isset($_POST["Date"]) && isset($_POST["EVE"]) ) {
-    if (!empty($_POST["Comment"]) && !empty($_POST["Date"]) && !empty($_POST["EVE"])) {
-        $Evaluate = new Evaluation($_POST["Comment"] , $_POST["Date"] ,
-                        $_SESSION["Id"] , $_POST["EVE"] ,
-                        18);
-        $EvController->AddEvaluate($Evaluate);
-        if($errmsg === "")
-        {
-            header("Location: EvaluateCoTeachers.php");
+            $answers[] = $response;
         }
-
     }
 }
 
-?>
+$errmsg = $QrController->AddQuestionnaireCoTeacher($answers, $EvaluationId);
 
+if ($errmsg === "") {
+    header("Location: EvaluateCoTeachers.php");
+    exit();
+}
+?>
 
 
 <!DOCTYPE html>
@@ -85,12 +91,6 @@ if (isset($_POST["Comment"]) && isset($_POST["Date"]) && isset($_POST["EVE"]) ) 
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../../index.php">
-                <span class="menu-title">Dashboard</span>
-                <i class="mdi mdi-home menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="UploadCourseMaterial.php">
                 <span class="menu-title">Upload Course Material</span>
                 <i class="fa fa-video-camera menu-icon"></i> 
@@ -114,37 +114,40 @@ if (isset($_POST["Comment"]) && isset($_POST["Date"]) && isset($_POST["EVE"]) ) 
                 <i class="fa fa-file-text menu-icon"></i> 
               </a>
             </li>
+            
         </nav>
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-          <div class="card-body">
-                    
-                    <h4 class="card-title">Evaluation</h4>
+          <h4 class="card-title">Evaluation Questionnaire</h4>
                     <br>
                     <form class="forms-sample" method = "post">
-                      <div class="form-group">
-                        <label for="exampleInputName1">Comment</label>
-                        <input type="text" class="form-control" id="exampleInputName1" placeholder="Comment" name = "Comment" required >
-                      <div class="form-group">
-                        <label for="exampleInputCity1">Date</label>
-                        <input type="Date" class="form-control" id="exampleInputCity1" placeholder="Date" name="Date" required >
-                        </div>
-                      <div class="form-group">
-                        <label for="exampleInputUsername1" style="font-size : 20px">Evaluatee</label>
-                        <select class="form-select " name="EVE">
-                          <?php
-                              foreach ($Members as $Member) 
-                              {?>
-                                <option value="<?php echo $Member["Id"] ?>"><?php echo $Member["Name"] ?></option>
-                              <?php
-                              } ?>
+                  <?php
+                  if($questions !== false && !empty($questions)) {
+                      for($i = 0 ; $i < Count($questions) ; $i++) {
+                          ?>
+                          <div class="form-group">
+                              <label><?php echo $questions[$i]['Text']; ?></label>
+                              <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Answer" name="answer<?php echo $questions[$i]["QuestionId"]?>">
+                          </div>
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <select class="form-control" name="rating<?php echo $questions[$i]["QuestionId"]?>" required>
+                            <option value="">Select Rating</option>
+                            <option value="1" >1 - Poor</option>
+                            <option value="2" >2 - Fair</option>
+                            <option value="3" >3 - Good</option>
+                            <option value="4" >4 - Very Good</option>
+                            <option value="5" >5 - Excellent</option>
                         </select>
-                      </div>
-                      <button type="submit" class="btn btn-gradient-primary me-2" >Submit</button>
-                      <a class="btn btn-light" href = "EvaluateCoTeachers.php">Cancel</a>
-                    </form>
-                  </div>
+                    </div>
+                          <?php
+                      }
+                  }
+                  ?>
+                  <button type="submit" class="btn btn-gradient-primary me-2" >Submit</button>
+                  <a class="btn btn-light" href = "EvaluateCoTeachers.php">Cancel</a>
+                  </form>
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->

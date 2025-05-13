@@ -7,12 +7,16 @@ require_once 'DBController.php';
 
 
 
-        public function setAnswerToQuestion($questionId)
+        public function setAnswerToQuestion($Answer)
         {
             $this->db = new DBController;
             if($this->db->openConnection())
             {
-                $query = "";
+                $Is_Correct = $this->isCorrect($Answer);
+                $QID = $this->$Answer['QuestionId'];
+                $ExamId = $this->$Answer['ExamId'];
+                $query = "INSERT INTO studentanswer
+                values ('' , $Answer , $Is_Correct , $QID , $ExamId)";
 
                 $result = $this->db->select($query); 
 
@@ -28,12 +32,12 @@ require_once 'DBController.php';
             }
         }
 
-        public function isCorrect($questionId)
+        public function isCorrect($Answer)
         {
             $this->db = new DBController;
             if($this->db->openConnection())
             {
-                $query = "SELECT questions.CorrectAnswer, studentanswer.Answer FROM questions JOIN studentanswer on questions.QuestionId = studentanswer.QuestionId;";
+                $query = "SELECT questions.QuestionId, questions.ExamId, questions.CorrectAnswer, studentanswer.Answer FROM questions JOIN studentanswer on questions.QuestionId = studentanswer.QuestionId;";
 
                 $result = $this->db->select($query); 
 
@@ -43,7 +47,7 @@ require_once 'DBController.php';
                     return false;
                 }
                 elseif ($result[0]['CorrectAnswer'] === $result[0]['Answer']) {
-                    return true;
+                    return $result;
                 }else {
                     return false;
                 }
