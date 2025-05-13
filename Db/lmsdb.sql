@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 07, 2025 at 09:32 PM
+-- Generation Time: May 13, 2025 at 09:09 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -43,7 +43,8 @@ INSERT INTO `course` (`CrsId`, `CrsName`, `FacultyId`, `Description`) VALUES
 (5, 'Computer Science', 12, 'Computer Science'),
 (11, 'Network', 13, 'Network'),
 (15, 'AI', 12, 'artificial intelligence'),
-(19, 'IT', 12, 'Internet Technology');
+(19, 'IT', 27, 'Internet Technology'),
+(21, 'machine Learning', 39, 'machine Learning');
 
 -- --------------------------------------------------------
 
@@ -62,9 +63,10 @@ CREATE TABLE `courseregisteration` (
 --
 
 INSERT INTO `courseregisteration` (`CrsId`, `StuId`, `Grade`) VALUES
-(4, 3, NULL),
-(5, 3, NULL),
-(11, 20, NULL);
+(4, 20, NULL),
+(5, 3, 75),
+(11, 3, NULL),
+(15, 20, NULL);
 
 -- --------------------------------------------------------
 
@@ -98,6 +100,19 @@ CREATE TABLE `evalquestion` (
   `questionnaireId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `evalquestion`
+--
+
+INSERT INTO `evalquestion` (`QuestionId`, `Text`, `questionnaireId`) VALUES
+(45, 'What is your Opinion?', 22),
+(46, 'What do you think of his explanation?', 22),
+(47, 'Does it simplify the information?', 22),
+(48, 'Does he explain all parts of the course carefully?', 22),
+(49, 'Does he explain quickly?', 22),
+(50, 'What is your Opinion?', 23),
+(51, 'What do you think of his explanation?', 23);
+
 -- --------------------------------------------------------
 
 --
@@ -113,6 +128,14 @@ CREATE TABLE `evaluation` (
   `evaluatee_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `evaluation`
+--
+
+INSERT INTO `evaluation` (`EvaluationId`, `Comment`, `Date`, `evaluator_id`, `QuestionnaireId`, `evaluatee_id`) VALUES
+(26, 'good', '2025-05-12 00:00:00', 3, 22, 12),
+(27, 'Bad', '2025-05-20 00:00:00', 12, 23, 42);
+
 -- --------------------------------------------------------
 
 --
@@ -126,6 +149,13 @@ CREATE TABLE `exam` (
   `Date` date NOT NULL,
   `CrsId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `exam`
+--
+
+INSERT INTO `exam` (`ExamId`, `Title`, `Type`, `Date`, `CrsId`) VALUES
+(3, 'Erd Exam', 'post', '2025-05-19', 4);
 
 -- --------------------------------------------------------
 
@@ -146,7 +176,7 @@ INSERT INTO `facultymember` (`UserId`, `SsNo`) VALUES
 (12, '3040278937925'),
 (13, '3030987750254'),
 (27, '3020810948304345'),
-(33, '309019038052542');
+(39, '30504229727525');
 
 -- --------------------------------------------------------
 
@@ -162,6 +192,18 @@ CREATE TABLE `notifications` (
   `ReceiverId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`NotifId`, `Message`, `IsRead`, `DateSent`, `ReceiverId`) VALUES
+(1, 'You have been rated by studenttwo', 1, '2025-05-12 00:00:00', 12),
+(3, 'You have been rated by studenttwo', 1, '2025-05-12 00:00:00', 13),
+(5, 'You have been rated by membertwo', 0, '2025-05-12 00:00:00', 42),
+(6, 'You have been rated by membertwo', 0, '2025-05-12 00:00:00', 41),
+(7, 'You have been rated by studenttwo', 1, '2025-05-12 00:00:00', 12),
+(8, 'You have been rated by membertwo', 0, '2025-05-12 00:00:00', 41);
+
 -- --------------------------------------------------------
 
 --
@@ -173,8 +215,13 @@ CREATE TABLE `questionnaire` (
   `Type` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `questionnaire` (`QuestionnaireId`, `Type`) 
-VALUES ('3', 'ghg'), ('4', 'gghgh');
+--
+-- Dumping data for table `questionnaire`
+--
+
+INSERT INTO `questionnaire` (`QuestionnaireId`, `Type`) VALUES
+(22, 'Teacher-Eval'),
+(23, 'Co-Teacher-Eval');
 
 -- --------------------------------------------------------
 
@@ -184,11 +231,24 @@ VALUES ('3', 'ghg'), ('4', 'gghgh');
 
 CREATE TABLE `questionresponse` (
   `ResponseId` int(11) NOT NULL,
-  `Rating` int(11) NOT NULL,
   `ResponseText` varchar(255) NOT NULL,
   `evaluationId` int(11) NOT NULL,
-  `questionId` int(11) NOT NULL
+  `questionId` int(11) NOT NULL,
+  `Rating` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `questionresponse`
+--
+
+INSERT INTO `questionresponse` (`ResponseId`, `ResponseText`, `evaluationId`, `questionId`, `Rating`) VALUES
+(51, 'very good', 26, 51, 3),
+(52, 'very good', 26, 51, 3),
+(53, 'very good', 26, 51, 3),
+(54, 'very good', 26, 51, 3),
+(55, 'very good', 26, 51, 3),
+(56, 'very good', 27, 51, 3),
+(57, 'very good', 27, 51, 3);
 
 -- --------------------------------------------------------
 
@@ -203,6 +263,13 @@ CREATE TABLE `questions` (
   `ExamId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `questions`
+--
+
+INSERT INTO `questions` (`QuestionId`, `Text`, `CorrectAnswer`, `ExamId`) VALUES
+(4, 'What is entity?', 'entity', 3);
+
 -- --------------------------------------------------------
 
 --
@@ -216,6 +283,15 @@ CREATE TABLE `schedule` (
   `CrsId` int(11) NOT NULL,
   `FactulyId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `schedule`
+--
+
+INSERT INTO `schedule` (`SchId`, `EventType`, `Date`, `CrsId`, `FactulyId`) VALUES
+(3, 'Course', '2025-04-23', 5, 12),
+(4, 'Course', '2025-04-30', 4, 27),
+(12, 'Course', '2025-05-17', 11, 13);
 
 -- --------------------------------------------------------
 
@@ -280,7 +356,10 @@ INSERT INTO `users` (`Id`, `Name`, `UserName`, `Password`, `Email`, `RoleName`) 
 (27, 'memberone', 'member1', 'Member123', 'member1@gmail.com', 'Faculty'),
 (28, 'Student1', 'student1', 'Student123', 'Student1@gmail.com', 'Student'),
 (32, 'adminthree', 'admin3', 'Admin345', 'adminthree3@gmail.com', 'Admin'),
-(33, 'memberfour', 'member4', 'Member456', 'member4@gmail.com', 'Faculty');
+(38, 'admin4', 'admin4', 'Admin456', 'admin4@gmail.com', 'Admin'),
+(39, 'memberfour', 'member4', 'Member456', 'member4@gmail.com', 'Faculty'),
+(41, 'CoTeacherone', 'CoTeacher1', 'CoTeacher123', 'CoTeacherone@gmail.com', 'Co-Teacher'),
+(42, 'CoTeachertwo', 'CoTeacher2', 'CoTeacher234', 'CoTeachertwo@gmail.com', 'Co-Teacher');
 
 --
 -- Indexes for dumped tables
@@ -399,7 +478,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `course`
 --
 ALTER TABLE `course`
-  MODIFY `CrsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `CrsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `coursevideos`
@@ -411,67 +490,67 @@ ALTER TABLE `coursevideos`
 -- AUTO_INCREMENT for table `evalquestion`
 --
 ALTER TABLE `evalquestion`
-  MODIFY `QuestionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `QuestionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `evaluation`
 --
 ALTER TABLE `evaluation`
-  MODIFY `EvaluationId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `EvaluationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `exam`
 --
 ALTER TABLE `exam`
-  MODIFY `ExamId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ExamId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `facultymember`
 --
 ALTER TABLE `facultymember`
-  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `NotifId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `NotifId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `questionnaire`
 --
 ALTER TABLE `questionnaire`
-  MODIFY `QuestionnaireId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `QuestionnaireId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `questionresponse`
 --
 ALTER TABLE `questionresponse`
-  MODIFY `ResponseId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ResponseId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `QuestionId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `QuestionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `schedule`
 --
 ALTER TABLE `schedule`
-  MODIFY `SchId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `SchId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- Constraints for dumped tables
