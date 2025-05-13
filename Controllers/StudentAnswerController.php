@@ -49,10 +49,5 @@ require_once 'DBController.php';
                 }
             }
         }
-
-
     }
-
-
-
 ?>
