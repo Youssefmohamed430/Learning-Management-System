@@ -9,7 +9,7 @@ require_once 'DBController.php';
 
         public function setAnswerToQuestion($Answer)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $Is_Correct = $this->isCorrect($Answer);
@@ -34,7 +34,7 @@ require_once 'DBController.php';
 
         public function isCorrect($Answer)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $query = "SELECT questions.QuestionId, questions.ExamId, questions.CorrectAnswer, studentanswer.Answer FROM questions JOIN studentanswer on questions.QuestionId = studentanswer.QuestionId;";
@@ -53,10 +53,5 @@ require_once 'DBController.php';
                 }
             }
         }
-
-
     }
-
-
-
 ?>

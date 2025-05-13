@@ -6,7 +6,8 @@ class ExamController {
 
     public function AddExam($Exam) 
 {
-    $this->db = new DBController;
+            $this->db = DBController::getInstance();
+
 
     if ($this->db->openConnection()) {
 
@@ -32,7 +33,8 @@ class ExamController {
 }
 
     public function getAllExames(){
-        $this->db = new DbController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection()) 
             {
                 $query = "SELECT exam.ExamId, exam.Title, exam.Type , course.CrsName FROM exam JOIN course ON exam.CrsId = course.CrsId";;
@@ -49,7 +51,8 @@ class ExamController {
             }
     }
     public function GetExam($ExamId){
-    $this->db = new DbController;
+            $this->db = DBController::getInstance();
+
     if($this->db->openConnection()) 
     {
         $query = "SELECT ExamId, Title, Type, Date, CrsId 
@@ -70,7 +73,8 @@ class ExamController {
 
     public function getCourseExam($courseId)
     {
-        $this->db = new DbController;
+            $this->db = DBController::getInstance();
+
     if($this->db->openConnection()) 
     {
         $query = "SELECT ExamId, Title, Type, Date, CrsId 
@@ -92,7 +96,8 @@ class ExamController {
 
     public function DeleteExam($ExamId) 
     {
-        $this->db = new DBController;
+            $this->db = DBController::getInstance();
+
         if($this->db->openConnection())
         {
             $queryDelete = "DELETE FROM exam WHERE ExamId = '$ExamId'";
@@ -111,7 +116,7 @@ class ExamController {
     }
     public function EditExam($Exam)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
 

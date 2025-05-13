@@ -6,7 +6,7 @@ class QuestionsController{
     protected $db;
 
     public function AddQuestion($Question , $EXId){
-        $this->db = new DBController;
+            $this->db = DBController::getInstance();
 
     if ($this->db->openConnection()) {
 
@@ -30,7 +30,7 @@ class QuestionsController{
     }
 
     public function getAllQuestion($ExamId){
-        $this->db = new DbController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection()) 
             {
                 $query = "SELECT questions.QuestionId , questions.Text, questions.CorrectAnswer 
@@ -51,7 +51,7 @@ class QuestionsController{
     }
     public function DeleteQuestion($QId) 
     {
-        $this->db = new DBController;
+            $this->db = DBController::getInstance();
         if($this->db->openConnection())
         {
             $queryDelete = "DELETE FROM questions WHERE questions.QuestionId = '$QId'";

@@ -17,7 +17,7 @@ require_once 'ValidationController.php';
 
         public function AddUser($member)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if(!$this->validationController->IsUserNameValid($member->getUsername()))
                 return "User Name must at least 3 letters";
 
@@ -60,7 +60,7 @@ require_once 'ValidationController.php';
 
         public function UpdateUser($Membermodel)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $name     = $Membermodel->getName();
@@ -102,7 +102,7 @@ require_once 'ValidationController.php';
 
         public function ShowUserData($memberid)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $query = "SELECT * FROM users JOIN facultymember ON Id = UserId WHERE Id = '" . $memberid . "'";
@@ -130,7 +130,7 @@ require_once 'ValidationController.php';
         }
 
         public function getCoTeacher(){
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection()){
                 $query = "SELECT Id , Name FROM users where RoleName = 'Co Teacher'";
                 $result = $this->db->select($query);
@@ -145,7 +145,7 @@ require_once 'ValidationController.php';
         }
 
     public function GetAllFaculty() {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $query = "SELECT Id, Name FROM users WHERE RoleName = 'Faculty'";

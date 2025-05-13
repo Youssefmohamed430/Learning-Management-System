@@ -10,7 +10,7 @@ require_once 'NotificationController.php';
 
         public function AddQuestionnaire($type)
         {
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
 
             if($this->db->openConnection())
             {
@@ -28,7 +28,7 @@ require_once 'NotificationController.php';
 
         public function AssignQuestionsToQuestionnaire($QuestionnaireId,$arrayquestions)
         {
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
 
             if($this->db->openConnection())
             {
@@ -43,7 +43,7 @@ require_once 'NotificationController.php';
         }
         public function GetFacultyFeedbacks($facultyId)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 // Get all evaluations where faculty member is  evaluatee
@@ -85,7 +85,7 @@ require_once 'NotificationController.php';
         }
 
         public function getAllQuestionnairesCoteacher(){
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection()) 
             {
                 $query = "SELECT * FROM `evalquestion` JOIN questionnaire
@@ -107,6 +107,7 @@ require_once 'NotificationController.php';
     public function GetQuestions()
         {
             $this->db = new DbController; 
+            $this->db = DBController::getInstance();
             
             if($this->db->openConnection())
             {
@@ -127,7 +128,7 @@ require_once 'NotificationController.php';
 
         public function AddFeedback($responsesarray,Evaluation $evalmodel)
         {
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
             
             if($this->db->openConnection())
             {

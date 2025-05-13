@@ -1,24 +1,34 @@
 <?php
     class DbController
     {
+        private static $instance = null;
         public $dbHost="localhost";
         public $dbUser="root";
         public $dbPassword="";
         public $dbName="LMSDb";
         public $connection;
 
+
+        private function __construct() {
+        $this->connection = new mysqli($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName);
+
+        if ($this->connection->connect_error) {
+            die("Connection failed: " . $this->connection->connect_error);
+        }
+    }
+
+        public static function getInstance() {
+        if (self::$instance === null) {
+            self::$instance = new DbController();
+        }
+
+        return self::$instance;
+    }
+
+
         public function openConnection()
         {
-            $this->connection=new mysqli($this->dbHost,$this->dbUser,$this->dbPassword,$this->dbName);
-            if($this->connection->connect_error)
-            {
-                echo " Error in Connection : ".$this->connection->connect_error;
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return $this->connection;
         }
 
         public function closeConnection()
@@ -32,6 +42,10 @@
                 echo "Connection is not opened";
             }
         }
+
+        public function __clone() {}
+
+        public function __wakeup() {}
 
         public function select($qry)
         {

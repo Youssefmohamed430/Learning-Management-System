@@ -18,7 +18,7 @@
         
         public function AddUser($Admin)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
 
             if(!$this->validationController->IsUserNameValid($Admin->getUsername()))
                 return "User Name must at least 3 letters";
@@ -54,7 +54,7 @@
 
         public function ShowUserData($adminid)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $query = "SELECT * FROM users WHERE Id = '" . $adminid . "'";
@@ -76,7 +76,8 @@
 
         public function UpdateUser($adminmodel)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection())
             {
                 $Updatequery = "UPDATE users SET 

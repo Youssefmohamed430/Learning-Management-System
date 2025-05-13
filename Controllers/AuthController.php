@@ -7,7 +7,7 @@ require_once 'DBController.php';
         public function LogIn($Username,$Password)
         {
             session_start();
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
 
             if($this->db->openConnection())
             {
