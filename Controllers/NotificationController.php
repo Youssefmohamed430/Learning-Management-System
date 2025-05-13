@@ -5,7 +5,7 @@
         private $db;
         public function AddNotification($NotificationModel)
         {
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
             
             if($this->db->openConnection())
             {
@@ -20,7 +20,7 @@
         }
         public function SendNotification($Id)
         {
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
             
             if($this->db->openConnection())
             {
@@ -34,7 +34,7 @@
         }
         public function MarkAsRead($notifId)
         {
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
             
             if($this->db->openConnection())
             {

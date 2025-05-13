@@ -8,7 +8,8 @@ require_once 'DBController.php';
 
         public function IsAssignedToAnotherMember($courseId)
         {
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
+
             if ($this->db->openConnection())
             {
                 $qry = "SELECT FacultyId FROM course WHERE CrsId = '$courseId'";
@@ -24,7 +25,8 @@ require_once 'DBController.php';
 
         public function GetAllCourses() 
         {
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection()) 
             {
                 $query = "SELECT CrsId,CrsName,Description,Name FROM course Left JOIN users ON FacultyId = Id";
@@ -45,7 +47,8 @@ require_once 'DBController.php';
 
         public function GetCoursesAssignedToMember($id) 
         {
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection()) 
             {
                 $query = "SELECT CrsId,CrsName,Description,Name FROM course Left JOIN users ON FacultyId = Id WHERE FacultyId = '$id' ";
@@ -64,7 +67,8 @@ require_once 'DBController.php';
 
         public function GetCourse($CrsId) 
         {
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection()) 
             {
                 $query = "SELECT CrsId,CrsName,Description,Name FROM course Left JOIN users ON FacultyId = Id WHERE CrsId = '$CrsId'";
@@ -86,7 +90,8 @@ require_once 'DBController.php';
             if($this->IsAssignedToAnotherMember($course->getCrsId(),$course->getTeacherId()))
                 return "This Course is already Assigned";
 
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection()) 
             {
                 $crsid = $course->getCrsId();
@@ -109,7 +114,8 @@ require_once 'DBController.php';
 
         public function DeleteCourse($crsid) 
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection())
             {
                 $queryDeletecourse = "DELETE FROM course WHERE CrsId = '$crsid'";
@@ -129,7 +135,7 @@ require_once 'DBController.php';
 
         public function AddCourse($course)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
 
             if($this->db->openConnection())
             {
@@ -153,7 +159,8 @@ require_once 'DBController.php';
 
         public function EditCourse($Coursemodel,$membername)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection())
             {
                 $queryId = "SELECT Id FROM users WHERE Name = '$membername'";
@@ -192,7 +199,8 @@ require_once 'DBController.php';
         }
         public function RegisterCourse($courseId, $stuId)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection())
             {
                 $isRegistered = $this->IsStudentRegistered($stuId, $courseId);
@@ -220,7 +228,8 @@ require_once 'DBController.php';
         }
         public function IsStudentRegistered($stuId, $courseId)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection())
             {
                 $query = "SELECT * FROM courseregisteration WHERE StuId = '$stuId' AND CrsId = '$courseId'";
@@ -232,7 +241,8 @@ require_once 'DBController.php';
         // zenhoum
     public function GetMYCourses($studentid) 
     {
-        $this->db = new DbController;
+            $this->db = DBController::getInstance();
+
         if($this->db->openConnection()) 
         {
             $query = "SELECT CrsName, Course.CrsId, Description FROM course JOIN courseregisteration ON course.CrsId=courseregisteration.CrsId JOIN student ON courseregisteration.StuId= student.UserId where student.UserId='$studentid';";
@@ -250,7 +260,8 @@ require_once 'DBController.php';
     }
 
     public function GetCourseVideos($couseid){
-        $this->db = new DbController;
+            $this->db = DBController::getInstance();
+
         if($this->db->openConnection()) 
         {
             $query = "SELECT VideoPath FROM coursevideos join course ON coursevideos.CrsId=course.CrsId WHERE course.CrsId='$couseid';";
@@ -270,7 +281,8 @@ require_once 'DBController.php';
 
     public function UploadCourseVideo($videoModel)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection())
             {
                 $crsId = $videoModel->getCrsId();
@@ -294,7 +306,8 @@ require_once 'DBController.php';
 
         public function GetFacultyCourses($facultyId)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection())
             {
                 $query = "SELECT CrsId, CrsName FROM course WHERE FacultyId = '$facultyId'";
@@ -314,7 +327,8 @@ require_once 'DBController.php';
 
         public function DropCourse($stuid,$crsid)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
+
             if($this->db->openConnection())
             {
                 $query = "DELETE FROM courseregisteration WHERE courseregisteration.CrsId = '$crsid' AND courseregisteration.StuId = '$stuid'";

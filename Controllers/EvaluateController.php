@@ -32,7 +32,7 @@ class EvaluateController{
 // }
 
     public function getAllEvaluations($id){
-        $this->db = new DbController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection()) 
             {
                 $query = "SELECT * 
@@ -52,7 +52,7 @@ class EvaluateController{
     }
     public function EditEvaluate($responsesarray,$Evaluate,$EvlId)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
 
@@ -99,7 +99,7 @@ class EvaluateController{
         }
         public function DeleteEvaluate($Evaluate) 
     {
-        $this->db = new DBController;
+        $this->db = DBController::getInstance();
         if($this->db->openConnection())
         {
             $queryDelete = "DELETE FROM evaluation WHERE EvaluationId = '$Evaluate'";

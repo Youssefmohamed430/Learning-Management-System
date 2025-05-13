@@ -13,7 +13,7 @@ require_once 'DBController.php';
 
         public function SetSchedule($schedulemodel)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             $date = $schedulemodel->getdate();
             $crsid = $schedulemodel->getCrsId();
             $evnttype = $schedulemodel->getEventType();
@@ -44,7 +44,7 @@ require_once 'DBController.php';
                 $_SESSION["errmsg"] = "Must Number of Courses More than 0";
                 return false;
             }
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $query = "SELECT schedule.EventType, schedule.Date,course.CrsName ,users.Name 

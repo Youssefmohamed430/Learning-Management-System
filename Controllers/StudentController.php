@@ -17,7 +17,7 @@
 
         public function AddUser($student)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if(!$this->validationController->IsUserNameValid($student->getUsername()))
                 return "User Name must at least 3 letters";
 
@@ -57,7 +57,7 @@
 
         public function UpdateUser($Studentmodel)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $name     = $Studentmodel->getName();
@@ -99,7 +99,7 @@
 
         public function ShowUserData($studentid)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $query = "SELECT * FROM users JOIN student ON Id = UserId WHERE Id = '" . $studentid . "'";
@@ -130,7 +130,7 @@
         // ahmed
         public function getTranscript($studentid)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $query = "SELECT courseregisteration.CrsId, course.CrsName, courseregisteration.Grade 

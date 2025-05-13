@@ -9,7 +9,7 @@ require_once 'DBController.php';
 
         public function setAnswerToQuestion($questionId)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $query = "";
@@ -30,7 +30,7 @@ require_once 'DBController.php';
 
         public function isCorrect($questionId)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $query = "SELECT questions.CorrectAnswer, studentanswer.Answer FROM questions JOIN studentanswer on questions.QuestionId = studentanswer.QuestionId;";

@@ -7,7 +7,7 @@
 
         public function IsUserNameToken(string $Username)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection()) 
             {
                 $query = "SELECT * FROM users WHERE username = '$Username'";
@@ -18,7 +18,7 @@
 
         public function IsSSnToken(string $Ssn)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection()) 
             {
                 $query = "SELECT * FROM facultymember WHERE SsNo = '$Ssn'";
@@ -33,7 +33,7 @@
         { return strlen($Password) > 3 && ctype_upper($Password[0]) && strpbrk($Password, '0123456789'); }
         
         public function NumberOfCourses($StuId){
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection()) 
             {
                 $query = "SELECT * FROM courseregisteration WHERE StuId = '$StuId'";

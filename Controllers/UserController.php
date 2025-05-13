@@ -13,7 +13,7 @@
 
         public function DeleteUser($userId)
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection())
             {
                 $queryDeleteUser = "DELETE FROM users WHERE Id = '" . $userId . "'";
@@ -31,7 +31,7 @@
 
         public function GetAll($Role) 
         {
-            $this->db = new DBController;
+            $this->db = DBController::getInstance();
             if($this->db->openConnection()) 
             {
                 $query = "SELECT * FROM users WHERE RoleName = '" . $Role . "'";
@@ -48,7 +48,7 @@
             }
         }
         public function getAllUser() {
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
 
             if ($this->db->openConnection()) {
             $query = "SELECT * FROM `users` WHERE RoleName = 'Faculty';";
