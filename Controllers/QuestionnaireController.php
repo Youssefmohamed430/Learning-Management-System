@@ -90,7 +90,7 @@ require_once 'NotificationController.php';
             {
                 $query = "SELECT * FROM `evalquestion` JOIN questionnaire
                 ON evalquestion.questionnaireId = questionnaire.QuestionnaireId
-                WHERE questionnaire.Type = 'Co Teacher'";
+                WHERE questionnaire.Type = 'Co-Teacher-Eval'";
 
                 $result = $this->db->select($query);
                 if($result === false)
@@ -106,7 +106,6 @@ require_once 'NotificationController.php';
 
     public function GetQuestions()
         {
-            $this->db = new DbController; 
             $this->db = DBController::getInstance();
             
             if($this->db->openConnection())
@@ -161,24 +160,21 @@ require_once 'NotificationController.php';
             return "";
         }
         public function AddQuestionnaireCoTeacher($responsesarray,$EvaluationId){
-            $this->db = new DbController;
+            $this->db = DBController::getInstance();
             
             if($this->db->openConnection())
             {
                 $result = True;
                 foreach($responsesarray as $response)
                 {                
-                    $query = "INSERT INTO questionresponse VALUES ('','".$response->getRating()."','$EvaluationId'
-                    ,'".$response->getQuestionId()."', '".$response->getResponseText()."')";
+                    $query = "INSERT INTO questionresponse VALUES ('','".$response->getResponseText()."','$EvaluationId',
+                    '".$response->getQuestionId()."','".$response->getRating()."')";
 
                     $responseresult = $this->db->insert($query);
 
                     if($responseresult === false){
                         $result = False;
                         return false;
-                    }
-                    else{
-                        return "";
                     }
                 }
             }

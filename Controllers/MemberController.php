@@ -132,7 +132,7 @@ require_once 'ValidationController.php';
         public function getCoTeacher(){
             $this->db = DBController::getInstance();
             if($this->db->openConnection()){
-                $query = "SELECT Id , Name FROM users where RoleName = 'Co Teacher'";
+                $query = "SELECT Id , Name FROM users where RoleName = 'Co-Teacher'";
                 $result = $this->db->select($query);
                 if($result === false){
                     echo "Error in Query";

@@ -6,7 +6,7 @@ class EvaluateController{
 
     public function AddEvaluate($Evaluate) 
 {
-    $this->db = new DBController;
+            $this->db = DBController::getInstance();
 
     if ($this->db->openConnection()) {
 

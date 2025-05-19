@@ -20,7 +20,7 @@ require_once 'DBController.php';
                     $exmid = (int)$answer->getExamId();
                     $iscorrect = $this->isCorrect($studanswer,$answer->getQuestionId());
 
-                    $query = "INSERT INTO studentanswer VALUES ('','$studanswer','$iscorrect','$Qid', '$exmid')";
+                    $query = "INSERT INTO studentanswer VALUES ('$exmid','$studanswer','$iscorrect','$Qid', '$exmid')";
 
                     $result = $this->db->insert($query);
 
@@ -34,7 +34,7 @@ require_once 'DBController.php';
         {
             $this->db = DBController::getInstance();
             if ($this->db->openConnection()) {
-                $query = "SELECT CorrectAnswer FROM questions WHERE QuestionId = '$questionId';";
+                $query = "SELECT CorrectAnswer FROM questions WHERE QuestionId = '$questionId'";
 
                 $result = $this->db->select($query);
 

@@ -16,10 +16,12 @@ if (!isset($_SESSION["role"])) {
 }
 $MemberController = new MemberController();
 $EvController = new EvaluateController;
+$QrController = new QuestionnaireController;
 
 $errmsg = "";
 
 $Members = $MemberController->getCoTeacher();
+$questions = $QrController->getAllQuestionnairesCoteacher();
 
 
 $Evaluate = null;
@@ -27,7 +29,7 @@ if (isset($_POST["Comment"]) && isset($_POST["Date"]) && isset($_POST["EVE"]) ) 
     if (!empty($_POST["Comment"]) && !empty($_POST["Date"]) && !empty($_POST["EVE"])) {
         $Evaluate = new Evaluation($_POST["Comment"] , $_POST["Date"] ,
                         $_SESSION["Id"] , $_POST["EVE"] ,
-                        18);
+                        $questions[0]["questionnaireId"]);
         $EvController->EditEvaluate($Evaluate , $_SESSION["EvaluationId"]);
         if($errmsg === "")
         {

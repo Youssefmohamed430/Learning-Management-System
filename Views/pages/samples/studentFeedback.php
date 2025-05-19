@@ -35,8 +35,8 @@ if(isset($_POST["faculty_id"]) && isset($_POST["comment"]))
 
         if($result === false)
             $errmsg = "Error";
-          else
-              header("Location: \Learning-Management-System\Views\index.php");
+          // else
+          //     header("Location: \Learning-Management-System\Views\index.php");
     }
 }
 ?>

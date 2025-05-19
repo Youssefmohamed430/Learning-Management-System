@@ -31,7 +31,7 @@ for ($i = 0; $i < count($questions); $i++) {
             $response->setQuestionId($QId);
             $response->setRating($_POST["rating" . $QId]);
 
-            $answers[] = $response;
+            $answers[$i] = $response;
         }
     }
 }
@@ -48,7 +48,7 @@ if ($errmsg === "") {
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
+    <!-- Requi+red meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Purple Admin</title>

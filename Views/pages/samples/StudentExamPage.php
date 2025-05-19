@@ -25,7 +25,8 @@ $questionsController = new QuestionsController;
 $studentAnswercontroller = new StudentAnswerController;
 
 $exam = $examController -> getCourseExam($_SESSION["courseid"]);
-$questions = $questionsController -> getAllQuestion($exam[0]["ExamId"]);
+$id=$exam[0]["ExamId"];
+$questions = $questionsController -> getAllQuestion($id);
 $answers = [];
     for($i = 0 ; $i < Count($questions);$i++)
     {
@@ -37,7 +38,7 @@ $answers = [];
                 $studentanswer = new StudentAnswer;
                 $studentanswer->setAnswer($_POST["answer".$QId]);
                 $studentanswer->setQuestionId($QId);
-                $studentanswer->setExamId($exam[0]["ExamId"]);
+                $studentanswer->setExamId($id);
                 $answers[$i] = $studentanswer;
             }
         }
@@ -47,7 +48,10 @@ $answers = [];
         if($result === false)
             $errmsg = "Error";
         //   else
-        //     header("Location: \Learning-Management-System\Views\index.php");
+            // header("Location: \Learning-Management-System\Views\index.php");
+        // print_r($exam[0]["ExamId"]); 
+
+
 
 ?>
 
@@ -136,12 +140,6 @@ $answers = [];
               </div>
             </div>
           </div>
-                  <!-- <div class="alert alert-success" role="alert">
-                          This is a success alert—check it out!
-                        </div>
-                        <div class="alert alert-danger" role="alert">
-                          This is a danger alert—check it out!
-                    </div>  -->
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
           <footer class="footer">
