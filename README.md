@@ -37,7 +37,6 @@
         <h1>Learning Management System (LMS)</h1>
         <h2>Project Overview</h2>
         <p>The Learning Management System (LMS) is a web-based platform designed to enhance the learning experience for students, provide faculty members with tools to manage educational content, and allow administrators to oversee system operations efficiently.</p>
-
         <h2>Software Development Stages</h2>
         <p>We followed the core software engineering phases to ensure a robust and efficient system:</p>
         <ul>
@@ -46,7 +45,6 @@
             <li><strong>Implementation:</strong> Developed the system using a modular architecture with separate Admin, Faculty, and Student modules, ensuring scalability and maintainability.</li>
             <li><strong>Testing:</strong> Conducted rigorous testing, including test cases for user account creation, login validation, and course management to ensure the system meets all requirements.</li>
         </ul>
-
         <h2>Core System Functionalities</h2>
         <ul>
             <li>Admins can manage users, courses, evaluations, and generate reports.</li>
@@ -54,7 +52,6 @@
             <li>Students can register for courses, take exams, view scores, and provide feedback.</li>
             <li>Features include a course calendar, notifications, assessment engine, and teaching performance evaluation module.</li>
         </ul>
-
         <h2>Technologies Used</h2>
         <ul>
             <li><strong>HTML:</strong> For structuring the web-based interface.</li>
