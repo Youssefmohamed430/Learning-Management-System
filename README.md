@@ -32,7 +32,7 @@
             <li><strong>MVC Architecture:</strong> Used to separate concerns, ensuring a scalable and maintainable codebase.</li>
         </ul>
         <h2>Additional Information</h2>
-        <p>For more details, refer to the project documentation: <a href="Learning-Management-System-SRS_FINAL.pdf">Project Documentation</a>.</p>
+        <p>For more details, refer to the project documentation: <a href="[Learning-Management-System-SRS_FINAL.pdf](https://github.com/Youssefmohamed430/Learning-Management-System/blob/fc4420ae25a7cd32e3739f877f260432fa21d75a/Learning-Management-System-SRS_FINAL.pdf)">Project Documentation</a>.</p>
     </div>
 </body>
 </html>
